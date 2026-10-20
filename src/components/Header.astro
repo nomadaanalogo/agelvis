@@ -1,0 +1,126 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import logo from '../assets/marca/logo-agelvis.png';
+import { nav, navEn, site } from '../data/site';
+
+interface Props { lang?: 'es' | 'en'; alternate?: { lang: 'es' | 'en'; href: string } }
+const { lang = 'es', alternate } = Astro.props;
+const items = lang === 'es' ? nav : navEn;
+const home = lang === 'es' ? '/' : '/en/';
+// Si la página no tiene versión en el otro idioma, el selector lleva al inicio de ese idioma.
+const otherLang = lang === 'es' ? 'en' : 'es';
+const otherHref = alternate?.lang === otherLang ? alternate.href : otherLang === 'en' ? '/en/' : '/';
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+const cta = lang === 'es' ? { label: 'Solicitar evaluación', href: '/contacto' } : { label: 'Request a quote', href: '/en/#contact' };
+---
+<header class="site-header" data-header>
+  <div class="container bar">
+    <a href={home} class="brand" aria-label={`${site.name} — ${lang === 'es' ? 'inicio' : 'home'}`}>
+      <Image src={logo} alt={site.name} width={150} loading="eager" />
+    </a>
+
+    <nav class="nav" id="menu-principal" aria-label={lang === 'es' ? 'Principal' : 'Main'} data-nav>
+      <ul>
+        {items.map((item) => (
+          <li><a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+        <li class="lang">
+          <a href={otherHref} hreflang={otherLang} lang={otherLang} aria-label={otherLang === 'en' ? 'English version' : 'Versión en español'}><Icon name="globe" /> {otherLang.toUpperCase()}</a>
+        </li>
+      </ul>
+      <a href={cta.href} class="btn btn--primary nav-cta" data-track="cta_click" data-track-location="header">{cta.label} <Icon name="arrow" /></a>
+    </nav>
+
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal" data-menu-toggle>
+      <Icon name="menu" class="i-open" />
+      <Icon name="close" class="i-close" />
+      <span class="visually-hidden">{lang === 'es' ? 'Menú' : 'Menu'}</span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgb(255 255 255 / 0.82);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+  .site-header.is-scrolled { border-bottom-color: var(--line); box-shadow: 0 8px 30px -18px rgb(20 18 60 / 0.35); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 78px; transition: min-height 0.3s var(--ease); }
+  .is-scrolled .bar { min-height: 64px; }
+  .brand img { width: 124px; height: auto; transition: width 0.3s var(--ease); }
+  .is-scrolled .brand img { width: 108px; }
+  .nav { display: flex; align-items: center; gap: 22px; }
+  .nav ul { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .nav ul a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 0.97rem;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 999px;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .nav ul a:hover { background: rgb(24 0 173 / 0.06); color: var(--brand-blue); }
+  .nav ul a[aria-current='page'] { color: var(--brand-blue); background: rgb(24 0 173 / 0.08); }
+  .lang a { color: var(--ink-soft) !important; border: 1px solid var(--line); }
+  .lang :global(svg) { width: 16px; height: 16px; }
+  .nav-cta { min-height: 44px; padding: 8px 20px; font-size: 0.95rem; }
+  .menu-toggle { display: none; }
+
+  @media (max-width: 1080px) {
+    .menu-toggle {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 48px; height: 48px; border: 1px solid var(--line); border-radius: 14px;
+      background: #fff; color: var(--ink); cursor: pointer;
+    }
+    .menu-toggle :global(svg) { width: 24px; height: 24px; }
+    .menu-toggle :global(.i-close), .menu-toggle[aria-expanded='true'] :global(.i-open) { display: none; }
+    .menu-toggle[aria-expanded='true'] :global(.i-close) { display: block; }
+    .nav {
+      position: absolute; top: calc(100% + 8px); left: var(--gutter); right: var(--gutter); z-index: 49;
+      flex-direction: column; align-items: stretch; gap: 16px;
+      padding: 16px; background: #fff;
+      border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow);
+      opacity: 0; translate: 0 -8px; pointer-events: none; visibility: hidden;
+      transition: opacity 0.25s var(--ease), translate 0.25s var(--ease), visibility 0.25s;
+    }
+    .nav.is-open { opacity: 1; translate: 0 0; pointer-events: auto; visibility: visible; }
+    .nav ul { flex-direction: column; align-items: stretch; gap: 2px; }
+    .nav ul a { display: flex; padding: 14px 16px; font-size: 1.1rem; border-radius: 12px; }
+    .lang a { display: inline-flex !important; margin-top: 8px; }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const navEl = document.querySelector<HTMLElement>('[data-nav]');
+
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 12);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const setOpen = (open: boolean) => {
+    toggle?.setAttribute('aria-expanded', String(open));
+    navEl?.classList.toggle('is-open', open);
+  };
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+</script>

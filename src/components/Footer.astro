@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection as getEntries } from 'astro:content';
+import Icon from './Icon.astro';
+import logoBlanco from '../assets/marca/logo-agelvis-blanco.png';
+import { site, whatsappUrl } from '../data/site';
+import { enServicios } from '../data/en';
+
+interface Props { lang?: 'es' | 'en' }
+const { lang = 'es' } = Astro.props;
+const servicios = (await getEntries('servicios')).sort((a, b) => a.data.orden - b.data.orden);
+const year = new Date().getFullYear();
+const socials = (Object.entries(site.social) as [ 'linkedin' | 'facebook' | 'instagram', string][]).filter(([, url]) => url);
+---
+<footer class="site-footer">
+  <div class="container grid">
+    <div class="col-brand">
+      <Image src={logoBlanco} alt={site.name} width={200} />
+      <p>{lang === 'es' ? site.promise : 'Industrial machinery installation, rigging, packaging and plant relocation in Colombia and Latin America.'}</p>
+      {socials.length > 0 && (
+        <ul class="socials">
+          {socials.map(([name, url]) => (
+            <li><a href={url} target="_blank" rel="noopener" aria-label={name}><Icon name={name} /></a></li>
+          ))}
+        </ul>
+      )}
+    </div>
+
+    <div>
+      <h2 class="f-title">{lang === 'es' ? 'Servicios' : 'Services'}</h2>
+      <ul class="links">
+        {servicios.map((s) => lang === 'es'
+          ? <li><a href={`/servicios/${s.id}`}>{s.data.tituloCorto}</a></li>
+          : <li><a href={`/en/services/${enServicios[s.id].slug}`}>{enServicios[s.id].short}</a></li>)}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="f-title">{lang === 'es' ? 'Empresa' : 'Company'}</h2>
+      {lang === 'es' ? (
+        <ul class="links">
+          <li><a href="/nosotros">Nosotros</a></li>
+          <li><a href="/proyectos">Proyectos</a></li>
+          <li><a href="/proyectos-internacionales">Proyectos internacionales</a></li>
+          <li><a href="/sectores">Sectores</a></li>
+          <li><a href="/fabricantes-oem">Fabricantes OEM</a></li>
+          <li><a href="/en/" hreflang="en" lang="en">English</a></li>
+          <li><a href="/politica-de-privacidad">Política de privacidad</a></li>
+        </ul>
+      ) : (
+        <ul class="links">
+          <li><a href="/en/">Home</a></li>
+          <li><a href="/en/services">Services</a></li>
+          <li><a href="/en/international">International projects</a></li>
+          <li><a href="/en/oem">For OEM manufacturers</a></li>
+          <li><a href="/proyectos" hreflang="es" lang="es">Project photos (ES)</a></li>
+          <li><a href="/" hreflang="es" lang="es">Español</a></li>
+        </ul>
+      )}
+    </div>
+
+    <div>
+      <h2 class="f-title">{lang === 'es' ? 'Contacto' : 'Contact'}</h2>
+      <ul class="contact">
+        <li><Icon name="whatsapp" /><a href={whatsappUrl()} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location="footer">{site.whatsapp.label}</a></li>
+        {site.phones.map((p) => <li><Icon name="phone" /><a href={p.href} data-track="phone_click" data-track-location="footer">{p.label}</a></li>)}
+        <li><Icon name="mail" /><a href={`mailto:${site.email}`} data-track="email_click" data-track-location="footer">{site.email}</a></li>
+        {site.address.publish && <li><Icon name="pin" /><span>{site.address.street}<br />{site.address.city}, {site.address.region}</span></li>}
+        <li><Icon name="clock" /><span>{lang === 'es' ? site.hours : 'Monday to Saturday, 8:00 a.m. – 5:00 p.m. (Colombia, UTC−5)'}</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container legal">
+    <p>© {year} {site.name}. {lang === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>
+    <p>{lang === 'es' ? 'Palmira · Valle del Cauca · Colombia · Proyectos en Latinoamérica y el mundo' : 'Palmira · Colombia · Projects across Latin America and worldwide'}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--grad-dark); color: #bdbbd6; padding-top: 72px; margin: 0 var(--panel-inset); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  .grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.3fr; gap: 40px; padding-bottom: 56px; }
+  .col-brand img { width: 180px; margin-bottom: 20px; }
+  .col-brand p { max-width: 36ch; font-size: 0.98rem; }
+  .f-title { font-family: var(--font-body); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; margin-bottom: 18px; }
+  .links, .contact, .socials { list-style: none; margin: 0; padding: 0; }
+  .links li { margin-bottom: 10px; }
+  .links a { transition: color 0.2s, padding 0.2s; }
+  .links a:hover { padding-left: 4px; }
+  a { color: #d9d8ea; text-decoration: none; }
+  a:hover { color: var(--brand-orange); }
+  .contact li { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; font-size: 0.98rem; overflow-wrap: anywhere; }
+  .contact :global(svg) { width: 34px; height: 34px; padding: 8px; border-radius: 10px; background: rgb(255 255 255 / 0.07); flex: none; color: var(--brand-orange); }
+  .contact li { align-items: center; }
+  .socials { display: flex; gap: 10px; }
+  .socials a { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid #3a3670; border-radius: 50%; transition: background 0.2s, border-color 0.2s; }
+  .socials a:hover { background: var(--brand-orange); border-color: var(--brand-orange); color: #1b0f05; }
+  .socials :global(svg) { width: 18px; height: 18px; }
+  .legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; border-top: 1px solid #262257; padding-block: 22px; font-size: 0.9rem; }
+  .legal p { margin: 0; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+</style>

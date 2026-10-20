@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  title: string;
+  eyebrow?: string;
+  lead?: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  breadcrumbs?: { label: string; href?: string }[];
+  lang?: 'es' | 'en';
+}
+const { title, eyebrow, lead, image, imageAlt = '', breadcrumbs = [], lang = 'es' } = Astro.props;
+const crumbs = [lang === 'es' ? { label: 'Inicio', href: '/' } : { label: 'Home', href: '/en/' }, ...breadcrumbs];
+const crumbsLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.label,
+    item: new URL(c.href ?? Astro.url.pathname, Astro.site).toString(),
+  })),
+};
+---
+<section class:list={['page-hero panel', { 'has-image': image }]}>
+  {image && <Image src={image} alt={imageAlt} class="bg" widths={[640, 1024, 1600]} sizes="100vw" loading="eager" fetchpriority="high" />}
+  <div class="glow" aria-hidden="true"></div>
+  <div class="container inner on-dark">
+    {breadcrumbs.length > 0 && (
+      <nav aria-label={lang === 'es' ? 'Ruta de navegación' : 'Breadcrumb'} class="crumbs">
+        <ol>
+          {crumbs.map((c) => <li>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</li>)}
+        </ol>
+      </nav>
+    )}
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {lead && <p class="lead">{lead}</p>}
+    <slot />
+  </div>
+</section>
+{breadcrumbs.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(crumbsLd)} />}
+
+<style>
+  .page-hero { background: var(--grad-dark); color: #fff; margin-top: 4px; }
+  .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.45; z-index: -2; animation: kenburns 22s ease-out both; }
+  .has-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(100deg, rgb(12 10 38 / 0.96) 0%, rgb(20 14 70 / 0.78) 50%, rgb(36 18 143 / 0.35) 100%);
+  }
+  .glow {
+    position: absolute;
+    right: -120px;
+    bottom: -160px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(251 122 48 / 0.35), transparent 65%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .inner { position: relative; padding-block: clamp(48px, 7vw, 88px); animation: rise 0.9s var(--ease) both; }
+  h1 { color: #fff; max-width: 22ch; font-size: clamp(2rem, 3.6vw, 2.9rem); }
+  .lead { color: #d0cfe4; font-size: 1.12rem; }
+  .crumbs ol { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0 0 22px; padding: 0; font-size: 0.88rem; }
+  .crumbs li:not(:last-child)::after { content: '›'; margin-left: 6px; color: #8a87b8; }
+  .crumbs a { color: #bdbbd6; text-decoration: none; }
+  .crumbs a:hover { color: var(--brand-orange); }
+  .crumbs span { color: #fff; }
+  @keyframes kenburns { from { scale: 1.12; } to { scale: 1; } }
+  @keyframes rise { from { opacity: 0; translate: 0 24px; } to { opacity: 1; translate: 0 0; } }
+</style>

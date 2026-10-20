@@ -1,0 +1,91 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProjectGrid from '../../components/ProjectGrid.astro';
+import Gallery from '../../components/Gallery.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getProyectos } from '../../lib/colecciones';
+import hero from '../../assets/fotos/traslado-maquinaria-planchon.webp';
+
+const proyectos = await getProyectos();
+
+/** Videos en public/video (H.264, sin audio). `vertical` = grabado con el celular en vertical. */
+const videos = [
+  { file: 'traslado-prensas', caption: 'Traslado de prensas con montacargas de alta capacidad.', vertical: false },
+  { file: 'izaje-grua', caption: 'Izaje y posicionamiento de equipo con grúa.', vertical: false },
+  { file: 'linea-produccion-planta', caption: 'Línea de producción operando en planta.', vertical: false },
+  { file: 'izaje-chiller-cubierta', caption: 'Izaje de chiller hacia la cubierta de un edificio industrial.', vertical: true },
+  { file: 'traslado-maquina-vidrio', caption: 'Desplazamiento de máquina formadora en una planta de vidrio.', vertical: true },
+];
+const videoLd = videos.map((v) => ({
+  '@context': 'https://schema.org',
+  '@type': 'VideoObject',
+  name: v.caption.replace(/\.$/, ''),
+  description: `${v.caption} Maniobra ejecutada por AGELVIS EU.`,
+  thumbnailUrl: new URL(`/video/${v.file}.webp`, Astro.site).toString(),
+  contentUrl: new URL(`/video/${v.file}.mp4`, Astro.site).toString(),
+  uploadDate: '2026-10-20',
+}));
+---
+<Base
+  title="Proyectos de montaje y traslado de maquinaria industrial | AGELVIS EU"
+  description="Registro de proyectos de AGELVIS EU: desmontajes, izajes, embalajes para exportación, traslados y montajes de maquinaria industrial en Colombia y otros países."
+  image={hero}
+  jsonLd={videoLd}
+>
+  <PageHero
+    title="Proyectos y registro de campo"
+    eyebrow="Proyectos"
+    lead="Fotografías de intervenciones reales ejecutadas por nuestro equipo: desmontajes, maniobras, embalajes, traslados y montajes."
+    image={hero}
+    imageAlt="Traslado de máquina industrial sobre vehículo de carga"
+    breadcrumbs={[{ label: 'Proyectos' }]}
+  />
+
+  {proyectos.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><p class="eyebrow">Casos</p><h2>Casos de proyecto</h2></div>
+        <ProjectGrid proyectos={proyectos} />
+      </div>
+    </section>
+  )}
+
+  <section class:list={['section', { 'section--alt': proyectos.length > 0 }]}>
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">En campo</p><h2>Registro fotográfico</h2></div>
+      <Gallery />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container videos">
+      <div class="section-head"><p class="eyebrow">Video</p><h2>Maniobras en video</h2></div>
+      <div class="video-grid">
+        {videos.map((v) => (
+          <figure class:list={{ vertical: v.vertical }}>
+            <video controls preload="none" playsinline poster={`/video/${v.file}.webp`}>
+              <source src={`/video/${v.file}.mp4`} type="video/mp4" />
+            </video>
+            <figcaption>{v.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .video-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; align-items: start; }
+  .video-grid figure { grid-column: span 2; }
+  .video-grid figure.vertical { grid-column: span 3; }
+  figure { margin: 0; }
+  video { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--navy-900); border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+  figcaption { margin-top: 10px; color: var(--ink-soft); font-size: 0.95rem; }
+  .vertical video { display: block; width: min(100%, 340px); aspect-ratio: 9 / 16; margin-inline: auto; }
+  .vertical figcaption { text-align: center; }
+  @media (max-width: 900px) { .video-grid figure, .video-grid figure.vertical { grid-column: span 3; } }
+  @media (max-width: 600px) { .video-grid { grid-template-columns: 1fr; } .video-grid figure, .video-grid figure.vertical { grid-column: auto; } }
+</style>

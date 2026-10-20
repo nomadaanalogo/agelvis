@@ -1,0 +1,54 @@
+---
+/** Franja en movimiento continuo con capacidades y sectores. */
+import Icon from './Icon.astro';
+import type { IconName } from '../data/icons';
+
+const items: { icon: IconName; t: string }[] = [
+  { icon: 'gear', t: 'Montaje de maquinaria' },
+  { icon: 'crane', t: 'Rigging industrial' },
+  { icon: 'truck', t: 'Traslado de equipos' },
+  { icon: 'package', t: 'Embalaje de exportación' },
+  { icon: 'factory', t: 'Relocalización de plantas' },
+  { icon: 'ruler', t: 'Layout y adecuaciones' },
+  { icon: 'cup', t: 'Alimentos y bebidas' },
+  { icon: 'printer', t: 'Artes gráficas' },
+  { icon: 'paper', t: 'Papel y tissue' },
+  { icon: 'bottle', t: 'Plásticos' },
+];
+---
+<div class="marquee" aria-label="Capacidades y sectores">
+  <div class="track">
+    {[0, 1].map((copy) => (
+      <ul aria-hidden={copy === 1 ? 'true' : undefined}>
+        {items.map((it) => <li><Icon name={it.icon} />{it.t}</li>)}
+      </ul>
+    ))}
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    padding-block: 36px 8px;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+  .track { display: flex; width: max-content; animation: scroll 45s linear infinite; }
+  .marquee:hover .track { animation-play-state: paused; }
+  ul { display: flex; gap: 14px; list-style: none; margin: 0; padding: 0 14px 0 0; }
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    padding: 10px 18px 10px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, #fff, #f7f6fc);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+  li :global(svg) { width: 20px; height: 20px; color: var(--brand-orange); }
+  @keyframes scroll { to { translate: -50% 0; } }
+</style>

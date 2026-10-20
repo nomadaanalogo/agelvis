@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { whatsappUrl } from '../data/site';
+---
+<Base title="Solicitud recibida | AGELVIS EU" description="Recibimos su solicitud técnica." noindex>
+  <PageHero title="Recibimos su solicitud" eyebrow="Gracias" lead="Un responsable de AGELVIS EU revisará la información y le contactará para coordinar los siguientes pasos.">
+    <div class="btn-row" style="margin-top: 28px">
+      <a href="/" class="btn btn--primary">Volver al inicio</a>
+      <a href={whatsappUrl('Hola AGELVIS EU, acabo de enviar una solicitud técnica desde la web.')} target="_blank" rel="noopener" class="btn btn--ghost" data-track="whatsapp_click" data-track-location="gracias">Enviar planos por WhatsApp</a>
+    </div>
+  </PageHero>
+</Base>

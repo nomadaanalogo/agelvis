@@ -1,0 +1,120 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { site, whatsappUrl } from '../../data/site';
+import type { IconName } from '../../data/icons';
+import hero from '../../assets/fotos/desplazamiento-maquina-embalada-planta.webp';
+import rigging from '../../assets/fotos/izaje-mezclador-acero-inoxidable.webp';
+import packing from '../../assets/fotos/embalaje-maquina-estiba-planta.webp';
+
+const scope: { icon: IconName; t: string; d: string }[] = [
+  { icon: 'package', t: 'Receiving & unpacking', d: 'Container unloading, crate opening, inspection and condition reports.' },
+  { icon: 'crane', t: 'Rigging & in-plant moving', d: 'Planned lifts and moves from receiving area to final position, using skates, forklifts and cranes.' },
+  { icon: 'gear', t: 'Positioning & mechanical assembly', d: 'Placement, leveling, alignment, assembly and anchoring per manufacturer specifications.' },
+  { icon: 'users', t: 'Support for your field engineers', d: 'Local crew on site during commissioning and adjustments.' },
+  { icon: 'zap', t: 'Utility hook-ups via partners', d: 'Electrical, compressed air, water and gas through licensed local partners, as scoped.' },
+  { icon: 'truck', t: 'Relocation & export packing', d: 'Dismantling, technical packaging and relocation of installed lines between plants or countries.' },
+];
+const msg = 'Hello AGELVIS EU, we are a machinery manufacturer and would like to discuss local installation support in Colombia.';
+---
+<Base
+  lang="en"
+  title="Machinery installation & rigging contractor in Colombia for OEMs | AGELVIS EU"
+  description="Local installation partner for machinery manufacturers (OEMs) in Colombia and Latin America: receiving, unpacking, rigging, positioning and mechanical assembly."
+  image={hero}
+  alternate={{ lang: 'es', href: '/fabricantes-oem' }}
+>
+  <section class="hero panel">
+    <Image src={hero} alt="New packed machine being moved to its installation point in a plant" class="bg" widths={[768, 1280, 1600]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <div class="container inner on-dark">
+      <p class="eyebrow">For machinery manufacturers · OEM</p>
+      <h1>Your local installation partner in Colombia</h1>
+      <p class="lead">AGELVIS EU handles the on-site execution of machinery installations in Colombia and Latin America, and supports relocations to and from other countries, so your service engineers can focus on commissioning.</p>
+      <div class="btn-row">
+        <a href="#contact" class="btn btn--primary" data-track="cta_click" data-track-location="en-hero">Discuss a project <Icon name="arrow" /></a>
+        <a href="/en/international" class="btn btn--ghost"><Icon name="globe" /> International projects</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two">
+      <div>
+        <p class="eyebrow">Who we are</p>
+        <h2>Industrial engineering and machinery installation since {site.foundingYear}</h2>
+        <p>Based in Palmira (Valle del Cauca, Colombia), AGELVIS EU plans and executes installation, dismantling, rigging, technical packaging and relocation of industrial machinery and production lines.</p>
+        <p><strong>We handle the complete operation:</strong> we plan the job, engineer each lift and move, and coordinate crews, tools and lifting equipment, our own or from specialized partners, according to each project.</p>
+        <p>Our team has worked in plants for food & beverage, pharma, paper & tissue, packaging, printing, plastics, glass and metalworking, with project experience outside Colombia.</p>
+      </div>
+      <Image src={rigging} alt="Crane lift of a stainless steel mixer executed by AGELVIS EU" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 480px" class="img" />
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">Scope</p><h2>What we can execute for you</h2></div>
+      <ol class="model">
+        {scope.map((m, i) => (<li class="card" data-reveal style={`--i:${i % 3}`}><div class="top"><span class="icon-tile icon-tile--solid"><Icon name={m.icon} /></span><span class="n">{String(i + 1).padStart(2, '0')}</span></div><h3>{m.t}</h3><p>{m.d}</p></li>))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two">
+      <Image src={packing} alt="Industrial machine with technical packaging on a wooden skid" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 480px" class="img" />
+      <div>
+        <p class="eyebrow">How we work with OEMs</p>
+        <h2>Subcontracting model</h2>
+        <ul class="check-list">
+          <li>You define the local scope; we submit a technical proposal with resources, schedule and responsibilities.</li>
+          <li>We work from your manuals, drawings and installation instructions, under your technical supervision.</li>
+          <li>Company and crew documentation for plant access in Colombia (social security, insurance, safety requirements).</li>
+          <li>Single local point of contact for mechanical execution.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark panel" id="contact">
+    <div class="container contact">
+      <div>
+        <p class="eyebrow">Contact</p>
+        <h2>Selling machinery to Colombia or Latin America?</h2>
+        <p class="lead">Tell us about your next installation. We reply with a first technical assessment and next steps.</p>
+      </div>
+      <ul>
+        <li><a href={whatsappUrl(msg)} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location="en-contact"><Icon name="whatsapp" /> WhatsApp {site.whatsapp.label}</a></li>
+        <li><a href={`mailto:${site.email}?subject=OEM%20installation%20partnership`} data-track="email_click" data-track-location="en-contact"><Icon name="mail" /> {site.email}</a></li>
+        {site.phones.map((p) => <li><a href={p.href} data-track="phone_click"><Icon name="phone" /> {p.label}</a></li>)}
+        <li><span><Icon name="pin" /> Palmira, Valle del Cauca, Colombia</span></li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { background: var(--navy-900); margin-top: 4px; }
+  .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; animation: kenburns 24s ease-out both; }
+  .hero::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, rgb(12 10 38 / 0.95), rgb(20 14 70 / 0.75) 50%, rgb(36 18 143 / 0.3)); }
+  .inner { position: relative; padding-block: clamp(72px, 10vw, 128px); animation: rise 1s var(--ease) both; }
+  h1 { color: #fff; max-width: 18ch; font-size: clamp(2.2rem, 4.2vw, 3.4rem); }
+  @keyframes kenburns { from { scale: 1.15; } to { scale: 1; } }
+  @keyframes rise { from { opacity: 0; translate: 0 26px; } to { opacity: 1; translate: 0 0; } }
+  .hero .lead { color: #d0cfe4; margin-bottom: 32px; }
+  .two { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+  .model { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .model li { padding: 28px; }
+  .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .n { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: var(--line); }
+  .model h3 { margin: 0 0 8px; }
+  .model p { color: var(--ink-soft); margin: 0; }
+  .contact { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+  .contact ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+  .contact a, .contact span { display: inline-flex; align-items: center; gap: 12px; color: #fff; text-decoration: none; font-weight: 600; font-size: 1.1rem; overflow-wrap: anywhere; }
+  .contact a:hover { color: var(--brand-orange); }
+  .contact :global(svg) { width: 40px; height: 40px; padding: 9px; border-radius: 12px; background: rgb(255 255 255 / 0.08); color: var(--brand-orange); flex: none; }
+  @media (max-width: 900px) { .two, .contact { grid-template-columns: 1fr; } .model { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .model { grid-template-columns: 1fr; } }
+</style>

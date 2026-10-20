@@ -1,0 +1,132 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Metodologia from '../components/Metodologia.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import type { IconName } from '../data/icons';
+import { site } from '../data/site';
+import hero from '../assets/fotos/desmontaje-prensa-offset.webp';
+import equipo from '../assets/fotos/maquina-aseguramiento-cinchas-planta.webp';
+
+const valores: { icon: IconName; t: string }[] = [
+  { icon: 'shield', t: 'Seguridad' },
+  { icon: 'award', t: 'Integridad' },
+  { icon: 'clipboard', t: 'Responsabilidad' },
+  { icon: 'check', t: 'Cumplimiento' },
+  { icon: 'target', t: 'Precisión técnica' },
+  { icon: 'users', t: 'Trabajo en equipo' },
+  { icon: 'heart', t: 'Respeto por las instalaciones del cliente' },
+  { icon: 'trending', t: 'Mejora continua' },
+];
+
+const cifras = [
+  { n: `${site.stats.crewSize}`, l: 'técnicos por cuadrilla movilizable a otros países' },
+  { n: `${site.stats.ownLiftTons} t`, l: 'cargas movidas con herramientas propias' },
+  { n: `${site.stats.craneTons} t`, l: 'grúas telescópicas coordinadas con aliados' },
+  { n: `${site.internationalExperience.length + 1}`, l: 'países con proyectos ejecutados o acompañados' },
+];
+---
+<Base
+  title="Nosotros: trayectoria en montajes industriales desde 1996 | AGELVIS EU"
+  description="AGELVIS EU nace de la experiencia del ingeniero José Luis Agelvis Bolaños en proyectos industriales. Montaje, desmontaje y relocalización de maquinaria desde Palmira, Valle del Cauca."
+  image={hero}
+>
+  <PageHero
+    title="Experiencia técnica al servicio de la industria"
+    eyebrow="Nosotros"
+    lead={`Desde ${site.foundingYear} desarrollamos capacidades de montaje, desmontaje, movimiento y relocalización de maquinaria industrial.`}
+    image={hero}
+    imageAlt="Técnico de AGELVIS EU desmontando una prensa offset"
+    breadcrumbs={[{ label: 'Nosotros' }]}
+  />
+
+  <section class="section">
+    <div class="container story">
+      <div class="prose" data-reveal>
+        <p class="eyebrow">Nuestra historia</p>
+        <h2>De la experiencia de un ingeniero a una empresa especializada</h2>
+        <p>La trayectoria de AGELVIS EU está vinculada al trabajo del ingeniero <strong>José Luis Agelvis Bolaños</strong> en proyectos industriales, incluyendo su experiencia como contratista en Carvajal, con participación en la optimización y el montaje de líneas de producción.</p>
+        <p>Esa experiencia técnica dio origen a una empresa especializada en intervenir maquinaria y plantas industriales, que con los años amplió su alcance hacia desmontajes, embalajes, traslados y montajes integrales, en Colombia y en proyectos internacionales.</p>
+        <p>Hoy trabajamos desde Palmira, Valle del Cauca, para plantas industriales, fabricantes de maquinaria e ingenierías que necesitan un aliado técnico capaz de planificar y ejecutar. Nuestro equipo reúne ingenieros, calculistas, mecánicos montadores, riggers, eléctricos, electrónicos, soldadores y programadores, y ha trabajado con multinacionales de empaques, consumo masivo, papel y salud.</p>
+      </div>
+      <Image src={equipo} alt="Equipo de AGELVIS EU asegurando una máquina sobre estiba en planta" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 480px" class="story-img" data-reveal style="--i:1" />
+    </div>
+  </section>
+
+  <section class="container cifras" aria-label="Capacidades">
+    {cifras.map((c, i) => <div data-reveal style={`--i:${i}`}><strong>{c.n}</strong><span>{c.l}</span></div>)}
+  </section>
+
+  <section class="section section--alt">
+    <div class="container mv">
+      <article data-reveal>
+        <span class="icon-tile icon-tile--solid"><Icon name="target" /></span>
+        <h2>Misión</h2>
+        <p>Desarrollar y ejecutar soluciones especializadas de ingeniería, montaje, desmontaje, embalaje, movimiento y relocalización de maquinaria y plantas industriales, integrando experiencia técnica, personal competente y recursos adecuados para atender cada proyecto con seguridad, precisión, responsabilidad y cumplimiento.</p>
+      </article>
+      <article data-reveal style="--i:1">
+        <span class="icon-tile icon-tile--orange"><Icon name="trending" /></span>
+        <h2>Visión 2030</h2>
+        <p>Consolidar a AGELVIS EU como un aliado técnico reconocido en Colombia y Latinoamérica para empresas industriales y fabricantes de maquinaria que requieren proyectos especializados de instalación, montaje y relocalización, mediante excelencia operativa, relaciones de largo plazo y mejora continua.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">Valores</p><h2>Cómo trabajamos en su planta</h2></div>
+      <ul class="values">{valores.map((v, i) => <li class="card" data-reveal style={`--i:${i % 4}`}><span class="icon-tile"><Icon name={v.icon} /></span>{v.t}</li>)}</ul>
+    </div>
+  </section>
+
+  {site.flags.showInternationalCountries && (
+    <section class="section section--alt">
+      <div class="container intl">
+        <div>
+          <p class="eyebrow">Cobertura</p>
+          <h2>Colombia y otros mercados</h2>
+          <p>Nuestra base está en el Valle del Cauca y ejecutamos proyectos en distintas regiones de Colombia. También hemos movilizado cuadrillas a proyectos en Latinoamérica y Europa, y trabajamos en español e inglés.</p>
+          <a href="/proyectos-internacionales" class="btn btn--blue">Proyectos internacionales <Icon name="arrow" /></a>
+        </div>
+        <ul>
+          <li class="home"><Icon name="pin" /> Colombia</li>
+          {site.internationalExperience.map((c) => <li><Icon name="globe" /> {c}</li>)}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--dark panel">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">Metodología</p><h2>Seis pasos, un responsable</h2></div>
+      <Metodologia />
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .cifras { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding-bottom: var(--section); }
+  .cifras div { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 22px; box-shadow: var(--shadow-sm); }
+  .cifras strong { display: block; font-family: var(--font-display); font-size: 2.4rem; line-height: 1; color: var(--brand-blue); margin-bottom: 6px; }
+  .cifras span { color: var(--ink-soft); font-size: 0.95rem; }
+  .intl .btn { margin-top: 12px; }
+  .story { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .story-img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+  .mv { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .mv article { background: #fff; padding: clamp(28px, 4vw, 44px); border-radius: var(--radius-lg); border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+  .mv .icon-tile { margin-bottom: 18px; }
+  .mv p { color: var(--ink-soft); margin: 0; }
+  .values { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .values li { display: flex; flex-direction: column; gap: 14px; padding: 22px; font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; line-height: 1.2; }
+  .intl { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .intl ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .intl li { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--line); padding: 10px 18px 10px 14px; border-radius: 999px; font-weight: 600; }
+  .intl li :global(svg) { width: 18px; height: 18px; color: var(--brand-orange); }
+  .intl li.home :global(svg) { color: #fff; }
+  .intl li.home { background: var(--grad-blue); border-color: var(--brand-blue); color: #fff; }
+  @media (max-width: 900px) { .story, .mv, .intl { grid-template-columns: 1fr; } .values, .cifras { grid-template-columns: 1fr 1fr; } }
+</style>

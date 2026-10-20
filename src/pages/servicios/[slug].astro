@@ -1,0 +1,155 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getServicios } from '../../lib/colecciones';
+import { sectores } from '../../data/contenido';
+import { whatsappUrl } from '../../data/site';
+import { enServicios } from '../../data/en';
+import type { IconName } from '../../data/icons';
+
+export async function getStaticPaths() {
+  const servicios = await getServicios();
+  return servicios.map((servicio) => ({ params: { slug: servicio.id }, props: { servicio, todos: servicios } }));
+}
+
+interface Props { servicio: CollectionEntry<'servicios'>; todos: CollectionEntry<'servicios'>[] }
+const { servicio, todos } = Astro.props;
+const { data } = servicio;
+const { Content } = await render(servicio);
+const otros = todos.filter((s) => s.id !== servicio.id);
+
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: data.titulo,
+  description: data.seoDescription,
+  serviceType: data.tituloCorto,
+  provider: { '@id': `${Astro.site}#empresa` },
+  areaServed: [
+    { '@type': 'Country', name: 'Colombia' },
+    { '@type': 'Country', name: 'México' },
+    { '@type': 'Place', name: 'Latinoamérica' },
+    { '@type': 'Place', name: 'Mundial' },
+  ],
+};
+---
+<Base
+  title={data.seoTitle}
+  description={data.seoDescription}
+  image={data.imagen}
+  jsonLd={[serviceLd]}
+  alternate={{ lang: 'en', href: `/en/services/${enServicios[servicio.id].slug}` }}
+>
+  <PageHero
+    title={data.titulo}
+    eyebrow="Servicio"
+    lead={data.resumen}
+    image={data.imagen}
+    imageAlt={data.imagenAlt}
+    breadcrumbs={[{ label: 'Servicios', href: '/servicios' }, { label: data.tituloCorto }]}
+  >
+    <div class="btn-row hero-ctas">
+      <a href="/contacto" class="btn btn--primary" data-track="cta_click" data-track-location={`servicio-${servicio.id}`}>Solicitar evaluación técnica <Icon name="arrow" /></a>
+      <a href={whatsappUrl(`Hola AGELVIS EU, quisiera información sobre: ${data.tituloCorto}.`)} target="_blank" rel="noopener" class="btn btn--ghost" data-track="whatsapp_click" data-track-location={`servicio-${servicio.id}`}><Icon name="whatsapp" /> WhatsApp</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container layout">
+      <div class="prose" data-reveal>
+        <Content />
+      </div>
+      <aside class="scope" data-reveal style="--i:1">
+        <div class="scope-head"><span class="icon-tile icon-tile--solid"><Icon name={data.icono as IconName} /></span><h2>Alcance</h2></div>
+        <ul class="check-list">
+          {data.incluye.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="note">El alcance final se define según la evaluación técnica de cada proyecto.</p>
+        <a href="/contacto" class="btn btn--blue">Cotizar este servicio <Icon name="arrow" /></a>
+      </aside>
+    </div>
+  </section>
+
+  {data.galeria.length > 0 && (
+    <section class="section section--alt">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Registro fotográfico</p>
+          <h2>Trabajos en campo</h2>
+        </div>
+        <ul class="gallery">
+          {data.galeria.map((g, i) => (
+            <li data-reveal style={`--i:${i}`}><Image src={g.src} alt={g.alt} widths={[400, 720]} sizes="(max-width: 700px) 100vw, 400px" /></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="container sectors-row">
+      <p class="eyebrow">Sectores donde aplica</p>
+      <ul>{sectores.map((s) => <li><Icon name={s.icono} />{s.nombre}</li>)}</ul>
+    </div>
+  </section>
+
+  {data.faq.length > 0 && (
+    <section class="section section--alt">
+      <div class="container"><Faq items={data.faq} title={`Preguntas sobre ${data.tituloCorto.toLowerCase()}`} /></div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">Servicios relacionados</p><h2>Complemente el alcance</h2></div>
+      <ul class="related">
+        {otros.map((s, i) => <li data-reveal style={`--i:${i % 3}`}><a href={`/servicios/${s.id}`}><span class="icon-tile"><Icon name={s.data.icono as IconName} /></span><span class="rl">{s.data.tituloCorto}</span><Icon name="arrow" class="go" /></a></li>)}
+        <li data-reveal><a href="/proyectos-internacionales"><span class="icon-tile"><Icon name="globe" /></span><span class="rl">Proyectos internacionales</span><Icon name="arrow" class="go" /></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .hero-ctas { margin-top: 28px; }
+  .layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+  .scope { position: sticky; top: 96px; background: var(--grad-soft); border: 1px solid var(--line); padding: 32px; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+  .scope-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .scope h2 { font-size: 1.7rem; margin: 0; }
+  .note { font-size: 0.9rem; color: var(--ink-soft); margin: 20px 0; }
+  .gallery { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .gallery li { aspect-ratio: 4 / 3; overflow: hidden; border-radius: 20px; }
+  .gallery img { width: 100%; height: 100%; object-fit: cover; transition: scale 0.8s var(--ease); }
+  .gallery li:hover img { scale: 1.06; }
+  .sectors-row ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .sectors-row li { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff, #f7f6fc); border-radius: 999px; padding: 8px 16px 8px 12px; font-weight: 500; }
+  .sectors-row li :global(svg) { width: 18px; height: 18px; color: var(--brand-orange); }
+  .related { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .related a {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px 14px 14px; border: 1px solid var(--line); border-radius: 18px; background: #fff;
+    font-family: var(--font-display); font-size: 1.2rem; font-weight: 600;
+    color: var(--ink); text-decoration: none;
+    transition: border-color 0.3s, transform 0.4s var(--ease), box-shadow 0.3s;
+  }
+  .related a:hover { border-color: rgb(75 47 214 / 0.3); color: var(--brand-blue); transform: translateY(-3px); box-shadow: var(--shadow-sm); }
+  .related .rl { flex: 1; }
+  .related .icon-tile { width: 44px; height: 44px; border-radius: 12px; }
+  .related .icon-tile :global(svg) { width: 22px; height: 22px; }
+  .related :global(.go) { width: 20px; height: 20px; color: var(--brand-orange); flex: none; transition: translate 0.3s var(--ease); }
+  .related a:hover :global(.go) { translate: 4px 0; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .scope { position: static; }
+    .gallery { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }
+</style>

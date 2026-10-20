@@ -1,0 +1,168 @@
+---
+import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import Analytics from '../components/Analytics.astro';
+import { site } from '../data/site';
+import ogDefault from '../assets/fotos/traslado-maquinaria-planchon.webp';
+import { getCollection } from 'astro:content';
+import { enServicios } from '../data/en';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: ImageMetadata;
+  lang?: 'es' | 'en';
+  noindex?: boolean;
+  /** Ruta de la versión alterna en otro idioma (hreflang). */
+  alternate?: { lang: 'es' | 'en'; href: string };
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { title, description, image = ogDefault, lang = 'es', noindex = false, alternate, jsonLd = [] } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+// Mismo formato que el canonical (con barra final) para que el par hreflang coincida exacto.
+const altUrl = alternate && new URL(alternate.href.endsWith('/') ? alternate.href : `${alternate.href}/`, Astro.site);
+const og = await getImage({ src: image, width: 1200, format: 'jpg' });
+const ogUrl = new URL(og.src, Astro.site);
+
+const servicios = (await getCollection('servicios')).sort((a, b) => a.data.orden - b.data.orden);
+const isEn = lang === 'en';
+const countries = ['Colombia', ...site.internationalExperienceEn];
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': `${Astro.site}#empresa`,
+  name: site.name,
+  legalName: site.legalName,
+  description: isEn
+    ? 'Industrial machinery installation, dismantling, rigging, export packing and plant relocation. Based in Colombia, executing projects in Latin America and worldwide.'
+    : site.promise,
+  slogan: site.tagline,
+  url: Astro.site?.toString(),
+  logo: new URL('/logo-agelvis.png', Astro.site).toString(),
+  image: ogUrl.toString(),
+  telephone: site.phones[0].href.replace('tel:', ''),
+  email: site.email,
+  foundingDate: String(site.foundingYear),
+  founder: { '@type': 'Person', name: 'José Luis Agelvis Bolaños' },
+  knowsLanguage: ['es', 'en'],
+  knowsAbout: [
+    'Industrial machinery installation', 'Machinery dismantling', 'Rigging', 'Heavy machinery moving',
+    'Export packing', 'Industrial plant relocation', 'Production line installation', 'Montaje de maquinaria industrial',
+    'Traslado de maquinaria', 'Relocalización de plantas industriales', 'Embalaje industrial para exportación',
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: isEn ? 'Industrial services' : 'Servicios industriales',
+    itemListElement: servicios.map((s) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: isEn ? enServicios[s.id].title : s.data.titulo,
+        url: new URL(isEn ? `/en/services/${enServicios[s.id].slug}` : `/servicios/${s.id}`, Astro.site).toString(),
+      },
+    })),
+  },
+  address: site.address.publish
+    ? {
+        '@type': 'PostalAddress',
+        streetAddress: site.address.street,
+        addressLocality: site.address.city,
+        addressRegion: site.address.region,
+        addressCountry: site.address.countryCode,
+      }
+    : undefined,
+  openingHours: site.hoursSchema,
+  areaServed: [
+    ...countries.map((name) => ({ '@type': 'Country', name })),
+    { '@type': 'Place', name: isEn ? 'Latin America' : 'Latinoamérica' },
+    { '@type': 'Place', name: isEn ? 'Worldwide' : 'Mundial' },
+  ],
+  sameAs: Object.values(site.social).filter(Boolean),
+};
+
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${Astro.site}#web`,
+  url: Astro.site?.toString(),
+  name: site.name,
+  inLanguage: ['es', 'en'],
+  publisher: { '@id': `${Astro.site}#empresa` },
+};
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    {alternate && (
+      <>
+        <link rel="alternate" hreflang={lang} href={canonical} />
+        <link rel="alternate" hreflang={alternate.lang} href={altUrl} />
+        <link rel="alternate" hreflang="x-default" href={lang === 'es' ? canonical : altUrl} />
+      </>
+    )}
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#0c0a26" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={lang === 'es' ? 'es_CO' : 'en_US'} />
+    <meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_CO'} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(business)} />
+    <script type="application/ld+json" set:html={JSON.stringify(website)} />
+    {jsonLd.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
+    <Analytics />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">{lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
+    <Header lang={lang} alternate={alternate} />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <WhatsAppFloat lang={lang} />
+    <script>
+      // Aparición progresiva de elementos marcados con data-reveal.
+      const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -40px 0px', threshold: 0 },
+        );
+        items.forEach((el) => io.observe(el));
+      } else {
+        items.forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>

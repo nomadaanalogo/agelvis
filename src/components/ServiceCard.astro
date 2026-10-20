@@ -1,0 +1,38 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import type { IconName } from '../data/icons';
+
+interface Props { servicio: CollectionEntry<'servicios'>; index?: number }
+const { servicio, index = 0 } = Astro.props;
+const { data } = servicio;
+---
+<article class="card svc" data-reveal style={`--i:${index % 3}`}>
+  <div class="media">
+    <Image src={data.imagen} alt={data.imagenAlt} widths={[400, 640]} sizes="(max-width: 700px) 100vw, 400px" />
+  </div>
+  <div class="body">
+    <span class="icon-tile icon-tile--solid"><Icon name={data.icono as IconName} /></span>
+    <h3><a href={`/servicios/${servicio.id}`}>{data.tituloCorto}</a></h3>
+    <p>{data.resumen}</p>
+    <span class="more" aria-hidden="true">Ver servicio <Icon name="arrow" /></span>
+  </div>
+</article>
+
+<style>
+  .svc { display: flex; flex-direction: column; overflow: hidden; }
+  .media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: var(--surface-alt); }
+  .media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgb(12 10 38 / 0.35)); }
+  .media img { width: 100%; height: 100%; object-fit: cover; transition: scale 0.8s var(--ease); }
+  .svc:hover .media img { scale: 1.07; }
+  .body { position: relative; padding: 0 26px 26px; display: flex; flex-direction: column; flex: 1; }
+  .icon-tile { margin-top: -26px; margin-bottom: 16px; border: 4px solid #fff; width: 60px; height: 60px; border-radius: 18px; }
+  h3 { font-size: 1.5rem; }
+  h3 a { color: var(--ink); text-decoration: none; }
+  h3 a::after { content: ''; position: absolute; inset: 0; }
+  p { color: var(--ink-soft); font-size: 0.98rem; flex: 1; }
+  .more { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.95rem; color: var(--brand-blue); }
+  .more :global(svg) { width: 18px; height: 18px; transition: translate 0.3s var(--ease); }
+  .svc:hover .more :global(svg) { translate: 5px 0; }
+</style>

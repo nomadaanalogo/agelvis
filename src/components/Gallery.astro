@@ -1,0 +1,65 @@
+---
+/** Registro fotográfico de trabajos reales de AGELVIS EU. */
+import { Image } from 'astro:assets';
+import ingresoNave from '../assets/fotos/izaje-maquina-ingreso-nave-industrial.webp';
+import tanque from '../assets/fotos/izaje-tanque-industrial-grua.webp';
+import camaBaja from '../assets/fotos/transporte-maquinaria-cama-baja.webp';
+import prensa from '../assets/fotos/desmontaje-prensa-offset.webp';
+import guacal from '../assets/fotos/fabricacion-guacal-madera.webp';
+import chiller from '../assets/fotos/izaje-chiller-grua.webp';
+import desplazamiento from '../assets/fotos/desplazamiento-maquina-embalada-planta.webp';
+import film from '../assets/fotos/embalaje-maquina-film-bodega.webp';
+import troqueladora from '../assets/fotos/movimiento-troqueladora-montacargas.webp';
+import mezclador from '../assets/fotos/izaje-mezclador-acero-inoxidable.webp';
+import lineaEmbalaje from '../assets/fotos/desmontaje-linea-produccion-embalaje.webp';
+import contenedor from '../assets/fotos/cargue-montacargas-contenedor.webp';
+import tableros from '../assets/fotos/instalacion-tableros-control-planta.webp';
+import traslado from '../assets/fotos/traslado-maquinaria-planchon.webp';
+import protegido from '../assets/fotos/izaje-equipo-protegido-bodega.webp';
+
+interface Props { limit?: number; lang?: 'es' | 'en' }
+const { limit, lang = 'es' } = Astro.props;
+const tagsEn: Record<string, string> = { Rigging: 'Rigging', Traslado: 'Transport', Desmontaje: 'Dismantling', Embalaje: 'Packing', Montaje: 'Installation', Cargue: 'Loading' };
+const fotos = [
+  { src: ingresoNave, alt: 'Izaje de máquina embalada hacia el interior de una nave industrial', tag: 'Rigging' },
+  { src: tanque, alt: 'Izaje de tanque industrial con grúa telescópica para cargue en cama baja', tag: 'Rigging' },
+  { src: camaBaja, alt: 'Maquinaria cubierta con lona sobre cama baja para transporte terrestre', tag: 'Traslado' },
+  { src: prensa, alt: 'Desmontaje de prensa offset en planta de artes gráficas', tag: 'Desmontaje' },
+  { src: guacal, alt: 'Fabricación de guacal de madera a la medida para exportación', tag: 'Embalaje' },
+  { src: chiller, alt: 'Izaje de chiller industrial con grúa', tag: 'Rigging' },
+  { src: desplazamiento, alt: 'Desplazamiento de máquina embalada hasta su punto de instalación', tag: 'Montaje' },
+  { src: film, alt: 'Equipo industrial embalado con film y asegurado con cinchas', tag: 'Embalaje' },
+  { src: troqueladora, alt: 'Movimiento de troqueladora con montacargas de alta capacidad', tag: 'Traslado' },
+  { src: mezclador, alt: 'Izaje de mezclador de acero inoxidable en patio de planta', tag: 'Rigging' },
+  { src: lineaEmbalaje, alt: 'Desmontaje y protección de una línea de producción', tag: 'Desmontaje' },
+  { src: contenedor, alt: 'Cargue de guacal en contenedor con montacargas', tag: 'Cargue' },
+  { src: tableros, alt: 'Tableros de control posicionados en planta para su instalación', tag: 'Montaje' },
+  { src: traslado, alt: 'Traslado de máquina industrial sobre vehículo de carga', tag: 'Traslado' },
+  { src: protegido, alt: 'Izaje de equipo protegido con lona frente a bodega industrial', tag: 'Rigging' },
+].slice(0, limit);
+---
+<ul class="gallery">
+  {fotos.map((f, i) => (
+    <li data-reveal style={`--i:${i % 3}`}>
+      <Image src={f.src} alt={f.alt} widths={[400, 720]} sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 400px" />
+      <span>{lang === 'es' ? f.tag : tagsEn[f.tag]}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .gallery { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  li { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 20px; background: var(--surface-alt); }
+  li::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgb(12 10 38 / 0.45)); pointer-events: none; }
+  img { width: 100%; height: 100%; object-fit: cover; transition: scale 0.8s var(--ease); }
+  li:hover img { scale: 1.06; }
+  span {
+    position: absolute; left: 12px; bottom: 12px;
+    z-index: 1;
+    background: rgb(255 255 255 / 0.16); backdrop-filter: blur(8px); color: #fff;
+    font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.78rem;
+    padding: 5px 12px; border-radius: 999px; border: 1px solid rgb(255 255 255 / 0.25);
+  }
+  @media (max-width: 900px) { .gallery { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }
+</style>

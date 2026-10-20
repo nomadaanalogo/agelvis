@@ -1,0 +1,37 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getServicios } from '../../lib/colecciones';
+import hero from '../../assets/fotos/izaje-chiller-grua.webp';
+
+const servicios = await getServicios();
+---
+<Base
+  title="Servicios de montaje, rigging y traslado de maquinaria industrial | AGELVIS EU"
+  description="Montaje e instalación, desmontaje y traslado, relocalización de plantas, embalaje industrial, rigging e ingeniería de layout para maquinaria industrial en Colombia, México y Latinoamérica."
+  image={hero}
+  alternate={{ lang: 'en', href: '/en/services' }}
+>
+  <PageHero
+    title="Servicios para maquinaria y plantas industriales"
+    eyebrow="Servicios"
+    lead="Elija el servicio según su necesidad. Puede contratarlo de forma puntual o como parte de un alcance integral coordinado por AGELVIS EU."
+    image={hero}
+    imageAlt="Izaje de chiller industrial con grúa ejecutado por AGELVIS EU"
+    breadcrumbs={[{ label: 'Servicios' }]}
+  />
+  <section class="section">
+    <div class="container cards">
+      {servicios.map((s, i) => <ServiceCard servicio={s} index={i} />)}
+    </div>
+  </section>
+  <CtaBand title="¿No sabe qué servicio necesita?" text="Descríbanos la maquinaria y lo que quiere lograr. Definimos el alcance con usted en la evaluación técnica." />
+</Base>
+
+<style>
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 960px) { .cards { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px) { .cards { grid-template-columns: 1fr; } }
+</style>

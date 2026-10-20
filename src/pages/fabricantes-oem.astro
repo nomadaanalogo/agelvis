@@ -1,0 +1,89 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import type { IconName } from '../data/icons';
+import hero from '../assets/fotos/desplazamiento-maquina-embalada-planta.webp';
+import desembalaje from '../assets/fotos/cargue-contenedor-maquinaria.webp';
+
+const modelo: { icon: IconName; t: string; d: string }[] = [
+  { icon: 'package', t: 'Recepción y desembalaje', d: 'Descargue del contenedor, apertura, inspección y registro del estado de los equipos.' },
+  { icon: 'crane', t: 'Rigging y movimiento interno', d: 'Traslado desde el área de recibo hasta el punto de instalación, con maniobras planificadas.' },
+  { icon: 'gear', t: 'Posicionamiento y montaje mecánico', d: 'Ubicación, nivelación, alineación, ensamble y anclaje según los manuales del fabricante.' },
+  { icon: 'users', t: 'Soporte al técnico del fabricante', d: 'Cuadrilla local disponible durante la puesta en marcha y los ajustes.' },
+  { icon: 'zap', t: 'Coordinación de redes con aliados', d: 'Conexiones eléctricas, aire, agua y gas con especialistas habilitados, según alcance.' },
+  { icon: 'truck', t: 'Relocalizaciones y retrofits', d: 'Traslado de equipos instalados entre plantas y apoyo en modernizaciones de líneas.' },
+];
+const faq = [
+  { q: '¿Cómo funciona la subcontratación?', a: 'El fabricante o su representante define el alcance de la instalación local. AGELVIS EU presenta una propuesta técnica con recursos, cronograma y responsabilidades, y ejecuta bajo la supervisión técnica del fabricante.' },
+  { q: '¿Qué documentación pueden presentar?', a: 'Documentación legal y de seguridad social de la empresa y del personal requerida para el ingreso a planta en Colombia. Las certificaciones específicas se confirman en cada proceso de registro de proveedores.' },
+  { q: '¿Trabajan con instrucciones en inglés?', a: 'Sí, trabajamos con manuales y planos del fabricante y podemos coordinar la comunicación con equipos de servicio internacionales.' },
+  { q: '¿Qué cobertura tienen?', a: 'Base en el Valle del Cauca con proyectos en distintas regiones de Colombia, y experiencia en proyectos internacionales que se evalúan caso a caso.' },
+];
+---
+<Base
+  title="Contratista de instalación para fabricantes de maquinaria en Colombia | AGELVIS EU"
+  description="Aliado local de instalación para fabricantes de maquinaria (OEM): recepción, desembalaje, rigging, posicionamiento y montaje mecánico en Colombia y Latinoamérica."
+  image={hero}
+  alternate={{ lang: 'en', href: '/en/oem' }}
+>
+  <PageHero
+    title="Su aliado local de instalación en Colombia"
+    eyebrow="Fabricantes internacionales · OEM"
+    lead="Para fabricantes de maquinaria, representantes e integradores que venden equipos a plantas en Colombia y necesitan una ejecución local confiable."
+    image={hero}
+    imageAlt="Desplazamiento de máquina nueva embalada hasta su punto de instalación en planta"
+    breadcrumbs={[{ label: 'Fabricantes OEM' }]}
+  >
+    <div class="btn-row cta">
+      <a href="/contacto?tipo=oem" class="btn btn--primary" data-track="cta_click" data-track-location="oem-hero">Proponer una alianza <Icon name="arrow" /></a>
+      <a href="/en/oem" class="btn btn--ghost" hreflang="en">English version</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container intro">
+      <div data-reveal>
+        <p class="eyebrow">El problema</p>
+        <h2>Vender la máquina es una parte. Instalarla bien, otra.</h2>
+        <p>Cuando un fabricante vende un equipo a una planta en Colombia, la instalación local exige personal, herramientas y equipos de elevación disponibles en el sitio, conocimiento de las condiciones de las plantas y documentación para el ingreso.</p>
+        <p>AGELVIS EU ejecuta esa etapa para que su técnico de servicio se concentre en la puesta en marcha.</p>
+      </div>
+      <Image src={desembalaje} alt="Cargue y descargue de maquinaria en contenedor" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 480px" class="intro-img" />
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head"><p class="eyebrow">Modelo de trabajo</p><h2>Qué podemos ejecutar por usted</h2></div>
+      <ol class="model">
+        {modelo.map((m, i) => (
+          <li class="card" data-reveal style={`--i:${i % 3}`}><div class="top"><span class="icon-tile icon-tile--solid"><Icon name={m.icon} /></span><span class="n">{String(i + 1).padStart(2, '0')}</span></div><h3>{m.t}</h3><p>{m.d}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container"><Faq items={faq} title="Preguntas de fabricantes" /></div>
+  </section>
+
+  <CtaBand title="¿Vende maquinaria en Colombia o Latinoamérica?" text="Conversemos sobre su próximo proyecto de instalación y cómo podemos apoyar a su equipo de servicio." />
+</Base>
+
+<style>
+  .cta { margin-top: 28px; }
+  .intro { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .intro-img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+  .model { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .model li { padding: 28px; }
+  .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .n { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: var(--line); }
+  .model h3 { margin: 0 0 8px; }
+  .model p { color: var(--ink-soft); margin: 0; }
+  @media (max-width: 900px) { .intro { grid-template-columns: 1fr; } .model { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .model { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,32 @@
+---
+/**
+ * Google Analytics 4 + eventos de conversión.
+ * Defina PUBLIC_GA_ID (ej. G-XXXXXXX) en el archivo .env para activarlo.
+ * Cualquier enlace o botón con data-track="nombre_evento" envía un evento:
+ *   - whatsapp_click, phone_click, email_click, cta_click, form_submit
+ */
+const gaId = import.meta.env.PUBLIC_GA_ID;
+---
+{gaId && (
+  <>
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+    <script is:inline define:vars={{ gaId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', gaId);
+    </script>
+  </>
+)}
+<script>
+  type Gtag = (...args: unknown[]) => void;
+  document.addEventListener('click', (event) => {
+    const el = (event.target as HTMLElement).closest<HTMLElement>('[data-track]');
+    if (!el) return;
+    const name = el.dataset.track!;
+    const params = { location: el.dataset.trackLocation ?? location.pathname, label: el.textContent?.trim().slice(0, 80) };
+    const gtag = (window as unknown as { gtag?: Gtag }).gtag;
+    if (gtag) gtag('event', name, params);
+    else ((window as unknown as { dataLayer?: unknown[] }).dataLayer ??= []).push({ event: name, ...params });
+  });
+</script>

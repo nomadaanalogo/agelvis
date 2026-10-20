@@ -1,0 +1,38 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import Gallery from './Gallery.astro';
+
+interface Props { proyectos: CollectionEntry<'proyectos'>[] }
+const { proyectos } = Astro.props;
+---
+{proyectos.length > 0 ? (
+  <div class="grid">
+    {proyectos.map((p, i) => (
+      <article class="project" data-reveal style={`--i:${i % 3}`}>
+        <Image src={p.data.imagen} alt={p.data.imagenAlt} widths={[400, 720]} sizes="(max-width: 700px) 100vw, 400px" />
+        <div class="overlay">
+          <p class="meta">{p.data.sector} · {p.data.ubicacion}{p.data.draft && <span class="draft">Borrador</span>}</p>
+          <h3><a href={`/proyectos/${p.id}`}>{p.data.titulo}</a></h3>
+        </div>
+      </article>
+    ))}
+  </div>
+) : (
+  <Gallery limit={6} />
+)}
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .project { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--radius-lg); background: var(--navy-900); }
+  .project img { width: 100%; height: 100%; object-fit: cover; transition: scale 0.8s var(--ease); }
+  .project:hover img { scale: 1.05; }
+  .overlay { position: absolute; inset: auto 0 0 0; padding: 80px 24px 24px; background: linear-gradient(180deg, transparent, rgb(12 10 38 / 0.92) 70%); color: #fff; }
+  .meta { display: inline-block; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #ffd2b0; background: rgb(255 255 255 / 0.12); backdrop-filter: blur(6px); padding: 4px 12px; border-radius: 999px; margin-bottom: 10px; }
+  .draft { margin-left: 8px; background: #c62828; color: #fff; padding: 1px 8px; border-radius: 3px; font-size: 0.75rem; }
+  h3 { font-size: 1.5rem; margin: 0; }
+  h3 a { color: #fff; text-decoration: none; }
+  h3 a::after { content: ''; position: absolute; inset: 0; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } .project { aspect-ratio: 4 / 3; } }
+</style>

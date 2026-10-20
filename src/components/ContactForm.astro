@@ -1,0 +1,187 @@
+---
+/**
+ * Formulario corto de contacto: solicitud, nombre, correo y teléfono.
+ * Envío: defina PUBLIC_FORM_ENDPOINT en .env con la URL de un servicio de
+ * formularios (Formspree, Web3Forms, Basin, etc.). Si no está definida, el
+ * formulario arma un mensaje y lo abre en WhatsApp como respaldo.
+ */
+import { site } from '../data/site';
+
+interface Props { lang?: 'es' | 'en' }
+const { lang = 'es' } = Astro.props;
+const es = lang === 'es';
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+
+const txt = es
+  ? {
+      solicitud: 'Cuéntenos sobre su solicitud',
+      placeholder: 'Qué maquinaria es, dónde está y qué necesita (instalar, desmontar, trasladar, embalar…)',
+      nombre: 'Nombre',
+      email: 'Correo',
+      telefono: 'Teléfono / WhatsApp',
+      consent: 'Autorizo el tratamiento de mis datos para atender esta solicitud, según la',
+      policy: 'política de datos',
+      enviar: 'Enviar solicitud',
+    }
+  : {
+      solicitud: 'Tell us about your project',
+      placeholder: 'What machinery, where it is and what you need (install, dismantle, relocate, pack…)',
+      nombre: 'Name',
+      email: 'Email',
+      telefono: 'Phone / WhatsApp',
+      consent: 'I authorize the processing of my data to handle this request, under the',
+      policy: 'privacy policy',
+      enviar: 'Send request',
+    };
+---
+<form
+  class="form"
+  method="POST"
+  action={endpoint || undefined}
+  data-form
+  data-endpoint={endpoint}
+  data-wa={site.whatsapp.number}
+  data-lang={lang}
+  data-thanks={es ? '/gracias' : ''}
+  novalidate
+>
+  <label>{txt.solicitud}
+    <textarea name="solicitud" rows="4" required placeholder={txt.placeholder}></textarea>
+  </label>
+  <div class="grid">
+    <label>{txt.nombre}<input name="nombre" required autocomplete="name" /></label>
+    <label>{txt.email}<input type="email" name="email" required autocomplete="email" /></label>
+    <label>{txt.telefono}<input type="tel" name="telefono" required autocomplete="tel" /></label>
+  </div>
+
+  <!-- Antispam: campo trampa invisible para personas -->
+  <div class="hp" aria-hidden="true"><label>No llenar<input name="_gotcha" tabindex="-1" autocomplete="off" /></label></div>
+
+  <label class="consent">
+    <input type="checkbox" name="consentimiento" value="acepto" required />
+    <span>{txt.consent} <a href="/politica-de-privacidad" target="_blank">{txt.policy}</a>.</span>
+  </label>
+
+  <div class="actions">
+    <button type="submit" class="btn btn--primary">{txt.enviar}</button>
+    <p class="status" role="status" aria-live="polite" data-status></p>
+  </div>
+</form>
+
+<style>
+  .form { display: grid; gap: 18px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; }
+  label { display: grid; gap: 6px; font-weight: 600; font-size: 0.95rem; }
+  input, textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 14px;
+    border: 1px solid #d6d4e4;
+    border-radius: 12px;
+    background: #fbfbfe;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    color: var(--ink);
+    font: 400 1rem/1.4 var(--font-body);
+  }
+  textarea { resize: vertical; }
+  input:focus, textarea:focus { outline: none; border-color: var(--brand-violet); background: #fff; box-shadow: 0 0 0 4px rgb(75 47 214 / 0.15); }
+  [aria-invalid='true'] { border-color: #c62828; }
+  .consent { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; font-size: 0.88rem; color: var(--ink-soft); }
+  .consent input { width: 18px; min-height: 18px; height: 18px; margin-top: 2px; flex: none; accent-color: var(--brand-blue); }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+  .status { margin: 0; font-weight: 600; }
+  .status.error { color: #c62828; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>
+
+<script>
+  type Gtag = (...args: unknown[]) => void;
+  const form = document.querySelector<HTMLFormElement>('[data-form]');
+  const status = form?.querySelector<HTMLElement>('[data-status]');
+  const es = form?.dataset.lang !== 'en';
+  const msg = es
+    ? {
+        invalid: 'Complete los campos y acepte la política de datos.',
+        sending: 'Enviando…',
+        wa: 'Abrimos WhatsApp con su solicitud. Si tiene fotos o planos, adjúntelos en el chat.',
+        error: 'No pudimos enviar la solicitud. Intente de nuevo o escríbanos por WhatsApp.',
+        sent: 'Recibimos su solicitud. Le responderemos pronto.',
+        title: 'Solicitud desde la web',
+      }
+    : {
+        invalid: 'Please fill in all fields and accept the privacy policy.',
+        sending: 'Sending…',
+        wa: 'We opened WhatsApp with your request. Feel free to attach photos or drawings in the chat.',
+        error: 'We could not send your request. Please try again or message us on WhatsApp.',
+        sent: 'We received your request and will reply shortly.',
+        title: 'Request from the website',
+      };
+
+  // Si se llega desde la página para fabricantes (?tipo=oem), se sugiere el inicio del mensaje.
+  if (new URLSearchParams(location.search).get('tipo') === 'oem') {
+    const area = form?.querySelector<HTMLTextAreaElement>('textarea[name="solicitud"]');
+    if (area && !area.value) area.value = 'Somos fabricante de maquinaria y buscamos un aliado de instalación local. ';
+  }
+
+  const track = (name: string) => {
+    const gtag = (window as unknown as { gtag?: Gtag }).gtag;
+    gtag?.('event', name, { location: location.pathname });
+  };
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!status) return;
+    status.classList.remove('error');
+
+    let valid = true;
+    form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[required]').forEach((field) => {
+      const ok = field.checkValidity();
+      field.setAttribute('aria-invalid', String(!ok));
+      if (!ok) valid = false;
+    });
+    if (!valid) {
+      status.textContent = msg.invalid;
+      status.classList.add('error');
+      form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+      return;
+    }
+
+    const data = new FormData(form);
+    if (data.get('_gotcha')) return;
+
+    const endpoint = form.dataset.endpoint;
+    if (!endpoint) {
+      // Respaldo sin servicio de formularios: abrir WhatsApp con el resumen.
+      const lines = [
+        msg.title,
+        `${data.get('nombre')} · ${data.get('email')} · ${data.get('telefono')}`,
+        '',
+        String(data.get('solicitud')),
+      ];
+      track('form_submit');
+      window.open(`https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener');
+      status.textContent = msg.wa;
+      return;
+    }
+
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    button?.setAttribute('disabled', '');
+    status.textContent = msg.sending;
+    try {
+      const res = await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+      if (!res.ok) throw new Error(String(res.status));
+      track('form_submit');
+      if (form.dataset.thanks) {
+        window.location.href = form.dataset.thanks;
+      } else {
+        form.reset();
+        status.textContent = msg.sent;
+        button?.removeAttribute('disabled');
+      }
+    } catch {
+      status.textContent = msg.error;
+      status.classList.add('error');
+      button?.removeAttribute('disabled');
+    }
+  });
+</script>

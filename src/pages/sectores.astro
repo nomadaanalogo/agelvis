@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { sectores } from '../data/contenido';
+import type { IconName } from '../data/icons';
+import hero from '../assets/fotos/embalaje-maquina-film-bodega.webp';
+
+const segmentos: { icon: IconName; titulo: string; situacion: string; href?: string }[] = [
+  { icon: 'factory', titulo: 'Plantas industriales', situacion: 'Expansión, cambio de layout, compra de maquinaria, traslado, cierre o parada técnica.' },
+  { icon: 'handshake', titulo: 'Fabricantes de maquinaria (OEM)', situacion: 'Venta de equipos a clientes en Colombia que requieren instalación local.', href: '/fabricantes-oem' },
+  { icon: 'ruler', titulo: 'Ingenierías, EPC e integradores', situacion: 'Proyectos adjudicados que necesitan capacidad de ejecución mecánica en campo.' },
+  { icon: 'globe', titulo: 'Grupos industriales multinacionales', situacion: 'Estandarización o traslado de activos entre plantas y países.' },
+];
+---
+<Base
+  title="Sectores industriales atendidos | AGELVIS EU"
+  description="Montaje y traslado de maquinaria para alimentos y bebidas, farmacéutico, papel y tissue, empaques, artes gráficas, plásticos, vidrio, metalmecánica y manufactura."
+  image={hero}
+>
+  <PageHero
+    title="Sectores que atendemos"
+    eyebrow="Industrias"
+    lead="Intervenimos maquinaria en plantas con exigencias distintas de limpieza, seguridad y continuidad operativa."
+    image={hero}
+    imageAlt="Equipo industrial embalado en la bodega de una planta de alimentos"
+    breadcrumbs={[{ label: 'Sectores' }]}
+  />
+  <section class="section">
+    <div class="container">
+      <ul class="sectors">
+        {sectores.map((s, i) => (
+          <li class="card" data-reveal style={`--i:${i % 3}`}>
+            <div class="top">
+              <span class="icon-tile icon-tile--solid"><Icon name={s.icono} /></span>
+              <span class="n">{String(i + 1).padStart(2, '0')}</span>
+            </div>
+            <h2>{s.nombre}</h2>
+            <p>{s.detalle}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head" data-reveal><p class="eyebrow">A quién servimos</p><h2>Cuándo nos llaman</h2></div>
+      <div class="segments">
+        {segmentos.map((s, i) => (
+          <article class="card" data-reveal style={`--i:${i % 2}`}>
+            <span class="icon-tile"><Icon name={s.icon} /></span>
+            <div>
+              <h3>{s.titulo}</h3>
+              <p>{s.situacion}</p>
+              {s.href && <a href={s.href} class="link">Ver modelo para fabricantes <Icon name="arrow" /></a>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+
+<style>
+  .sectors { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .sectors li { padding: 28px; }
+  .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .n { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: var(--line); }
+  .sectors h2 { font-size: 1.5rem; margin-bottom: 6px; }
+  .sectors p { color: var(--ink-soft); margin: 0; }
+  .segments { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .segments article { display: flex; gap: 18px; padding: 28px; }
+  .segments p { color: var(--ink-soft); }
+  .link { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; text-decoration: none; }
+  .link :global(svg) { width: 18px; height: 18px; }
+  @media (max-width: 900px) { .sectors { grid-template-columns: 1fr 1fr; } .segments { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) { .sectors { grid-template-columns: 1fr; } }
+</style>

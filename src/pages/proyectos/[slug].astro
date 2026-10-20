@@ -1,0 +1,67 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getProyectos } from '../../lib/colecciones';
+
+export async function getStaticPaths() {
+  return (await getProyectos()).map((proyecto) => ({ params: { slug: proyecto.id }, props: { proyecto } }));
+}
+
+interface Props { proyecto: CollectionEntry<'proyectos'> }
+const { proyecto } = Astro.props;
+const { data } = proyecto;
+const { Content } = await render(proyecto);
+const ficha = [
+  ['Sector', data.sector],
+  ['Ubicación', data.ubicacion],
+  ['Año', data.anio],
+  ['Cliente', data.cliente],
+  ['Maquinaria', data.maquinaria],
+  ['Servicios', data.servicios.join(' · ')],
+].filter(([, v]) => v);
+---
+<Base title={`${data.titulo} | Proyectos AGELVIS EU`} description={data.resumen} image={data.imagen} noindex={data.draft}>
+  <PageHero
+    title={data.titulo}
+    eyebrow={data.draft ? 'Caso en borrador · no se publica' : 'Caso de proyecto'}
+    lead={data.resumen}
+    image={data.imagen}
+    imageAlt={data.imagenAlt}
+    breadcrumbs={[{ label: 'Proyectos', href: '/proyectos' }, { label: data.titulo }]}
+  />
+  <section class="section">
+    <div class="container layout">
+      <div class="prose"><Content /></div>
+      <aside>
+        <dl>
+          {ficha.map(([k, v]) => (<><dt>{k}</dt><dd>{v}</dd></>))}
+        </dl>
+      </aside>
+    </div>
+  </section>
+  {data.galeria.length > 0 && (
+    <section class="section section--alt">
+      <div class="container gallery">
+        <Image src={data.imagen} alt={data.imagenAlt} widths={[400, 720]} sizes="(max-width: 700px) 100vw, 400px" />
+        {data.galeria.map((g) => <Image src={g.src} alt={g.alt} widths={[400, 720]} sizes="(max-width: 700px) 100vw, 400px" />)}
+      </div>
+    </section>
+  )}
+  <CtaBand title="¿Tiene un proyecto similar?" />
+</Base>
+
+<style>
+  .layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+  aside { background: var(--grad-soft); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 28px; }
+  dl { margin: 0; display: grid; gap: 4px; }
+  dt { font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-blue); font-size: 0.78rem; margin-top: 14px; }
+  dt:first-child { margin-top: 0; }
+  dd { margin: 0; }
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 20px; }
+  @media (max-width: 860px) { .layout, .gallery { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,202 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Faq from '../../components/Faq.astro';
+import Gallery from '../../components/Gallery.astro';
+import EnServiceCards from '../../components/EnServiceCards.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { site, whatsappUrl } from '../../data/site';
+import { enSectores, enFaq } from '../../data/en';
+import type { IconName } from '../../data/icons';
+import heroImg from '../../assets/fotos/izaje-maquina-ingreso-nave-industrial.webp';
+import oemImg from '../../assets/fotos/desplazamiento-maquina-embalada-planta.webp';
+
+const msg = 'Hello AGELVIS EU, I would like a technical assessment for an industrial machinery project.';
+
+const proof: { icon: IconName; t: string; d: string }[] = [
+  { icon: 'award', t: `Since ${site.foundingYear}`, d: 'Industrial project experience' },
+  { icon: 'globe', t: `${site.internationalExperienceEn.length + 1} countries`, d: 'Latin America and Europe' },
+  { icon: 'users', t: `Crews of up to ${site.stats.crewSize}`, d: 'Deployable abroad' },
+];
+
+const why: { icon: IconName; t: string; d: string }[] = [
+  { icon: 'users', t: 'One accountable contractor', d: 'Dismantling, packing, moving and reinstallation by the same team, with the same records.' },
+  { icon: 'shield', t: 'Controlled risk', d: 'Every lift and move is engineered before execution, with HSE controls in the field.' },
+  { icon: 'handshake', t: 'Own tools or partners', d: `Loads up to ${site.stats.ownLiftTons} t with our own tools; cranes up to ${site.stats.craneTons} t through partners.` },
+  { icon: 'heart', t: 'Respect for your plant', d: 'We protect your facility and production schedule during shutdowns.' },
+];
+---
+<Base
+  lang="en"
+  title="Industrial machinery installation, rigging & plant relocation contractor | AGELVIS EU"
+  description="AGELVIS EU installs, dismantles, packs, moves and relocates industrial machinery and production lines. Colombian contractor with projects in Mexico, Latin America and Europe."
+  image={heroImg}
+  alternate={{ lang: 'es', href: '/' }}
+>
+  <section class="hero panel">
+    <Image src={heroImg} alt="Packed industrial machine lifted by crane into a plant by AGELVIS EU" class="hero-bg" widths={[768, 1280, 1920, 2400]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <div class="container hero-inner on-dark">
+      <p class="eyebrow">Industrial machinery contractor · Colombia → worldwide</p>
+      <h1>Machinery installation, rigging and <span class="grad-text">plant relocation</span></h1>
+      <p class="hero-lead">We dismantle, pack, move and install industrial machinery and complete production lines, in Colombia, Latin America and abroad, with engineered planning and specialized crews.</p>
+      <div class="btn-row">
+        <a href="#contact" class="btn btn--primary" data-track="cta_click" data-track-location="en-home-hero">Request a technical assessment <Icon name="arrow" /></a>
+        <a href="/en/international" class="btn btn--ghost"><Icon name="globe" /> International projects</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof container" aria-label="Credentials">
+    {proof.map((p, i) => (
+      <div class="proof-item" data-reveal style={`--i:${i}`}>
+        <span class="icon-tile icon-tile--solid"><Icon name={p.icon} /></span>
+        <div><strong>{p.t}</strong><span>{p.d}</span></div>
+      </div>
+    ))}
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Services</p>
+        <h2>Six ways we handle your machinery</h2>
+        <p class="lead">Hire a single operation or a turnkey scope. Every project starts with a technical assessment.</p>
+      </div>
+      <EnServiceCards />
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container diff">
+      <div class="diff-media" data-reveal>
+        <video autoplay muted loop playsinline preload="none" poster="/video/izaje-grua.webp" aria-label="Crane lift executed by AGELVIS EU">
+          <source src="/video/izaje-grua.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div data-reveal style="--i:1">
+        <p class="eyebrow">Why AGELVIS</p>
+        <h2>We plan and execute <span class="accent">every lift and move</span></h2>
+        <p class="lead">We analyze the load, the route and the plant conditions, choose the technique and coordinate people, equipment and partners for each project.</p>
+        <div class="diff-grid">
+          {why.map((d) => (
+            <div class="diff-item">
+              <span class="icon-tile"><Icon name={d.icon} /></span>
+              <div><h3>{d.t}</h3><p>{d.d}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark panel">
+    <div class="container intl">
+      <div data-reveal>
+        <p class="eyebrow">International</p>
+        <h2>From the origin plant to the destination plant</h2>
+        <p class="lead">Dismantling and tagging at origin, export packing, container loading, coordination with forwarders and customs brokers, receiving, installation and start-up support at destination.</p>
+        <a href="/en/international" class="btn btn--primary">How an international project works <Icon name="arrow" /></a>
+      </div>
+      <ul class="chips" data-reveal style="--i:1">
+        <li class="home"><Icon name="pin" /> Colombia</li>
+        {site.internationalExperienceEn.map((c) => <li><Icon name="globe" /> {c}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head center" data-reveal>
+        <p class="eyebrow">Industries</p>
+        <h2>Experience across manufacturing sectors</h2>
+      </div>
+      <ul class="sectors">
+        {enSectores.map((s) => <li><Icon name={s.icono} />{s.nombre}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container oem">
+      <div data-reveal>
+        <p class="eyebrow">Machinery manufacturers · OEM</p>
+        <h2>Your local installation partner in Latin America</h2>
+        <p>Selling machinery to plants in Colombia or Latin America? We execute the local stage (receiving, unpacking, rigging, positioning and mechanical assembly) under your service team’s supervision.</p>
+        <a href="/en/oem" class="btn btn--blue">OEM partnership model <Icon name="arrow" /></a>
+      </div>
+      <Image src={oemImg} alt="New packed machine moved to its installation point" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 480px" class="oem-img" data-reveal style="--i:1" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head" data-reveal><p class="eyebrow">Field work</p><h2>Recent projects</h2></div>
+      <Gallery limit={6} lang="en" />
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container"><Faq items={enFaq} title="Frequently asked questions" /></div>
+  </section>
+
+  <section class="section section--dark panel" id="contact">
+    <div class="container contact">
+      <div>
+        <p class="eyebrow">Contact</p>
+        <h2>Tell us about your project</h2>
+        <p class="lead">Tell us briefly what you need. We reply with a first technical assessment and next steps. We work in English and Spanish.</p>
+        <ul>
+        <li><a href={whatsappUrl(msg)} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location="en-home-contact"><Icon name="whatsapp" /> WhatsApp {site.whatsapp.label}</a></li>
+        <li><a href={`mailto:${site.email}?subject=Industrial%20machinery%20project`} data-track="email_click" data-track-location="en-home-contact"><Icon name="mail" /> {site.email}</a></li>
+        {site.phones.map((p) => <li><a href={p.href} data-track="phone_click"><Icon name="phone" /> {p.label}</a></li>)}
+        <li><span><Icon name="pin" /> Palmira, Valle del Cauca, Colombia</span></li>
+        </ul>
+      </div>
+      <div class="form-card"><ContactForm lang="en" /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { min-height: min(80vh, 720px); display: grid; align-items: center; background: var(--navy-900); margin-top: 4px; }
+  .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; animation: kenburns 24s ease-out both; }
+  .hero::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, rgb(12 10 38 / 0.94) 0%, rgb(18 12 64 / 0.78) 45%, rgb(36 18 143 / 0.3) 100%), linear-gradient(0deg, rgb(12 10 38 / 0.6), transparent 40%); }
+  .hero-inner { padding-block: clamp(64px, 9vw, 110px) clamp(96px, 10vw, 130px); animation: rise 1s var(--ease) both; }
+  .hero h1 { color: #fff; max-width: 18ch; font-size: clamp(2.2rem, 4.2vw, 3.4rem); }
+  .hero-lead { color: #d6d5ea; font-size: clamp(1.02rem, 1.3vw, 1.15rem); max-width: 58ch; margin-bottom: 30px; }
+  .proof { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: -56px; }
+  .proof-item { display: flex; align-items: center; gap: 16px; padding: 22px; border-radius: 20px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .proof strong { display: block; font-family: var(--font-display); font-size: 1.45rem; line-height: 1.1; color: var(--ink); }
+  .proof span:not(.icon-tile) { color: var(--ink-soft); font-size: 0.95rem; }
+  .diff { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .diff-media video { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); background: var(--navy-900); box-shadow: var(--shadow); }
+  .accent { color: var(--brand-blue); }
+  .diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px; }
+  .diff-item { display: flex; gap: 14px; padding: 18px; border-radius: 18px; background: #fff; border: 1px solid var(--line); }
+  .diff-item .icon-tile { width: 44px; height: 44px; border-radius: 12px; flex: none; }
+  .diff-item .icon-tile :global(svg) { width: 22px; height: 22px; }
+  .diff-item h3 { font-size: 1.15rem; margin-bottom: 4px; }
+  .diff-item p { margin: 0; font-size: 0.93rem; color: var(--ink-soft); line-height: 1.5; }
+  .intl { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+  .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .chips li { display: inline-flex; align-items: center; gap: 8px; background: rgb(255 255 255 / 0.06); border: 1px solid rgb(255 255 255 / 0.14); color: #fff; padding: 10px 18px 10px 14px; border-radius: 999px; font-weight: 600; }
+  .chips li :global(svg) { width: 18px; height: 18px; color: var(--brand-amber); }
+  .chips li.home { background: var(--grad-orange); color: #1b0f05; border-color: transparent; }
+  .chips li.home :global(svg) { color: #1b0f05; }
+  .sectors { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .sectors li { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 10px 18px 10px 14px; font-weight: 600; }
+  .sectors li :global(svg) { width: 20px; height: 20px; color: var(--brand-orange); }
+  .oem { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .oem-img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+  .contact { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
+  .contact ul { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 14px; }
+  .form-card { background: #fff; color: var(--ink); padding: clamp(24px, 4vw, 36px); border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+  .contact ul a, .contact ul span { display: inline-flex; align-items: center; gap: 12px; color: #fff; text-decoration: none; font-weight: 600; font-size: 1.1rem; overflow-wrap: anywhere; }
+  .contact ul a:hover { color: var(--brand-orange); }
+  .contact ul :global(svg) { width: 40px; height: 40px; padding: 9px; border-radius: 12px; background: rgb(255 255 255 / 0.08); color: var(--brand-orange); flex: none; }
+  @keyframes kenburns { from { scale: 1.15; } to { scale: 1; } }
+  @keyframes rise { from { opacity: 0; translate: 0 26px; } to { opacity: 1; translate: 0 0; } }
+  @media (max-width: 1000px) { .diff, .intl, .oem, .contact { grid-template-columns: 1fr; } }
+  @media (max-width: 680px) { .proof { grid-template-columns: 1fr; margin-top: -40px; } .diff-grid { grid-template-columns: 1fr; } }
+</style>

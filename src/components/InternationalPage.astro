@@ -1,0 +1,305 @@
+---
+/**
+ * Página de proyectos internacionales (ES: /proyectos-internacionales, EN: /en/international).
+ * Contenido basado en el plan de exportación UPB 2026 (información suministrada por la empresa).
+ */
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import Icon from './Icon.astro';
+import Faq from './Faq.astro';
+import CtaBand from './CtaBand.astro';
+import { site, whatsappUrl } from '../data/site';
+import type { IconName } from '../data/icons';
+import hero from '../assets/fotos/izaje-tanque-industrial-grua.webp';
+import guacal from '../assets/fotos/fabricacion-guacal-madera.webp';
+import contenedor from '../assets/fotos/cargue-montacargas-contenedor.webp';
+import camaBaja from '../assets/fotos/transporte-maquinaria-cama-baja.webp';
+import film from '../assets/fotos/embalaje-maquina-film-bodega.webp';
+
+interface Props { lang: 'es' | 'en' }
+const { lang } = Astro.props;
+const es = lang === 'es';
+const t = <T,>(a: T, b: T) => (es ? a : b);
+
+const countries = es ? site.internationalExperience : site.internationalExperienceEn;
+
+const stats = [
+  { n: `${countries.length + 1}`, l: t('países con proyectos ejecutados o acompañados', 'countries with projects executed or supported') },
+  { n: `${site.stats.crewSize}`, l: t('técnicos por cuadrilla movilizable al exterior', 'technicians per crew deployable abroad') },
+  { n: `${site.stats.ownLiftTons} t`, l: t('cargas movidas con herramientas propias', 'loads moved with our own tools') },
+  { n: `${site.stats.craneTons} t`, l: t('grúas telescópicas coordinadas con aliados', 'telescopic cranes coordinated with partners') },
+];
+
+const cadena: { icon: IconName; t: string; d: string; dur: string }[] = es
+  ? [
+      { icon: 'search', t: 'Visita técnica y propuesta', d: 'Levantamiento en origen (y en destino cuando aplica), alcance, riesgos y cronograma.', dur: '2–10 días' },
+      { icon: 'wrench', t: 'Desmontaje e identificación', d: 'Desarme controlado, marcación de componentes, cableado y conexiones.', dur: '2–6 semanas' },
+      { icon: 'package', t: 'Embalaje de exportación', d: 'Guacales a la medida, barreras contra humedad y corrosión, fijación y registro fotográfico.', dur: 'Incluido' },
+      { icon: 'truck', t: 'Cargue y transporte a puerto', d: 'Contenerización y transporte de carga pesada hasta Buenaventura o Cartagena.', dur: '2–5 días' },
+      { icon: 'shield', t: 'Puerto e inspecciones', d: 'Supervisión portuaria y acompañamiento de inspecciones con el agente de aduanas.', dur: '2–7 días' },
+      { icon: 'globe', t: 'Tránsito internacional', d: 'Coordinación con la naviera o el forwarder hasta el puerto de destino.', dur: '8–18 días a México' },
+      { icon: 'clipboard', t: 'Aduana y entrega en planta', d: 'Liberación con el agente local, transporte a planta y descontenedorización.', dur: '5–15 días' },
+      { icon: 'gear', t: 'Montaje y puesta en marcha', d: 'Desembalaje, posicionamiento, nivelación, alineación, conexiones con aliados y pruebas.', dur: '3–8 semanas' },
+      { icon: 'check', t: 'Entrega técnica', d: 'Actas, checklists, reportes y memorias del proyecto.', dur: '1–3 días' },
+    ]
+  : [
+      { icon: 'search', t: 'Site survey & proposal', d: 'Survey at origin (and destination when needed), scope, risks and schedule.', dur: '2–10 days' },
+      { icon: 'wrench', t: 'Dismantling & tagging', d: 'Controlled disassembly, tagging of components, wiring and connections.', dur: '2–6 weeks' },
+      { icon: 'package', t: 'Export packing', d: 'Custom crates, moisture and corrosion barriers, securing and photo records.', dur: 'Included' },
+      { icon: 'truck', t: 'Loading & transport to port', d: 'Container stuffing and heavy haulage to the port of loading.', dur: '2–5 days' },
+      { icon: 'shield', t: 'Port & inspections', d: 'Port supervision and support during inspections with the customs broker.', dur: '2–7 days' },
+      { icon: 'globe', t: 'Ocean transit', d: 'Coordination with the shipping line or freight forwarder to the port of discharge.', dur: '8–18 days Colombia → Mexico' },
+      { icon: 'clipboard', t: 'Customs & delivery to plant', d: 'Clearance with the local broker, transport to plant and container unloading.', dur: '5–15 days' },
+      { icon: 'gear', t: 'Installation & start-up', d: 'Unpacking, positioning, leveling, alignment, utility hook-ups with partners and testing.', dur: '3–8 weeks' },
+      { icon: 'check', t: 'Technical handover', d: 'Sign-off records, checklists, reports and project documentation.', dur: '1–3 days' },
+    ];
+
+const mexicoCities = ['Monterrey', 'Querétaro', 'Bajío', 'Guadalajara', 'Puebla', t('Ciudad de México', 'Mexico City')];
+
+const incoterms = es
+  ? [
+      { k: 'FCA', d: 'Cuando desmontamos, embalamos y entregamos la maquinaria al transportista o terminal que designa el cliente, que controla el flete internacional.' },
+      { k: 'DAP', d: 'Recomendado para proyectos llave en mano: la carga llega a la planta de destino y el cliente nacionaliza.' },
+      { k: 'CIP', d: 'Útil para mover herramientas o carga técnica con seguro hasta un punto acordado.' },
+    ]
+  : [
+      { k: 'FCA', d: 'When we dismantle, pack and hand over the machinery to the carrier or terminal named by the client, who controls the international freight.' },
+      { k: 'DAP', d: 'Recommended for turnkey projects: cargo is delivered to the destination plant and the client handles import clearance.' },
+      { k: 'CIP', d: 'Useful for shipping tools or technical cargo insured to an agreed point.' },
+    ];
+
+const faq = es
+  ? [
+      { q: '¿Pueden trasladar una línea de producción de Colombia a México?', a: 'Sí. Podemos asumir la cadena completa: desmontaje e identificación en origen, embalaje de exportación, contenerización, coordinación con el forwarder y el agente aduanero, recepción en destino, montaje y apoyo en la puesta en marcha.' },
+      { q: '¿Quién se encarga de los trámites aduaneros?', a: 'Los trámites los realiza un agente de aduanas habilitado en cada país. AGELVIS EU coordina con él la documentación técnica, el inventario de la carga y las inspecciones, para que la maquinaria no se retrase en puerto.' },
+      { q: '¿El personal viaja desde Colombia?', a: `Sí. Movilizamos cuadrillas especializadas de hasta ${site.stats.crewSize} técnicos (ingenieros, mecánicos montadores, riggers, eléctricos, electrónicos y soldadores) y las complementamos con personal local en destino cuando el proyecto lo requiere.` },
+      { q: '¿Qué Incoterm se usa para trasladar maquinaria?', a: 'Los Incoterms aplican a la carga, no al servicio técnico. Para proyectos llave en mano solemos recomendar DAP, y FCA cuando el cliente contrata directamente el flete internacional. Se define en cada contrato.' },
+      { q: '¿Cómo se protege la maquinaria en el tránsito marítimo?', a: 'Con embalaje según el viaje: guacales a la medida, barreras contra humedad, protección anticorrosiva, fijación dentro del contenedor y registro fotográfico antes del cierre.' },
+      { q: '¿Atienden proyectos en otros países?', a: 'Sí. Además de México, tenemos experiencia en Ecuador, Panamá, Bulgaria y Ucrania. Evaluamos proyectos en cualquier país según alcance, requisitos migratorios y logísticos, y recursos necesarios.' },
+    ]
+  : [
+      { q: 'Can you move a production line from one country to another?', a: 'Yes. We can take on the full chain: dismantling and tagging at origin, export packing, container stuffing, coordination with the freight forwarder and customs broker, receiving at destination, installation and start-up support.' },
+      { q: 'Who handles customs?', a: 'A licensed customs broker in each country files the paperwork. AGELVIS EU coordinates technical documentation, cargo inventory and inspections with the broker so the machinery is not held up in port.' },
+      { q: 'Does your crew travel from Colombia?', a: `Yes. We deploy specialized crews of up to ${site.stats.crewSize} technicians (engineers, millwrights, riggers, electricians, electronics technicians and welders) and add local labor at destination when needed.` },
+      { q: 'Which Incoterm should be used to move machinery?', a: 'Incoterms apply to the cargo, not to the technical service. For turnkey projects we usually recommend DAP, and FCA when the client books the international freight directly. It is defined in each contract.' },
+      { q: 'How is machinery protected during ocean transit?', a: 'With packing designed for the trip: custom crates, moisture barriers, anti-corrosion protection, securing inside the container and photo records before sealing.' },
+      { q: 'Do you work in other countries?', a: 'Yes. Besides Mexico, we have experience in Ecuador, Panama, Bulgaria and Ukraine. We assess projects in any country based on scope, immigration and logistics requirements, and resources.' },
+    ];
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: t('Relocalización internacional de plantas y traslado de maquinaria industrial', 'International plant relocation and industrial machinery transfer'),
+  serviceType: t('Relocalización internacional de maquinaria', 'International machinery relocation'),
+  provider: { '@id': `${Astro.site}#empresa` },
+  areaServed: [
+    ...['Colombia', ...site.internationalExperienceEn].map((name) => ({ '@type': 'Country', name })),
+    { '@type': 'Place', name: 'Latin America' },
+    { '@type': 'Place', name: 'Worldwide' },
+  ],
+};
+
+const contactHref = es ? '/contacto' : '/en/#contact';
+const waMsg = es
+  ? 'Hola AGELVIS EU, tengo un proyecto internacional de traslado o montaje de maquinaria y quisiera una evaluación.'
+  : 'Hello AGELVIS EU, we have an international machinery relocation or installation project and would like an assessment.';
+---
+<Base
+  lang={lang}
+  title={t(
+    'Traslado internacional de maquinaria y relocalización de plantas | AGELVIS EU',
+    'International machinery relocation & plant transfer services | AGELVIS EU',
+  )}
+  description={t(
+    'Desmontaje en origen, embalaje de exportación, logística coordinada y montaje en destino. Proyectos de relocalización de plantas y maquinaria industrial en México, Latinoamérica y el mundo.',
+    'Dismantling at origin, export packing, coordinated logistics and installation at destination. Plant and machinery relocation projects in Mexico, Latin America and worldwide, by a Colombian industrial contractor.',
+  )}
+  image={hero}
+  alternate={es ? { lang: 'en', href: '/en/international' } : { lang: 'es', href: '/proyectos-internacionales' }}
+  jsonLd={[ld]}
+>
+  <PageHero
+    lang={lang}
+    title={t('Traslado internacional de maquinaria y relocalización de plantas', 'International machinery relocation and plant transfers')}
+    eyebrow={t('Proyectos internacionales', 'International projects')}
+    lead={t(
+      'Desmontamos en origen e instalamos en destino con el mismo equipo y los mismos registros técnicos. Colombia, México, Latinoamérica y otros mercados.',
+      'We dismantle at origin and install at destination with the same crew and the same technical records. Colombia, Mexico, Latin America and beyond.',
+    )}
+    image={hero}
+    imageAlt={t('Izaje de tanque industrial con grúa para cargue en cama baja', 'Crane lifting an industrial tank onto a lowboy trailer')}
+    breadcrumbs={[{ label: t('Proyectos internacionales', 'International projects') }]}
+  >
+    <div class="btn-row hero-ctas">
+      <a href={contactHref} class="btn btn--primary" data-track="cta_click" data-track-location="internacional-hero">{t('Evaluar mi proyecto', 'Assess my project')} <Icon name="arrow" /></a>
+      <a href={whatsappUrl(waMsg)} target="_blank" rel="noopener" class="btn btn--ghost" data-track="whatsapp_click" data-track-location="internacional-hero"><Icon name="whatsapp" /> WhatsApp</a>
+    </div>
+  </PageHero>
+
+  <section class="stats container" aria-label={t('Capacidades', 'Capabilities')}>
+    {stats.map((s, i) => (
+      <div class="stat" data-reveal style={`--i:${i}`}><strong>{s.n}</strong><span>{s.l}</span></div>
+    ))}
+  </section>
+
+  <section class="section">
+    <div class="container two">
+      <div class="prose" data-reveal>
+        <p class="eyebrow">{t('Un solo responsable', 'One accountable contractor')}</p>
+        <h2>{t('De la planta de origen a la planta de destino', 'From the origin plant to the destination plant')}</h2>
+        {es ? (
+          <>
+            <p>Trasladar una línea a otro país implica conservar la información técnica de cada máquina, marcar cada pieza, proteger la carga durante el viaje y tener el sitio de destino listo para recibirla.</p>
+            <p>AGELVIS EU integra esas etapas. El mismo equipo que desmonta y embala la maquinaria es el que la recibe, la posiciona y la deja lista para operar. La logística aduanera y el flete internacional se ejecutan con agentes de aduana y operadores logísticos especializados, coordinados por nosotros.</p>
+            <p>Hemos intervenido equipos de alto valor para empresas multinacionales de empaques, consumo masivo, papel, salud y artes gráficas, donde cada día de planta detenida cuenta.</p>
+          </>
+        ) : (
+          <>
+            <p>Moving a line to another country means keeping the technical records of every machine, tagging every part, protecting the cargo during the voyage and having the destination site ready to receive it.</p>
+            <p>AGELVIS EU integrates those stages. The same crew that dismantles and packs the machinery receives it, positions it and leaves it ready to run. Customs and international freight are handled by licensed customs brokers and specialized forwarders, coordinated by us.</p>
+            <p>We have handled high-value equipment for multinational companies in packaging, consumer goods, paper, healthcare and printing, where every day of downtime counts.</p>
+          </>
+        )}
+      </div>
+      <div class="pair" data-reveal style="--i:1">
+        <Image src={guacal} alt={t('Fabricación de guacal de madera a la medida para exportación', 'Building a custom wooden export crate')} widths={[360, 600]} sizes="(max-width: 860px) 50vw, 300px" />
+        <Image src={contenedor} alt={t('Cargue de guacal en contenedor con montacargas', 'Loading a crate into a container with a forklift')} widths={[360, 600]} sizes="(max-width: 860px) 50vw, 300px" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark panel">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">{t('Cadena de un proyecto internacional', 'International project chain')}</p>
+        <h2>{t('Nueve etapas, un cronograma', 'Nine stages, one schedule')}</h2>
+        <p class="lead">{t('Tiempos de referencia para un traslado Colombia–México. El cronograma real se define en la propuesta técnica.', 'Reference durations for a Colombia–Mexico transfer. The actual schedule is defined in the technical proposal.')}</p>
+      </div>
+      <ol class="chain">
+        {cadena.map((c, i) => (
+          <li data-reveal style={`--i:${i % 3}`}>
+            <div class="top"><span class="icon-tile"><Icon name={c.icon} /></span><span class="n">{String(i + 1).padStart(2, '0')}</span></div>
+            <h3>{c.t}</h3>
+            <p>{c.d}</p>
+            <span class="dur"><Icon name="clock" /> {c.dur}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two">
+      <Image src={camaBaja} alt={t('Maquinaria cubierta con lona sobre cama baja para transporte a puerto', 'Tarped machinery on a lowboy trailer heading to port')} widths={[480, 720, 1080]} sizes="(max-width: 860px) 100vw, 520px" class="img" data-reveal />
+      <div data-reveal style="--i:1">
+        <p class="eyebrow">{t('Mercado prioritario', 'Priority market')}</p>
+        <h2>{t('México y el nearshoring', 'Mexico and nearshoring')}</h2>
+        <p>{t(
+          'La relocalización de plantas hacia México por su integración con Norteamérica está generando traslados de líneas, ampliaciones y nuevas instalaciones. AGELVIS EU tiene experiencia previa en el país, idioma común y una ruta marítima directa desde los puertos colombianos hacia Manzanillo, Veracruz y Altamira.',
+          'Nearshoring to Mexico is driving line transfers, plant expansions and new installations. AGELVIS EU has prior project experience in the country, works in Spanish and English, and ships along direct ocean routes from Colombian ports to Manzanillo, Veracruz and Altamira.',
+        )}</p>
+        <p class="cities-label">{t('Polos industriales que atendemos:', 'Industrial hubs we serve:')}</p>
+        <ul class="chips">{mexicoCities.map((c) => <li><Icon name="pin" /> {c}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container two">
+      <div data-reveal>
+        <p class="eyebrow">{t('Experiencia', 'Track record')}</p>
+        <h2>{t('Proyectos dentro y fuera de Colombia', 'Projects in Colombia and abroad')}</h2>
+        <p>{t(
+          'Desde nuestra base en Palmira, Valle del Cauca, hemos ejecutado o acompañado proyectos en Latinoamérica y Europa. Cada oportunidad internacional se evalúa según alcance, requisitos migratorios y logísticos, y recursos necesarios.',
+          'From our base in Palmira, Colombia, we have executed or supported projects in Latin America and Europe. Each international opportunity is assessed by scope, immigration and logistics requirements, and resources.',
+        )}</p>
+        <ul class="chips">
+          <li class="home"><Icon name="pin" /> Colombia</li>
+          {countries.map((c) => <li><Icon name="globe" /> {c}</li>)}
+        </ul>
+      </div>
+      <div data-reveal style="--i:1">
+        <p class="eyebrow">Incoterms</p>
+        <h2>{t('¿Qué Incoterm usar para trasladar maquinaria?', 'Which Incoterm for a machinery transfer?')}</h2>
+        <p>{t(
+          'Los Incoterms regulan la entrega y el riesgo de la carga, no el servicio técnico de desmontaje o montaje. En nuestros proyectos se usan así:',
+          'Incoterms govern delivery and risk of the cargo, not the technical dismantling or installation service. In our projects they are used like this:',
+        )}</p>
+        <dl class="inco">
+          {incoterms.map((i) => <div><dt>{i.k}</dt><dd>{i.d}</dd></div>)}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two">
+      <div data-reveal>
+        <p class="eyebrow">{t('Protección en tránsito', 'Protection in transit')}</p>
+        <h2>{t('Embalaje pensado para el viaje', 'Packing designed for the voyage')}</h2>
+        <ul class="check-list">
+          {(es
+            ? ['Guacales, bases y estructuras de madera a la medida', 'Barreras contra humedad y protección anticorrosiva', 'Fijación con cinchas y bloqueos dentro del contenedor', 'Registro fotográfico e inventario por bulto', 'Supervisión del cargue y de las inspecciones en puerto']
+            : ['Custom wooden crates, skids and frames', 'Moisture barriers and anti-corrosion protection', 'Strapping and blocking inside the container', 'Photo records and per-package inventory', 'Supervision of loading and port inspections']
+          ).map((x) => <li>{x}</li>)}
+        </ul>
+        <p class="more"><a href={es ? '/servicios/embalaje-desembalaje-industrial' : '/en/services/industrial-export-packing'} class="btn btn--outline">{t('Ver embalaje industrial', 'See export packing')} <Icon name="arrow" /></a></p>
+      </div>
+      <Image src={film} alt={t('Equipo industrial embalado con film y asegurado con cinchas', 'Industrial equipment wrapped in film and strapped')} widths={[480, 720, 1080]} sizes="(max-width: 860px) 100vw, 520px" class="img" data-reveal style="--i:1" />
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <Faq items={faq} title={t('Preguntas sobre proyectos internacionales', 'International project FAQ')} />
+    </div>
+  </section>
+
+  <CtaBand
+    lang={lang}
+    title={t('¿Va a trasladar una línea o una planta a otro país?', 'Moving a line or a plant to another country?')}
+    text={t('Cuéntenos origen, destino y qué equipos se mueven. Le respondemos con una primera evaluación técnica.', 'Tell us origin, destination and which equipment is moving. We reply with a first technical assessment.')}
+  />
+</Base>
+
+<style>
+  .hero-ctas { margin-top: 28px; }
+  .stats { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: -48px; }
+  .stat { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 22px; box-shadow: var(--shadow); }
+  .stat strong { display: block; font-family: var(--font-display); font-size: 2.4rem; line-height: 1; color: var(--brand-blue); margin-bottom: 6px; }
+  .stat span { color: var(--ink-soft); font-size: 0.95rem; }
+  .two { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .pair img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 20px; box-shadow: var(--shadow); }
+  .pair img:last-child { margin-top: 40px; }
+  .img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+  .chain { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .chain li { display: flex; flex-direction: column; padding: 24px; border-radius: 20px; background: rgb(255 255 255 / 0.05); border: 1px solid rgb(255 255 255 / 0.1); }
+  .chain .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .chain .n { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: rgb(255 255 255 / 0.25); }
+  .chain h3 { font-size: 1.3rem; margin-bottom: 6px; }
+  .chain p { color: #bdbbd6; margin: 0 0 14px; flex: 1; font-size: 0.97rem; }
+  .dur { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font-size: 0.85rem; font-weight: 600; color: var(--brand-amber); background: rgb(255 255 255 / 0.06); border-radius: 999px; padding: 4px 12px 4px 8px; }
+  .dur :global(svg) { width: 16px; height: 16px; }
+  .cities-label { font-weight: 600; margin: 20px 0 10px; }
+  .chips { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .chips li { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--line); padding: 8px 16px 8px 12px; border-radius: 999px; font-weight: 600; }
+  .chips li :global(svg) { width: 18px; height: 18px; color: var(--brand-orange); }
+  .chips li.home { background: var(--grad-blue); border-color: var(--brand-blue); color: #fff; }
+  .chips li.home :global(svg) { color: #fff; }
+  .inco { margin: 20px 0 0; display: grid; gap: 12px; }
+  .inco div { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+  .inco dt { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; color: var(--brand-blue); }
+  .inco dd { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
+  .more { margin-top: 24px; }
+  @media (max-width: 960px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .two { grid-template-columns: 1fr; }
+    .chain { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .chain { grid-template-columns: 1fr; }
+    .stats { margin-top: -32px; }
+  }
+</style>
