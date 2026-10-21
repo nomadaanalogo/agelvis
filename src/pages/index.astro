@@ -12,7 +12,7 @@ import { site, whatsappUrl } from '../data/site';
 import { sectores, faqGeneral, clientes } from '../data/contenido';
 import { getServicios, getProyectos } from '../lib/colecciones';
 
-import heroImg from '../assets/fotos/izaje-maquina-ingreso-nave-industrial.webp';
+import heroImg from '../assets/fotos/izaje-tanque-industrial-grua.webp';
 import oemImg from '../assets/fotos/linea-gabler-instalada.webp';
 import intlImg from '../assets/fotos/transporte-maquinaria-cama-baja.webp';
 
@@ -49,7 +49,7 @@ const oemPuntos = [
 >
   <!-- HERO -->
   <section class="hero panel">
-    <Image src={heroImg} alt="Izaje de maquinaria industrial embalada hacia el interior de una nave, ejecutado por AGELVIS EU" class="hero-bg" widths={[768, 1280, 1920, 2400]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <Image src={heroImg} alt="Izaje de tanque industrial con grúa telescópica ejecutado por AGELVIS EU" class="hero-bg" widths={[768, 1280, 1920, 2400]} sizes="100vw" loading="eager" fetchpriority="high" />
     <div class="hero-glow" aria-hidden="true"></div>
     <div class="container hero-inner on-dark">
       <div class="hero-copy">
@@ -267,8 +267,8 @@ const oemPuntos = [
     inset: 0;
     z-index: -1;
     background:
-      linear-gradient(100deg, rgb(12 10 38 / 0.94) 0%, rgb(18 12 64 / 0.78) 45%, rgb(36 18 143 / 0.3) 100%),
-      linear-gradient(0deg, rgb(12 10 38 / 0.6), transparent 40%);
+      linear-gradient(100deg, rgb(12 10 38 / 0.92) 0%, rgb(18 12 64 / 0.72) 38%, rgb(18 12 64 / 0.12) 72%, transparent 100%),
+      linear-gradient(0deg, rgb(12 10 38 / 0.45), transparent 30%);
   }
   .hero-glow { position: absolute; left: -10%; bottom: -30%; width: 60%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgb(75 47 214 / 0.45), transparent 65%); z-index: -1; animation: float 12s ease-in-out infinite alternate; }
   .hero-inner { display: grid; grid-template-columns: 1.35fr 0.85fr; gap: 48px; align-items: center; padding-block: clamp(64px, 9vw, 110px) clamp(96px, 10vw, 130px); }
@@ -277,8 +277,8 @@ const oemPuntos = [
   .hero-lead { color: #d6d5ea; font-size: clamp(1.02rem, 1.3vw, 1.15rem); max-width: 54ch; margin-bottom: 30px; }
 
   .hero-card {
-    background: linear-gradient(160deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.05));
-    border: 1px solid rgb(255 255 255 / 0.18);
+    background: rgb(12 10 38 / 0.72);
+    border: 1px solid rgb(255 255 255 / 0.16);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-radius: 24px;
