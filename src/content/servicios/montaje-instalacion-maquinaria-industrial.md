@@ -6,8 +6,8 @@ seoDescription: Montaje e instalación de maquinaria industrial e importada en C
 resumen: Recibimos, posicionamos, nivelamos y montamos maquinaria nueva o importada siguiendo las especificaciones del fabricante.
 icono: gear
 orden: 1
-imagen: ../../assets/fotos/ingreso-maquina-puerta-planta.webp
-imagenAlt: Ingreso de máquina industrial embalada a la planta del cliente con grúa
+imagen: ../../assets/fotos/mantenimiento-planta-industrial.webp
+imagenAlt: Técnico de AGELVIS EU interviniendo una máquina durante su montaje en planta
 incluye:
   - Recepción y descargue de maquinaria en planta
   - Desembalaje e inspección visual de componentes
@@ -16,6 +16,10 @@ incluye:
   - Ensamble mecánico y anclaje según especificaciones
   - Montaje de líneas de producción completas
 galeria:
+  - src: ../../assets/fotos/ingreso-carga-guiada-almacen.webp
+    alt: Técnicos guiando el ingreso de una máquina embalada a la planta
+  - src: ../../assets/fotos/montacargas-maquina-cnc-okuma.webp
+    alt: Montacargas de alta capacidad posicionando un centro de mecanizado CNC
   - src: ../../assets/fotos/desplazamiento-maquina-embalada-planta.webp
     alt: Desplazamiento de máquina nueva embalada hasta su punto de instalación
   - src: ../../assets/fotos/linea-gabler-instalada.webp

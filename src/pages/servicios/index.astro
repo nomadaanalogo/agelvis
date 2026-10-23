@@ -4,7 +4,7 @@ import PageHero from '../../components/PageHero.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import { getServicios } from '../../lib/colecciones';
-import hero from '../../assets/fotos/izaje-chiller-grua.webp';
+import hero from '../../assets/fotos/izaje-chiller-industrial.webp';
 
 const servicios = await getServicios();
 ---
@@ -19,7 +19,7 @@ const servicios = await getServicios();
     eyebrow="Servicios"
     lead="Elija el servicio según su necesidad. Puede contratarlo de forma puntual o como parte de un alcance integral coordinado por AGELVIS EU."
     image={hero}
-    imageAlt="Izaje de chiller industrial con grúa ejecutado por AGELVIS EU"
+    imageAlt="Izaje de chiller industrial con eslingas y grúa ejecutado por AGELVIS EU"
     breadcrumbs={[{ label: 'Servicios' }]}
   />
   <section class="section">

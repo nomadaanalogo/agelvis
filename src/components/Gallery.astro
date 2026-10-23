@@ -1,41 +1,47 @@
 ---
 /** Registro fotográfico de trabajos reales de AGELVIS EU. */
 import { Image } from 'astro:assets';
-import ingresoNave from '../assets/fotos/izaje-maquina-ingreso-nave-industrial.webp';
-import tanque from '../assets/fotos/izaje-tanque-industrial-grua.webp';
-import camaBaja from '../assets/fotos/transporte-maquinaria-cama-baja.webp';
+import pesada from '../assets/fotos/traslado-maquinaria-pesada-camabaja.webp';
+import chiller from '../assets/fotos/izaje-chiller-industrial.webp';
+import guacal from '../assets/fotos/embalaje-guacal-equipo-planta.webp';
+import okuma from '../assets/fotos/montacargas-maquina-cnc-okuma.webp';
+import envuelta from '../assets/fotos/izaje-maquinaria-envuelta.webp';
+import trailer from '../assets/fotos/carga-asegurada-trailer-plataforma.webp';
+import ingreso from '../assets/fotos/ingreso-carga-guiada-almacen.webp';
+import camaBajaBodega from '../assets/fotos/carga-envuelta-cama-baja-bodega.webp';
+import mantenimiento from '../assets/fotos/mantenimiento-planta-industrial.webp';
+import techo from '../assets/fotos/grua-elevando-chiller-techo.webp';
+import patio from '../assets/fotos/maquinaria-montacargas-patio-fabrica.webp';
+import movimiento from '../assets/fotos/movimiento-maquina-envuelta-planta.webp';
+import calle from '../assets/fotos/traslado-carga-asegurada-calle.webp';
+import almacen from '../assets/fotos/maquina-industrial-almacen.webp';
 import prensa from '../assets/fotos/desmontaje-prensa-offset.webp';
-import guacal from '../assets/fotos/fabricacion-guacal-madera.webp';
-import chiller from '../assets/fotos/izaje-chiller-grua.webp';
-import desplazamiento from '../assets/fotos/desplazamiento-maquina-embalada-planta.webp';
-import film from '../assets/fotos/embalaje-maquina-film-bodega.webp';
 import troqueladora from '../assets/fotos/movimiento-troqueladora-montacargas.webp';
-import mezclador from '../assets/fotos/izaje-mezclador-acero-inoxidable.webp';
-import lineaEmbalaje from '../assets/fotos/desmontaje-linea-produccion-embalaje.webp';
 import contenedor from '../assets/fotos/cargue-montacargas-contenedor.webp';
 import tableros from '../assets/fotos/instalacion-tableros-control-planta.webp';
-import traslado from '../assets/fotos/traslado-maquinaria-planchon.webp';
-import protegido from '../assets/fotos/izaje-equipo-protegido-bodega.webp';
 
 interface Props { limit?: number; lang?: 'es' | 'en' }
 const { limit, lang = 'es' } = Astro.props;
 const tagsEn: Record<string, string> = { Rigging: 'Rigging', Traslado: 'Transport', Desmontaje: 'Dismantling', Embalaje: 'Packing', Montaje: 'Installation', Cargue: 'Loading' };
 const fotos = [
-  { src: ingresoNave, alt: 'Izaje de máquina embalada hacia el interior de una nave industrial', tag: 'Rigging' },
-  { src: tanque, alt: 'Izaje de tanque industrial con grúa telescópica para cargue en cama baja', tag: 'Rigging' },
-  { src: camaBaja, alt: 'Maquinaria cubierta con lona sobre cama baja para transporte terrestre', tag: 'Traslado' },
+  { src: pesada, alt: 'Técnicos asegurando maquinaria pesada sobre cama baja para su traslado', tag: 'Traslado' },
+  { src: chiller, alt: 'Izaje de chiller industrial con eslingas y grúa', tag: 'Rigging' },
+  { src: guacal, alt: 'Cierre de guacal de madera a la medida alrededor de un equipo', tag: 'Embalaje' },
+  { src: okuma, alt: 'Montacargas de alta capacidad levantando un centro de mecanizado CNC', tag: 'Traslado' },
+  { src: envuelta, alt: 'Izaje de maquinaria envuelta hacia el interior de una nave industrial', tag: 'Rigging' },
+  { src: trailer, alt: 'Carga industrial cubierta y asegurada con cinchas en tráiler de plataforma', tag: 'Traslado' },
+  { src: ingreso, alt: 'Técnicos guiando el ingreso de una máquina embalada a la bodega', tag: 'Montaje' },
+  { src: camaBajaBodega, alt: 'Equipo envuelto en film sobre cama baja dentro de bodega', tag: 'Embalaje' },
+  { src: mantenimiento, alt: 'Técnico interviniendo maquinaria en planta industrial', tag: 'Montaje' },
+  { src: techo, alt: 'Grúa elevando un chiller hacia la cubierta de un edificio industrial', tag: 'Rigging' },
+  { src: patio, alt: 'Máquina industrial cargada sobre camión con apoyo de montacargas', tag: 'Cargue' },
+  { src: movimiento, alt: 'Desplazamiento de máquina embalada dentro de una planta', tag: 'Montaje' },
+  { src: calle, alt: 'Carga industrial asegurada sobre vehículo de plataforma', tag: 'Traslado' },
+  { src: almacen, alt: 'Máquina industrial posicionada en planta de manufactura', tag: 'Montaje' },
   { src: prensa, alt: 'Desmontaje de prensa offset en planta de artes gráficas', tag: 'Desmontaje' },
-  { src: guacal, alt: 'Fabricación de guacal de madera a la medida para exportación', tag: 'Embalaje' },
-  { src: chiller, alt: 'Izaje de chiller industrial con grúa', tag: 'Rigging' },
-  { src: desplazamiento, alt: 'Desplazamiento de máquina embalada hasta su punto de instalación', tag: 'Montaje' },
-  { src: film, alt: 'Equipo industrial embalado con film y asegurado con cinchas', tag: 'Embalaje' },
   { src: troqueladora, alt: 'Movimiento de troqueladora con montacargas de alta capacidad', tag: 'Traslado' },
-  { src: mezclador, alt: 'Izaje de mezclador de acero inoxidable en patio de planta', tag: 'Rigging' },
-  { src: lineaEmbalaje, alt: 'Desmontaje y protección de una línea de producción', tag: 'Desmontaje' },
   { src: contenedor, alt: 'Cargue de guacal en contenedor con montacargas', tag: 'Cargue' },
   { src: tableros, alt: 'Tableros de control posicionados en planta para su instalación', tag: 'Montaje' },
-  { src: traslado, alt: 'Traslado de máquina industrial sobre vehículo de carga', tag: 'Traslado' },
-  { src: protegido, alt: 'Izaje de equipo protegido con lona frente a bodega industrial', tag: 'Rigging' },
 ].slice(0, limit);
 ---
 <ul class="gallery">

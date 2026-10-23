@@ -6,8 +6,8 @@ seoDescription: Relocalización integral de plantas y líneas de producción. Pl
 resumen: Coordinamos el traslado integral de plantas y líneas de producción, desde la planeación hasta la reinstalación.
 icono: factory
 orden: 3
-imagen: ../../assets/fotos/linea-maquinaria-pesada.webp
-imagenAlt: Técnicos trabajando junto a una línea de maquinaria pesada durante una relocalización
+imagen: ../../assets/fotos/carga-asegurada-trailer-plataforma.webp
+imagenAlt: Equipos de una planta cubiertos y asegurados con cinchas sobre tráiler de plataforma
 incluye:
   - Diagnóstico de la planta de origen y del sitio de destino
   - Plan de relocalización por etapas y control de riesgos
@@ -16,6 +16,10 @@ incluye:
   - Reinstalación, nivelación e integración de líneas
   - Asistencia en la revisión del POT para la nueva ubicación industrial
 galeria:
+  - src: ../../assets/fotos/traslado-maquinaria-pesada-camabaja.webp
+    alt: Línea de maquinaria pesada asegurada sobre cama baja durante una relocalización
+  - src: ../../assets/fotos/ingreso-carga-guiada-almacen.webp
+    alt: Ingreso de equipo embalado a la nueva planta
   - src: ../../assets/fotos/transporte-maquinaria-cama-baja.webp
     alt: Equipos de una planta relocalizada en cama baja con protección de lona
   - src: ../../assets/fotos/cargue-equipos-tractocamion-plataforma.webp

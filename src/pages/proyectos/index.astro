@@ -5,7 +5,7 @@ import ProjectGrid from '../../components/ProjectGrid.astro';
 import Gallery from '../../components/Gallery.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import { getProyectos } from '../../lib/colecciones';
-import hero from '../../assets/fotos/traslado-maquinaria-planchon.webp';
+import hero from '../../assets/fotos/traslado-carga-asegurada-calle.webp';
 
 const proyectos = await getProyectos();
 
@@ -38,7 +38,7 @@ const videoLd = videos.map((v) => ({
     eyebrow="Proyectos"
     lead="Fotografías de intervenciones reales ejecutadas por nuestro equipo: desmontajes, maniobras, embalajes, traslados y montajes."
     image={hero}
-    imageAlt="Traslado de máquina industrial sobre vehículo de carga"
+    imageAlt="Carga industrial asegurada sobre vehículo de plataforma lista para su traslado"
     breadcrumbs={[{ label: 'Proyectos' }]}
   />
 

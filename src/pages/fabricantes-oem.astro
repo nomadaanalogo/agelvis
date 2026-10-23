@@ -6,8 +6,8 @@ import Icon from '../components/Icon.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
 import type { IconName } from '../data/icons';
-import hero from '../assets/fotos/desplazamiento-maquina-embalada-planta.webp';
-import desembalaje from '../assets/fotos/cargue-contenedor-maquinaria.webp';
+import hero from '../assets/fotos/movimiento-maquina-envuelta-planta.webp';
+import desembalaje from '../assets/fotos/ingreso-carga-guiada-almacen.webp';
 
 const modelo: { icon: IconName; t: string; d: string }[] = [
   { icon: 'package', t: 'Recepción y desembalaje', d: 'Descargue del contenedor, apertura, inspección y registro del estado de los equipos.' },
@@ -52,7 +52,7 @@ const faq = [
         <p>Cuando un fabricante vende un equipo a una planta en Colombia, la instalación local exige personal, herramientas y equipos de elevación disponibles en el sitio, conocimiento de las condiciones de las plantas y documentación para el ingreso.</p>
         <p>AGELVIS EU ejecuta esa etapa para que su técnico de servicio se concentre en la puesta en marcha.</p>
       </div>
-      <Image src={desembalaje} alt="Cargue y descargue de maquinaria en contenedor" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 480px" class="intro-img" />
+      <Image src={desembalaje} alt="Técnicos guiando el ingreso de una máquina embalada a la bodega del cliente" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 480px" class="intro-img" />
     </div>
   </section>
 
@@ -81,7 +81,7 @@ const faq = [
   .model { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .model li { padding: 28px; }
   .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-  .n { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: var(--line); }
+  .n { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: var(--line); }
   .model h3 { margin: 0 0 8px; }
   .model p { color: var(--ink-soft); margin: 0; }
   @media (max-width: 900px) { .intro { grid-template-columns: 1fr; } .model { grid-template-columns: 1fr 1fr; } }

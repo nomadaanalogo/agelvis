@@ -6,8 +6,8 @@ seoDescription: Desmontaje controlado y traslado de maquinaria industrial en Col
 resumen: Desarmamos de forma controlada, identificamos cada componente y coordinamos el traslado hasta su nuevo destino.
 icono: truck
 orden: 2
-imagen: ../../assets/fotos/traslado-maquinaria-planchon.webp
-imagenAlt: Traslado de máquina industrial sobre vehículo de carga con montacargas
+imagen: ../../assets/fotos/maquinaria-montacargas-patio-fabrica.webp
+imagenAlt: Máquina industrial desmontada y cargada sobre camión con apoyo de montacargas
 incluye:
   - Levantamiento técnico e inventario de la maquinaria
   - Identificación y marcación de componentes
@@ -16,6 +16,10 @@ incluye:
   - Cargue, transporte coordinado y descargue
   - Reinstalación en el nuevo sitio según alcance
 galeria:
+  - src: ../../assets/fotos/traslado-carga-asegurada-calle.webp
+    alt: Carga industrial asegurada sobre vehículo de plataforma para su traslado
+  - src: ../../assets/fotos/traslado-maquinaria-pesada-camabaja.webp
+    alt: Técnicos asegurando maquinaria pesada sobre cama baja
   - src: ../../assets/fotos/desmontaje-prensa-offset.webp
     alt: Técnico de AGELVIS EU desmontando una prensa offset en planta
   - src: ../../assets/fotos/desmontaje-linea-produccion-embalaje.webp

@@ -6,8 +6,8 @@ seoDescription: Rigging industrial en Colombia. Planificación de maniobras, mov
 resumen: Planificamos y ejecutamos maniobras de izaje y desplazamiento de equipos pesados o delicados.
 icono: crane
 orden: 5
-imagen: ../../assets/fotos/izaje-tanque-industrial-grua.webp
-imagenAlt: Izaje de tanque industrial con grúa telescópica para cargue en cama baja
+imagen: ../../assets/fotos/izaje-chiller-industrial.webp
+imagenAlt: Izaje de chiller industrial con eslingas y grúa ejecutado por AGELVIS EU
 incluye:
   - Ingeniería y planificación de maniobras
   - Movimiento interno con patines especializados
@@ -16,8 +16,10 @@ incluye:
   - Control de riesgos y aislamiento del área de trabajo
   - Posicionamiento final del equipo
 galeria:
-  - src: ../../assets/fotos/izaje-chiller-grua.webp
-    alt: Izaje de chiller industrial con grúa y control de cargas con vientos
+  - src: ../../assets/fotos/grua-elevando-chiller-techo.webp
+    alt: Grúa telescópica elevando un chiller hacia la cubierta de un edificio
+  - src: ../../assets/fotos/izaje-maquinaria-envuelta.webp
+    alt: Izaje de maquinaria envuelta hacia el interior de una nave industrial
   - src: ../../assets/fotos/izaje-tanque-grua-telescopica.webp
     alt: Grúa telescópica izando un tanque industrial en patio de planta
   - src: ../../assets/fotos/izaje-equipo-protegido-bodega.webp

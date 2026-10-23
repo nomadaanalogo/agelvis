@@ -11,11 +11,11 @@ import Faq from './Faq.astro';
 import CtaBand from './CtaBand.astro';
 import { site, whatsappUrl } from '../data/site';
 import type { IconName } from '../data/icons';
-import hero from '../assets/fotos/linea-maquinaria-pesada.webp';
-import guacal from '../assets/fotos/fabricacion-guacal-madera.webp';
+import hero from '../assets/fotos/traslado-maquinaria-pesada-camabaja.webp';
+import guacal from '../assets/fotos/embalaje-guacal-equipo-planta.webp';
 import contenedor from '../assets/fotos/cargue-montacargas-contenedor.webp';
-import camaBaja from '../assets/fotos/transporte-maquinaria-cama-baja.webp';
-import film from '../assets/fotos/embalaje-maquina-film-bodega.webp';
+import camaBaja from '../assets/fotos/carga-asegurada-trailer-plataforma.webp';
+import film from '../assets/fotos/carga-envuelta-cama-baja-bodega.webp';
 
 interface Props { lang: 'es' | 'en' }
 const { lang } = Astro.props;
@@ -128,7 +128,7 @@ const waMsg = es
       'We dismantle at origin and install at destination with the same crew and the same technical records. Colombia, Mexico, Latin America and beyond.',
     )}
     image={hero}
-    imageAlt={t('Técnicos de AGELVIS EU junto a una línea de maquinaria pesada durante una relocalización', 'AGELVIS EU technicians next to a heavy production line during a relocation')}
+    imageAlt={t('Técnicos de AGELVIS EU asegurando maquinaria pesada sobre cama baja durante una relocalización', 'AGELVIS EU technicians securing heavy machinery on a lowboy trailer during a relocation')}
     breadcrumbs={[{ label: t('Proyectos internacionales', 'International projects') }]}
   >
     <div class="btn-row hero-ctas">
@@ -267,7 +267,7 @@ const waMsg = es
   .hero-ctas { margin-top: 28px; }
   .stats { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: -48px; }
   .stat { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 22px; box-shadow: var(--shadow); }
-  .stat strong { display: block; font-family: var(--font-display); font-size: 2.4rem; line-height: 1; color: var(--brand-blue); margin-bottom: 6px; }
+  .stat strong { display: block; font-family: var(--font-display); font-size: 2rem; line-height: 1; color: var(--brand-blue); margin-bottom: 6px; }
   .stat span { color: var(--ink-soft); font-size: 0.95rem; }
   .two { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
   .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -277,8 +277,8 @@ const waMsg = es
   .chain { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .chain li { display: flex; flex-direction: column; padding: 24px; border-radius: 20px; background: rgb(255 255 255 / 0.05); border: 1px solid rgb(255 255 255 / 0.1); }
   .chain .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-  .chain .n { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: rgb(255 255 255 / 0.25); }
-  .chain h3 { font-size: 1.3rem; margin-bottom: 6px; }
+  .chain .n { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: rgb(255 255 255 / 0.25); }
+  .chain h3 { font-size: 1.1rem; margin-bottom: 6px; }
   .chain p { color: #bdbbd6; margin: 0 0 14px; flex: 1; font-size: 0.97rem; }
   .dur { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font-size: 0.85rem; font-weight: 600; color: var(--brand-amber); background: rgb(255 255 255 / 0.06); border-radius: 999px; padding: 4px 12px 4px 8px; }
   .dur :global(svg) { width: 16px; height: 16px; }
@@ -290,7 +290,7 @@ const waMsg = es
   .chips li.home :global(svg) { color: #fff; }
   .inco { margin: 20px 0 0; display: grid; gap: 12px; }
   .inco div { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
-  .inco dt { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; color: var(--brand-blue); }
+  .inco dt { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; color: var(--brand-blue); }
   .inco dd { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
   .more { margin-top: 24px; }
   @media (max-width: 960px) {

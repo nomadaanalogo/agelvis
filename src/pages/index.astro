@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import ServiceCard from '../components/ServiceCard.astro';
+import ServiceAccordion from '../components/ServiceAccordion.astro';
 import Metodologia from '../components/Metodologia.astro';
 import Faq from '../components/Faq.astro';
 import ContactForm from '../components/ContactForm.astro';
@@ -12,9 +12,10 @@ import { site, whatsappUrl } from '../data/site';
 import { sectores, faqGeneral, clientes } from '../data/contenido';
 import { getServicios, getProyectos } from '../lib/colecciones';
 
-import heroImg from '../assets/fotos/izaje-tanque-industrial-grua.webp';
-import oemImg from '../assets/fotos/linea-gabler-instalada.webp';
-import intlImg from '../assets/fotos/transporte-maquinaria-cama-baja.webp';
+import heroImg from '../assets/fotos/traslado-maquinaria-pesada-camabaja.webp';
+import oemImg from '../assets/fotos/montacargas-maquina-cnc-okuma.webp';
+import intlImg from '../assets/fotos/carga-asegurada-trailer-plataforma.webp';
+import splitImg from '../assets/fotos/izaje-maquinaria-envuelta.webp';
 
 const servicios = await getServicios();
 const proyectos = (await getProyectos()).filter((p) => p.data.destacado).slice(0, 3);
@@ -49,12 +50,12 @@ const oemPuntos = [
 >
   <!-- HERO -->
   <section class="hero panel">
-    <Image src={heroImg} alt="Izaje de tanque industrial con grúa telescópica ejecutado por AGELVIS EU" class="hero-bg" widths={[768, 1280, 1920, 2400]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <Image src={heroImg} alt="Técnicos de AGELVIS EU asegurando maquinaria pesada sobre cama baja para su traslado" class="hero-bg" widths={[768, 1280, 1920, 2400]} sizes="100vw" loading="eager" fetchpriority="high" />
     <div class="hero-glow" aria-hidden="true"></div>
     <div class="container hero-inner on-dark">
       <div class="hero-copy">
         <p class="eyebrow">Ingeniería y montajes industriales · Colombia y el mundo</p>
-        <h1>Montaje, traslado y relocalización de <span class="grad-text">maquinaria industrial</span></h1>
+        <h1>Montaje, traslado y relocalización de <span class="mark">maquinaria industrial</span></h1>
         <p class="hero-lead">Acompañamos proyectos de instalación, desmontaje, movimiento y relocalización de equipos y plantas industriales en Colombia y otros mercados, con planificación técnica y personal especializado.</p>
         <div class="btn-row">
           <a href="/contacto" class="btn btn--primary" data-track="cta_click" data-track-location="hero">Solicitar evaluación técnica <Icon name="arrow" /></a>
@@ -88,28 +89,28 @@ const oemPuntos = [
   <Marquee />
 
   <!-- SERVICIOS -->
-  <section class="section">
+  <section class="section section--alt services-band">
     <div class="container">
       <div class="section-head split" data-reveal>
         <div>
           <p class="eyebrow">Soluciones</p>
-          <h2>Seis soluciones para intervenir su maquinaria</h2>
+          <h2>Seis soluciones para <span class="mark">intervenir su maquinaria</span></h2>
         </div>
         <p class="lead">Contrate un servicio puntual o un alcance integral. Cada proyecto se define después de una evaluación técnica.</p>
       </div>
-      <div class="cards">
-        {servicios.map((s, i) => <ServiceCard servicio={s} index={i} />)}
-      </div>
+      <div data-reveal><ServiceAccordion servicios={servicios} /></div>
+      <p class="more-link"><a href="/servicios" class="btn btn--outline">Ver todos los servicios <Icon name="arrow" /></a></p>
     </div>
   </section>
 
   <!-- DIFERENCIADOR -->
-  <section class="section section--alt">
+  <section class="section">
     <div class="container diff">
       <div class="diff-media" data-reveal>
-        <video autoplay muted loop playsinline preload="none" poster="/video/izaje-grua.webp" aria-label="Video de una maniobra de izaje con grúa ejecutada por AGELVIS EU">
-          <source src="/video/izaje-grua.mp4" type="video/mp4" />
-        </video>
+        <div class="split-photo">
+          <div class="half"><Image src={splitImg} alt="Izaje de maquinaria envuelta hacia el interior de una nave industrial, ejecutado por AGELVIS EU" widths={[480, 800]} sizes="(max-width: 1000px) 100vw, 520px" /></div>
+          <div class="half" aria-hidden="true"><Image src={splitImg} alt="" widths={[480, 800]} sizes="(max-width: 1000px) 100vw, 520px" /></div>
+        </div>
         <div class="badge">
           <span class="icon-tile icon-tile--orange"><Icon name="crane" /></span>
           <div><strong>Ingeniería de maniobra</strong><span>Planeación, ejecución y control</span></div>
@@ -117,7 +118,7 @@ const oemPuntos = [
       </div>
       <div data-reveal style="--i:1">
         <p class="eyebrow">Por qué AGELVIS</p>
-        <h2>Planificamos y ejecutamos <span class="accent">cada maniobra</span></h2>
+        <h2>Planificamos y ejecutamos <span class="mark">cada maniobra</span></h2>
         <p class="lead">Analizamos la carga, la ruta y las condiciones de la planta; definimos la técnica y coordinamos personal, equipos y aliados según lo que exige cada proyecto.</p>
         <div class="diff-grid">
           {diferenciales.map((d) => (
@@ -131,8 +132,19 @@ const oemPuntos = [
     </div>
   </section>
 
+  <!-- DECLARACIÓN -->
+  <section class="statement-wrap">
+    <div class="container">
+      <div class="statement" data-reveal>
+        <p>Ejecutamos cada proyecto con <strong>altos estándares de seguridad</strong>, personal calificado y los equipos adecuados para cada maniobra: montajes mecánicos, movilización de carga sobre patines y gatos hidráulicos, e izajes en espacios reducidos.</p>
+        <span class="divider" aria-hidden="true"></span>
+        <p class="big">Planificación, seguridad y <span class="mark">precisión.</span></p>
+      </div>
+    </div>
+  </section>
+
   <!-- SECTORES -->
-  <section class="section">
+  <section class="section section--warm">
     <div class="container">
       <div class="section-head center" data-reveal>
         <p class="eyebrow">Industrias atendidas</p>
@@ -155,7 +167,7 @@ const oemPuntos = [
     <div class="container">
       <div class="section-head" data-reveal>
         <p class="eyebrow">Cómo trabajamos</p>
-        <h2>Metodología <span class="grad-text">AGELVIS</span></h2>
+        <h2>Metodología <span class="mark">AGELVIS</span></h2>
         <p class="lead">Una secuencia clara para que el cliente sepa qué se hará, cuándo y con qué recursos.</p>
       </div>
       <Metodologia />
@@ -177,14 +189,14 @@ const oemPuntos = [
   </section>
 
   <!-- INTERNACIONAL -->
-  <section class="section section--tight-top">
+  <section class="section section--lilac">
     <div class="container intl">
       <div class="intl-media" data-reveal>
-        <Image src={intlImg} alt="Maquinaria cubierta con lona sobre cama baja rumbo a puerto para exportación" widths={[480, 720, 1080]} sizes="(max-width: 1000px) 100vw, 540px" />
+        <Image src={intlImg} alt="Técnico de AGELVIS EU asegurando con cinchas carga industrial cubierta sobre tráiler de plataforma" widths={[480, 720, 1080]} sizes="(max-width: 1000px) 100vw, 540px" />
       </div>
       <div data-reveal style="--i:1">
         <p class="eyebrow">Proyectos internacionales</p>
-        <h2>Desmontamos en origen, <span class="accent">instalamos en destino</span></h2>
+        <h2>Desmontamos en origen, <span class="mark">instalamos en destino</span></h2>
         <p>Trasladamos líneas y plantas completas entre países: desmontaje e identificación, embalaje de exportación, contenerización, coordinación con agentes de aduana y forwarders, recepción, montaje y puesta en marcha. Un mismo equipo y los mismos registros técnicos de principio a fin.</p>
         <ul class="intl-chips">
           <li class="home"><Icon name="pin" /> Colombia</li>
@@ -196,7 +208,7 @@ const oemPuntos = [
   </section>
 
   <!-- OEM -->
-  <section class="section section--alt">
+  <section class="section">
     <div class="container oem">
       <div data-reveal>
         <p class="eyebrow">Fabricantes internacionales · OEM</p>
@@ -211,7 +223,7 @@ const oemPuntos = [
         </div>
       </div>
       <div class="oem-media" data-reveal style="--i:1">
-        <Image src={oemImg} alt="Línea de producción importada instalada en planta" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 480px" />
+        <Image src={oemImg} alt="Montacargas de alta capacidad trasladando un centro de mecanizado CNC importado" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 480px" />
         <div class="badge badge--top">
           <span class="icon-tile icon-tile--solid"><Icon name="handshake" /></span>
           <div><strong>Subcontratación local</strong><span>Cobertura Colombia y LATAM</span></div>
@@ -230,14 +242,14 @@ const oemPuntos = [
   )}
 
   <!-- FAQ -->
-  <section class="section">
+  <section class="section section--alt">
     <div class="container">
       <Faq items={faqGeneral.slice(0, 6)} />
     </div>
   </section>
 
   <!-- CONTACTO -->
-  <section class="section section--alt" id="contacto">
+  <section class="section section--warm" id="contacto">
     <div class="container contact">
       <div data-reveal>
         <p class="eyebrow">Contacto</p>
@@ -273,7 +285,7 @@ const oemPuntos = [
   .hero-glow { position: absolute; left: -10%; bottom: -30%; width: 60%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgb(75 47 214 / 0.45), transparent 65%); z-index: -1; animation: float 12s ease-in-out infinite alternate; }
   .hero-inner { display: grid; grid-template-columns: 1.35fr 0.85fr; gap: 48px; align-items: center; padding-block: clamp(64px, 9vw, 110px) clamp(96px, 10vw, 130px); }
   .hero-copy { animation: rise 1s var(--ease) both; }
-  .hero h1 { color: #fff; max-width: 17ch; font-size: clamp(2.2rem, 4.2vw, 3.4rem); }
+  .hero h1 { color: #fff; max-width: 17ch; font-size: clamp(1.9rem, 3.4vw, 2.75rem); }
   .hero-lead { color: #d6d5ea; font-size: clamp(1.02rem, 1.3vw, 1.15rem); max-width: 54ch; margin-bottom: 30px; }
 
   .hero-card {
@@ -311,19 +323,36 @@ const oemPuntos = [
     padding: 22px; border-radius: 20px; background: #fff;
     border: 1px solid var(--line); box-shadow: var(--shadow);
   }
-  .proof strong { display: block; font-family: var(--font-display); font-size: 1.45rem; line-height: 1.1; color: var(--ink); }
+  .proof strong { display: block; font-family: var(--font-display); font-size: 1.18rem; line-height: 1.2; color: var(--ink); }
   .proof span:not(.icon-tile) { color: var(--ink-soft); font-size: 0.95rem; }
 
   .split { max-width: none; display: flex; flex-wrap: wrap; gap: 20px 48px; justify-content: space-between; align-items: end; }
   .split h2 { margin-bottom: 0; max-width: 18ch; }
   .split .lead { margin: 0; max-width: 44ch; }
 
-  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .services-band .more-link { margin-top: 28px; }
 
   /* DIFERENCIADOR */
   .diff { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
   .diff-media { position: relative; }
-  .diff-media video { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); background: var(--navy-900); box-shadow: var(--shadow); }
+  /* Foto partida en dos mitades (idea tomada de la referencia) */
+  .split-photo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; aspect-ratio: 4 / 4.4; }
+  .half { position: relative; overflow: hidden; border-radius: 22px; box-shadow: var(--shadow); }
+  .half :global(img) { position: absolute; top: 0; height: 100%; width: calc(200% + 10px); max-width: none; object-fit: cover; }
+  .half:first-child :global(img) { left: 0; }
+  .half:last-child { translate: 0 28px; }
+  .half:last-child :global(img) { right: 0; }
+
+  /* Banda de declaración */
+  .statement-wrap { padding-block: 0 var(--section); }
+  .statement {
+    display: grid; grid-template-columns: 1fr auto 1.1fr; gap: clamp(24px, 4vw, 56px); align-items: center;
+    padding: clamp(32px, 5vw, 64px); border-radius: var(--radius-lg); background: var(--bg-gray);
+  }
+  .statement p { margin: 0; color: var(--ink-soft); }
+  .statement strong { color: var(--ink); }
+  .statement .divider { width: 1px; align-self: stretch; background: rgb(20 18 60 / 0.18); }
+  .statement .big { font-size: clamp(1.8rem, 3.4vw, 2.8rem); font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); text-align: right; }
   .badge {
     position: absolute; right: -16px; bottom: 28px;
     display: flex; align-items: center; gap: 12px;
@@ -340,18 +369,17 @@ const oemPuntos = [
   .diff-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); }
   .diff-item .icon-tile { width: 44px; height: 44px; border-radius: 12px; }
   .diff-item .icon-tile :global(svg) { width: 22px; height: 22px; }
-  .diff-item h3 { font-size: 1.15rem; margin-bottom: 4px; }
+  .diff-item h3 { font-size: 1rem; margin-bottom: 4px; }
   .diff-item p { margin: 0; font-size: 0.93rem; color: var(--ink-soft); line-height: 1.5; }
 
   /* SECTORES */
   .sectors { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .sectors li { display: flex; gap: 16px; align-items: flex-start; padding: 22px; }
-  .sectors h3 { font-size: 1.25rem; margin-bottom: 4px; }
+  .sectors h3 { font-size: 1.06rem; margin-bottom: 4px; }
   .sectors p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
   .more-link { margin-top: 32px; text-align: center; }
 
   /* INTERNACIONAL */
-  .section--tight-top { padding-top: 0; }
   .intl { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
   .intl-media img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
   .intl-chips { list-style: none; margin: 20px 0 28px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
@@ -369,7 +397,7 @@ const oemPuntos = [
   .oem-media { position: relative; }
   .oem-media img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
 
-  .clients ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 12px 28px; font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; color: var(--ink-soft); }
+  .clients ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 12px 28px; font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; color: var(--ink-soft); }
 
   /* CONTACTO */
   .contact { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
@@ -388,14 +416,16 @@ const oemPuntos = [
   @media (max-width: 1000px) {
     .hero-inner { grid-template-columns: 1fr; }
     .hero-card { max-width: 460px; }
-    .cards { grid-template-columns: 1fr 1fr; }
     .sectors { grid-template-columns: 1fr 1fr; }
     .diff, .oem, .contact, .intl { grid-template-columns: 1fr; }
     .badge { right: 12px; }
     .badge--top { left: 12px; }
   }
   @media (max-width: 680px) {
-    .cards, .sectors, .diff-grid, .oem-list { grid-template-columns: 1fr; }
+    .sectors, .diff-grid, .oem-list { grid-template-columns: 1fr; }
+    .statement { grid-template-columns: 1fr; }
+    .statement .divider { width: 60px; height: 1px; align-self: auto; }
+    .statement .big { text-align: left; }
     .hero-card { display: none; }
     .proof { grid-template-columns: 1fr; margin-top: -40px; }
   }

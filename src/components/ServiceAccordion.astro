@@ -1,0 +1,122 @@
+---
+/**
+ * Tarjetas de servicio expandibles (escritorio): una abierta con foto y texto,
+ * las demás como franjas con el título en vertical. Se abren al pasar el mouse
+ * o con el teclado. En celular se apilan como tarjetas normales.
+ */
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import type { IconName } from '../data/icons';
+import { enServicios } from '../data/en';
+
+interface Props { servicios: CollectionEntry<'servicios'>[]; lang?: 'es' | 'en' }
+const { servicios, lang = 'es' } = Astro.props;
+
+/** Textos según idioma; en inglés salen de src/data/en.ts. */
+const items = servicios.map((s) => {
+  const en = enServicios[s.id];
+  return lang === 'en' && en
+    ? { href: `/en/services/${en.slug}`, title: en.short, summary: en.summary, alt: en.title }
+    : { href: `/servicios/${s.id}`, title: s.data.tituloCorto, summary: s.data.resumen, alt: s.data.imagenAlt };
+});
+const verMas = lang === 'en' ? 'View service' : 'Ver servicio';
+---
+<div class="acc" data-acc>
+  {servicios.map((s, i) => (
+    <a href={items[i].href} class:list={['item', { 'is-active': i === 0 }]} data-acc-item>
+      <Image src={s.data.imagen} alt={items[i].alt} widths={[480, 800, 1100]} sizes="(max-width: 900px) 100vw, 640px" />
+      <span class="shade" aria-hidden="true"></span>
+      <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+      <span class="label" aria-hidden="true">
+        <span class="vt">{items[i].title}</span>
+        <span class="chip"><Icon name={s.data.icono as IconName} /></span>
+      </span>
+      <span class="content">
+        <span class="icon-tile icon-tile--orange"><Icon name={s.data.icono as IconName} /></span>
+        <h3>{items[i].title}</h3>
+        <span class="txt">{items[i].summary}</span>
+        <span class="go">{verMas} <Icon name="arrow" /></span>
+      </span>
+    </a>
+  ))}
+</div>
+
+<style>
+  .acc { display: flex; gap: 12px; height: clamp(440px, 46vw, 540px); }
+  .item {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: 22px;
+    background: var(--navy-900);
+    color: #fff;
+    text-decoration: none;
+    transition: flex-grow 0.7s var(--ease), box-shadow 0.4s;
+  }
+  .item.is-active { flex-grow: 5.2; box-shadow: var(--shadow); }
+  .item :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: scale 1.2s var(--ease), filter 0.6s; filter: grayscale(0.35); }
+  .item.is-active :global(img) { filter: none; scale: 1.03; }
+  .shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(12 10 38 / 0.35), rgb(12 10 38 / 0.8)); transition: background 0.6s; }
+  .item.is-active .shade { background: linear-gradient(180deg, rgb(12 10 38 / 0.05) 30%, rgb(12 10 38 / 0.88) 100%); }
+
+  .num {
+    position: absolute; top: 18px; left: 50%; translate: -50% 0;
+    font-weight: 700; font-size: 0.9rem; letter-spacing: 0.06em; color: var(--brand-amber);
+    transition: left 0.6s var(--ease), translate 0.6s var(--ease), font-size 0.6s;
+  }
+  .item.is-active .num { left: 28px; translate: 0 0; font-size: 1rem; background: rgb(12 10 38 / 0.55); padding: 4px 12px; border-radius: 999px; backdrop-filter: blur(6px); }
+
+  .label {
+    position: absolute; inset: 56px 0 20px 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 16px;
+    transition: opacity 0.3s;
+  }
+  .vt { writing-mode: vertical-rl; rotate: 180deg; white-space: nowrap; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.01em; }
+  .chip { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--grad-orange); color: #1b0f05; }
+  .chip :global(svg) { width: 20px; height: 20px; }
+  .item.is-active .label { opacity: 0; }
+
+  .content {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+    padding: 30px; max-width: 560px;
+    opacity: 0; translate: 0 18px; pointer-events: none;
+    transition: opacity 0.35s, translate 0.35s;
+  }
+  .item.is-active .content { opacity: 1; translate: 0 0; transition: opacity 0.5s 0.25s, translate 0.6s 0.25s var(--ease); }
+  .content h3 { color: #fff; font-size: 1.5rem; margin: 6px 0 0; }
+  .txt { color: #dcdbee; font-size: 0.98rem; line-height: 1.55; }
+  .go {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 6px;
+    padding: 9px 18px; border-radius: 999px; border: 1.5px solid rgb(255 255 255 / 0.5);
+    font-weight: 600; font-size: 0.9rem; transition: background 0.25s, color 0.25s;
+  }
+  .go :global(svg) { width: 17px; height: 17px; }
+  .item:hover .go { background: #fff; color: var(--navy-900); }
+
+  @media (max-width: 900px) {
+    .acc { flex-direction: column; height: auto; }
+    .item, .item.is-active { flex: none; height: auto; min-height: 340px; display: flex; align-items: flex-end; }
+    .item :global(img) { filter: none; }
+    .shade, .item.is-active .shade { background: linear-gradient(180deg, rgb(12 10 38 / 0.05) 25%, rgb(12 10 38 / 0.9) 100%); }
+    .label { display: none; }
+    .num, .item.is-active .num { left: 20px; translate: 0 0; background: rgb(12 10 38 / 0.55); padding: 4px 12px; border-radius: 999px; }
+    .content { position: relative; opacity: 1; translate: 0 0; padding: 72px 22px 22px; }
+    .content h3 { font-size: 1.3rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .item { transition: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-acc]').forEach((acc) => {
+    const items = [...acc.querySelectorAll<HTMLElement>('[data-acc-item]')];
+    const activate = (el: HTMLElement) => items.forEach((it) => it.classList.toggle('is-active', it === el));
+    items.forEach((it) => {
+      it.addEventListener('mouseenter', () => activate(it));
+      it.addEventListener('focus', () => activate(it));
+    });
+  });
+</script>

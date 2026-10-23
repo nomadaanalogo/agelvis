@@ -6,8 +6,8 @@ seoDescription: Embalaje técnico de maquinaria para almacenamiento, transporte 
 resumen: Protegemos maquinaria para almacenamiento, transporte y exportación, y desembalamos equipos importados para su instalación.
 icono: package
 orden: 4
-imagen: ../../assets/fotos/embalaje-maquina-estiba-planta.webp
-imagenAlt: Máquina industrial con embalaje técnico sobre estiba de madera lista para despacho
+imagen: ../../assets/fotos/embalaje-guacal-equipo-planta.webp
+imagenAlt: Equipo de AGELVIS EU cerrando un guacal de madera a la medida alrededor de una máquina
 incluye:
   - Embalaje técnico según destino y tiempo de almacenamiento
   - Guacales y estructuras de madera a la medida
@@ -16,14 +16,16 @@ incluye:
   - Desembalaje, inspección y preparación para instalación
   - Cargue y estiba en contenedor
 galeria:
+  - src: ../../assets/fotos/carga-envuelta-cama-baja-bodega.webp
+    alt: Equipo envuelto en film de protección sobre cama baja
+  - src: ../../assets/fotos/movimiento-maquina-envuelta-planta.webp
+    alt: Máquina embalada desplazada dentro de la planta
   - src: ../../assets/fotos/fabricacion-guacal-madera.webp
     alt: Fabricación de guacal de madera a la medida para exportación de maquinaria
   - src: ../../assets/fotos/embalaje-maquina-film-bodega.webp
     alt: Equipo industrial embalado con film y asegurado con cinchas en bodega
   - src: ../../assets/fotos/maquina-asegurada-estiba-cinchas.webp
     alt: Máquina asegurada con cinchas y bloqueos de madera sobre estiba
-  - src: ../../assets/fotos/embalaje-guacal-exportacion.webp
-    alt: Construcción de guacal de madera para exportación de un equipo industrial
   - src: ../../assets/fotos/embalaje-lona-cargue.webp
     alt: Equipo industrial protegido con lona durante el cargue
   - src: ../../assets/fotos/cargue-montacargas-contenedor.webp

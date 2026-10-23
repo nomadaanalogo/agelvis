@@ -5,7 +5,7 @@ import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
 import { sectores } from '../data/contenido';
 import type { IconName } from '../data/icons';
-import hero from '../assets/fotos/embalaje-maquina-film-bodega.webp';
+import hero from '../assets/fotos/maquina-industrial-almacen.webp';
 
 const segmentos: { icon: IconName; titulo: string; situacion: string; href?: string }[] = [
   { icon: 'factory', titulo: 'Plantas industriales', situacion: 'Expansión, cambio de layout, compra de maquinaria, traslado, cierre o parada técnica.' },
@@ -24,7 +24,7 @@ const segmentos: { icon: IconName; titulo: string; situacion: string; href?: str
     eyebrow="Industrias"
     lead="Intervenimos maquinaria en plantas con exigencias distintas de limpieza, seguridad y continuidad operativa."
     image={hero}
-    imageAlt="Equipo industrial embalado en la bodega de una planta de alimentos"
+    imageAlt="Máquina industrial posicionada en una planta de manufactura"
     breadcrumbs={[{ label: 'Sectores' }]}
   />
   <section class="section">
@@ -67,8 +67,8 @@ const segmentos: { icon: IconName; titulo: string; situacion: string; href?: str
   .sectors { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .sectors li { padding: 28px; }
   .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-  .n { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: var(--line); }
-  .sectors h2 { font-size: 1.5rem; margin-bottom: 6px; }
+  .n { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: var(--line); }
+  .sectors h2 { font-size: 1.22rem; margin-bottom: 6px; }
   .sectors p { color: var(--ink-soft); margin: 0; }
   .segments { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .segments article { display: flex; gap: 18px; padding: 28px; }

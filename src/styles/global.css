@@ -12,8 +12,13 @@
   --navy-800: #14113a;
   --navy-700: #1f1b52;
   --surface: #ffffff;
-  --surface-alt: #f5f4fb;
-  --line: #e4e2ef;
+  --surface-alt: #eef0f6;
+  --line: #e1e3ec;
+
+  /* Fondos de sección: cada uno claramente distinto del blanco */
+  --bg-gray: #eceef4;
+  --bg-warm: #fbf3ea;
+  --bg-lilac: #eeecfa;
 
   --grad-orange: linear-gradient(135deg, #ff9a4d 0%, #fb7a30 55%, #f0601c 100%);
   --grad-blue: linear-gradient(135deg, #4b2fd6 0%, #1800ad 60%, #24128f 100%);
@@ -22,10 +27,10 @@
     radial-gradient(60% 80% at 100% 0%, rgb(251 122 48 / 0.16) 0%, transparent 60%),
     radial-gradient(70% 90% at 0% 100%, rgb(75 47 214 / 0.35) 0%, transparent 60%),
     var(--navy-900);
-  --grad-soft: linear-gradient(180deg, #f7f6fc 0%, #eef0fb 100%);
+  --grad-soft: linear-gradient(180deg, #f1f2f8 0%, #e9ebf4 100%);
 
-  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-  --font-body: 'Barlow', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --radius-sm: 10px;
   --radius: 16px;
@@ -50,7 +55,7 @@ body {
   background: var(--surface);
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 1.0625rem;
+  font-size: 1rem;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
@@ -60,15 +65,15 @@ img, video { max-width: 100%; height: auto; display: block; }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.01em;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   margin: 0 0 0.5em;
   text-wrap: balance;
 }
-h1 { font-size: clamp(2.1rem, 4.4vw, 3.5rem); }
-h2 { font-size: clamp(1.8rem, 3.2vw, 2.6rem); }
-h3 { font-size: 1.4rem; line-height: 1.15; }
+h1 { font-size: clamp(1.9rem, 3.4vw, 2.75rem); font-weight: 700; }
+h2 { font-size: clamp(1.55rem, 2.5vw, 2.1rem); }
+h3 { font-size: 1.15rem; line-height: 1.3; }
 p { margin: 0 0 1em; text-wrap: pretty; }
 a { color: var(--brand-blue); }
 a:hover { color: var(--brand-violet); }
@@ -84,7 +89,22 @@ a:hover { color: var(--brand-violet); }
 
 .container { width: min(100% - 2 * var(--gutter), var(--container)); margin-inline: auto; }
 .section { padding-block: var(--section); }
-.section--alt { background: var(--grad-soft); }
+.section--alt { background: var(--bg-gray); }
+.section--warm { background: var(--bg-warm); }
+.section--lilac { background: var(--bg-lilac); }
+/* Las secciones de color se separan del blanco con un borde sutil */
+.section--alt, .section--warm, .section--lilac { border-block: 1px solid rgb(20 18 60 / 0.06); }
+/* Tarjetas sobre fondos de color: blancas y con sombra suave para contrastar */
+:is(.section--alt, .section--warm, .section--lilac) .card { box-shadow: var(--shadow-sm); border-color: transparent; }
+
+/* Palabra resaltada con trazo de marcador */
+.mark {
+  background: linear-gradient(transparent 58%, rgb(251 122 48 / 0.45) 58%, rgb(251 122 48 / 0.45) 92%, transparent 92%);
+  padding-inline: 0.08em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.on-dark .mark, .section--dark .mark { background: linear-gradient(transparent 60%, rgb(251 122 48 / 0.55) 60%, rgb(251 122 48 / 0.55) 92%, transparent 92%); }
 .section--dark { background: var(--grad-dark); color: #e9e8f3; }
 .section--dark h2, .section--dark h3 { color: #fff; }
 
@@ -127,7 +147,7 @@ a:hover { color: var(--brand-violet); }
   border-color: rgb(255 255 255 / 0.14);
 }
 
-.lead { font-size: 1.15rem; color: var(--ink-soft); max-width: 62ch; }
+.lead { font-size: 1.08rem; color: var(--ink-soft); max-width: 62ch; }
 .section--dark .lead { color: #bdbbd6; }
 
 .section-head { max-width: 760px; margin-bottom: clamp(32px, 5vw, 56px); }
@@ -146,7 +166,7 @@ a:hover { color: var(--brand-violet); }
   border: 1.5px solid transparent;
   border-radius: 999px;
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;

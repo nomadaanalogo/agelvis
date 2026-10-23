@@ -6,8 +6,8 @@ seoDescription: Diseño de layout, preparación de espacios, adecuaciones civile
 resumen: Preparamos el espacio antes de que llegue la maquinaria - layout, adecuaciones y coordinación de redes.
 icono: ruler
 orden: 6
-imagen: ../../assets/fotos/instalacion-tableros-control-planta.webp
-imagenAlt: Tableros de control y equipos industriales posicionados en planta para su conexión
+imagen: ../../assets/fotos/maquina-industrial-almacen.webp
+imagenAlt: Máquina industrial instalada en un área de planta preparada para recibirla
 incluye:
   - Diseño y ajuste de layout de planta
   - Visitas técnicas y levantamientos
@@ -16,6 +16,8 @@ incluye:
   - Coordinación de redes eléctricas, aire, agua y gas con aliados
   - Soporte técnico y cuadrillas especializadas según alcance
 galeria:
+  - src: ../../assets/fotos/mantenimiento-planta-industrial.webp
+    alt: Técnico conectando una máquina en planta industrial
   - src: ../../assets/fotos/plano-layout-planta.webp
     alt: Plano de layout de una planta de producción industrial
   - src: ../../assets/fotos/adecuacion-corte-metalico.webp
