@@ -24,31 +24,20 @@ if (!reduce) {
   gsap.ticker.lagSmoothing(0);
 }
 
-const header = $('[data-op-header]');
-const burger = $<HTMLButtonElement>('[data-op-burger]');
-const menu = $('[data-op-nav]');
-const setMenu = (open: boolean) => {
-  burger?.setAttribute('aria-expanded', String(open));
-  menu?.classList.toggle('is-open', open);
-  if (open) lenis?.stop(); else lenis?.start();
-};
-burger?.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+// El menú móvil (SiteHeader) avisa cuando se abre para pausar el scroll suave
+document.addEventListener('site:menu', (e) => {
+  if ((e as CustomEvent<{ open: boolean }>).detail.open) lenis?.stop(); else lenis?.start();
+});
 
 $$<HTMLAnchorElement>('a[data-scroll]').forEach((a) => {
   a.addEventListener('click', (e) => {
     const target = $(a.getAttribute('href') ?? '');
     if (!target) return;
     e.preventDefault();
-    setMenu(false);
     if (lenis) lenis.scrollTo(target, { offset: -70 });
     else target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
   });
 });
-
-const onScroll = () => header?.classList.toggle('is-solid', window.scrollY > 40);
-onScroll();
-window.addEventListener('scroll', onScroll, { passive: true });
 
 /* ---------- Izaje del hero ---------- */
 // La foto de la grúa está separada en dos capas: el fondo y la carga (gancho + eslingas + chiller).

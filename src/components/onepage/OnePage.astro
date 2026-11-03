@@ -11,7 +11,6 @@ import { site, whatsappUrl } from '../../data/site';
 import { enServicios } from '../../data/en';
 import { getServicios } from '../../lib/colecciones';
 import type { IconName } from '../../data/icons';
-import logoBlanco from '../../assets/marca/logo-agelvis-blanco.png';
 
 import gruaFondo from '../../assets/hero/grua-fondo.webp';
 import gruaCarga from '../../assets/hero/grua-carga.webp';
@@ -41,13 +40,6 @@ const servicios = (await getServicios()).map((s) => ({
   texto: es ? s.data.resumen : enServicios[s.id].summary,
   href: es ? `/servicios/${s.id}` : `/en/services/${enServicios[s.id].slug}`,
 }));
-
-const nav = [
-  { href: '#que-hacemos', label: t('Qué hacemos', 'What we do') },
-  { href: '#como', label: t('Cómo', 'How') },
-  { href: '#donde', label: t('Dónde', 'Where') },
-  { href: '#proyectos', label: t('Proyectos', 'Projects') },
-];
 
 const cifras = [
   { n: site.foundingYear, pre: t('Desde', 'Since'), suf: '', l: t('moviendo maquinaria industrial', 'moving industrial machinery') },
@@ -111,7 +103,6 @@ const carga = await getImage({ src: gruaCarga, format: 'webp', width: 252, quali
 const cables = [[663, 662], [675, 670], [683, 680], [691, 690]];
 
 const waMsg = t(undefined, 'Hello AGELVIS EU, I would like a quote for an industrial machinery project.');
-const otherHref = es ? '/en/' : '/';
 ---
 <Base
   lang={lang}
@@ -124,22 +115,6 @@ const otherHref = es ? '/en/' : '/';
   image={g7}
   alternate={es ? { lang: 'en', href: '/en/' } : { lang: 'es', href: '/' }}
 >
-  <header class="op-header" slot="header" data-op-header>
-    <a href={es ? '/' : '/en/'} class="op-logo" aria-label={`${site.name} — ${t('inicio', 'home')}`}>
-      <Image src={logoBlanco} alt={site.name} width={150} loading="eager" />
-    </a>
-    <nav class="op-nav" id="op-menu" aria-label={t('Principal', 'Main')} data-op-nav>
-      <ul>
-        {nav.map((n) => <li><a href={n.href} data-scroll>{n.label}</a></li>)}
-        <li><a href={otherHref} hreflang={es ? 'en' : 'es'} lang={es ? 'en' : 'es'} class="op-lang"><Icon name="globe" /> {es ? 'EN' : 'ES'}</a></li>
-      </ul>
-      <a href="#cotizar" class="op-btn op-btn--fire" data-scroll data-track="cta_click" data-track-location="header">{t('Cotizar', 'Get a quote')} <Icon name="arrow" /></a>
-    </nav>
-    <button class="op-burger" type="button" aria-expanded="false" aria-controls="op-menu" data-op-burger>
-      <span></span><span></span>
-      <span class="visually-hidden">{t('Menú', 'Menu')}</span>
-    </button>
-  </header>
 
   <div class="op">
     <!-- HERO -->
@@ -341,63 +316,15 @@ const otherHref = es ? '/en/' : '/';
     </section>
   </div>
 
-  <footer class="op-footer" slot="footer">
-    <div class="wrap op-footer-grid">
-      <div>
-        <Image src={logoBlanco} alt={site.name} width={170} />
-        <p>{t('Montaje, traslado, rigging, embalaje y relocalización de maquinaria industrial.', 'Industrial machinery installation, transfer, rigging, packing and relocation.')}</p>
-      </div>
-      <div>
-        <h2>{t('Servicios', 'Services')}</h2>
-        <ul>{servicios.map((s) => <li><a href={s.href}>{s.titulo}</a></li>)}</ul>
-      </div>
-      <div>
-        <h2>{t('Empresa', 'Company')}</h2>
-        <ul>
-          {es ? (
-            <>
-              <li><a href="/nosotros">Nosotros</a></li>
-              <li><a href="/proyectos">Proyectos</a></li>
-              <li><a href="/proyectos-internacionales">Proyectos internacionales</a></li>
-              <li><a href="/fabricantes-oem">Fabricantes OEM</a></li>
-              <li><a href="/sectores">Sectores</a></li>
-              <li><a href="/politica-de-privacidad">Política de privacidad</a></li>
-            </>
-          ) : (
-            <>
-              <li><a href="/en/services">Services</a></li>
-              <li><a href="/en/international">International projects</a></li>
-              <li><a href="/en/oem">For OEM manufacturers</a></li>
-              <li><a href="/proyectos" hreflang="es">Project photos (ES)</a></li>
-            </>
-          )}
-        </ul>
-      </div>
-      <div>
-        <h2>{t('Contacto', 'Contact')}</h2>
-        <ul>
-          <li><a href={whatsappUrl(waMsg)} target="_blank" rel="noopener">WhatsApp {site.whatsapp.label}</a></li>
-          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-          <li>{site.address.street}, {site.address.city}</li>
-          <li>{site.address.region}, Colombia</li>
-        </ul>
-      </div>
-    </div>
-    <p class="wrap op-legal">© {new Date().getFullYear()} {site.name} · {t('Colombia y el mundo', 'Colombia and the world')}</p>
-  </footer>
 </Base>
 
 <script>
   import '../../scripts/onepage';
 </script>
 
-<style is:global>
-  body.bare { background: #08071a; color: #e9e8f3; }
-</style>
-
 <style>
   /* ---------- Base del one-page ---------- */
-  .op, .op-header, .op-footer {
+  .op {
     --bg: #08071a;
     --bg-2: #100e2a;
     --fg: #f1f0f8;
@@ -431,39 +358,6 @@ const otherHref = es ? '/en/' : '/';
   .op-btn--line:hover { border-color: var(--fg); background: var(--fg); color: var(--bg); }
   .op-btn--dark { background: #08071a; color: #fff; }
   .op-btn--dark:hover { color: #fff; background: #1d1a3d; }
-
-  /* ---------- Header ---------- */
-  .op-header {
-    position: fixed; inset: 0 0 auto; z-index: 70;
-    display: flex; align-items: center; justify-content: space-between; gap: 24px;
-    padding: 18px var(--gutter);
-    background: linear-gradient(180deg, rgb(8 7 26 / 0.85), rgb(8 7 26 / 0)) border-box no-repeat;
-    transition: background 0.35s, padding 0.35s, border-color 0.35s;
-    border-bottom: 1px solid transparent;
-  }
-  .op-header.is-solid { background: rgb(8 7 26 / 0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding-block: 10px; border-bottom-color: rgb(255 255 255 / 0.08); }
-  .op-logo img { width: 128px; height: auto; display: block; }
-  .op-nav { display: flex; align-items: center; gap: 28px; }
-  .op-nav ul { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
-  .op-nav ul a { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; color: var(--fg); text-decoration: none; font-weight: 500; font-size: 0.97rem; border-radius: 4px; }
-  .op-nav ul a:hover { color: var(--steel); }
-  .op-lang { border: 1px solid rgb(255 255 255 / 0.25); }
-  .op-lang :global(svg) { width: 16px; height: 16px; }
-  .op-nav .op-btn { min-height: 44px; padding: 8px 18px; }
-  .op-burger { display: none; }
-  @media (max-width: 900px) {
-    .op-burger { display: grid; gap: 7px; place-content: center; width: 48px; height: 48px; background: none; border: 1px solid rgb(255 255 255 / 0.3); border-radius: 4px; cursor: pointer; }
-    .op-burger span:not(.visually-hidden) { display: block; width: 22px; height: 2px; background: #fff; transition: transform 0.3s var(--ease); }
-    .op-burger[aria-expanded='true'] span:nth-child(1) { transform: translateY(4.5px) rotate(45deg); }
-    .op-burger[aria-expanded='true'] span:nth-child(2) { transform: translateY(-4.5px) rotate(-45deg); }
-    .op-nav {
-      position: fixed; inset: 0; z-index: -1; flex-direction: column; justify-content: center; gap: 32px;
-      background: #08071a; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
-    }
-    .op-nav.is-open { opacity: 1; visibility: visible; }
-    .op-nav ul { flex-direction: column; align-items: center; gap: 8px; }
-    .op-nav ul a { font-family: var(--cond); font-size: 2.2rem; font-weight: 700; text-transform: uppercase; }
-  }
 
   /* ---------- Hero ---------- */
   .hero { position: relative; min-height: 100svh; display: grid; align-items: end; overflow: hidden; isolation: isolate; background: var(--bg); }
@@ -621,19 +515,7 @@ const otherHref = es ? '/en/' : '/';
   .cta-direct a:hover { text-decoration: underline; }
   .cta-direct :global(svg) { width: 18px; height: 18px; }
   .cta-form :global(.btn) { border-radius: 4px; min-height: 52px; }
-  .cta-form { background: #fff; color: var(--ink); padding: clamp(24px, 4vw, 40px); border-radius: 6px; box-shadow: 0 30px 60px -30px rgb(27 15 5 / 0.6); }
+  .cta-form { background: #08071a; color: var(--fg); padding: clamp(24px, 4vw, 40px); border-radius: 6px; box-shadow: 0 30px 60px -30px rgb(27 15 5 / 0.7); }
   @media (max-width: 900px) { .cta-grid { grid-template-columns: 1fr; } }
 
-  /* ---------- Footer ---------- */
-  .op-footer { background: #050412; color: var(--fg-soft); padding-top: 64px; }
-  .op-footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 48px; }
-  .op-footer img { width: 160px; height: auto; margin-bottom: 16px; }
-  .op-footer p { max-width: 34ch; margin: 0; }
-  .op-footer h2 { font-family: var(--font-body); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #fff; margin: 0 0 16px; }
-  .op-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-  .op-footer a { color: var(--fg-soft); text-decoration: none; overflow-wrap: anywhere; }
-  .op-footer a:hover { color: var(--steel); }
-  .op-legal { border-top: 1px solid rgb(255 255 255 / 0.08); padding-block: 20px; margin-top: 0; font-size: 0.88rem; }
-  @media (max-width: 900px) { .op-footer-grid { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 560px) { .op-footer-grid { grid-template-columns: 1fr; } }
 </style>

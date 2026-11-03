@@ -1,0 +1,120 @@
+---
+/**
+ * Header del sitio (oscuro, fijo). En el inicio muestra los enlaces de sección;
+ * en las páginas internas, "Inicio" y las páginas principales.
+ */
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import logoBlanco from '../assets/marca/logo-agelvis-blanco.png';
+import { site } from '../data/site';
+
+interface Props {
+  lang?: 'es' | 'en';
+  alternate?: { lang: 'es' | 'en'; href: string };
+  home?: boolean;
+}
+const { lang = 'es', alternate, home = false } = Astro.props;
+const es = lang === 'es';
+const homeHref = es ? '/' : '/en/';
+
+const items = home
+  ? es
+    ? [{ label: 'Qué hacemos', href: '#que-hacemos' }, { label: 'Cómo', href: '#como' }, { label: 'Dónde', href: '#donde' }, { label: 'Proyectos', href: '#proyectos' }]
+    : [{ label: 'What we do', href: '#que-hacemos' }, { label: 'How', href: '#como' }, { label: 'Where', href: '#donde' }, { label: 'Projects', href: '#proyectos' }]
+  : es
+    ? [{ label: 'Inicio', href: '/' }, { label: 'Servicios', href: '/servicios' }, { label: 'Proyectos', href: '/proyectos' }, { label: 'Internacional', href: '/proyectos-internacionales' }, { label: 'Nosotros', href: '/nosotros' }]
+    : [{ label: 'Home', href: '/en/' }, { label: 'Services', href: '/en/services' }, { label: 'International', href: '/en/international' }, { label: 'For OEMs', href: '/en/oem' }];
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => {
+  const h = href.replace(/\/$/, '') || '/';
+  return h === '/' || h === '/en' ? path === h : path === h || path.startsWith(`${h}/`);
+};
+
+const otherLang = es ? 'en' : 'es';
+const otherHref = alternate?.lang === otherLang ? alternate.href : otherLang === 'en' ? '/en/' : '/';
+const cta = home
+  ? { label: es ? 'Cotizar' : 'Get a quote', href: '#cotizar' }
+  : { label: es ? 'Cotizar' : 'Get a quote', href: es ? '/contacto' : '/en/#cotizar' };
+---
+<header class="sh" data-site-header>
+  <a href={homeHref} class="sh-logo" aria-label={`${site.name} — ${es ? 'inicio' : 'home'}`}>
+    <Image src={logoBlanco} alt={site.name} width={150} loading="eager" />
+  </a>
+  <nav class="sh-nav" id="sh-menu" aria-label={es ? 'Principal' : 'Main'} data-site-nav>
+    <ul>
+      {items.map((n) => (
+        <li><a href={n.href} data-scroll={home ? '' : undefined} aria-current={!home && isActive(n.href) ? 'page' : undefined}>{n.label}</a></li>
+      ))}
+      <li><a href={otherHref} hreflang={otherLang} lang={otherLang} class="sh-lang"><Icon name="globe" /> {otherLang.toUpperCase()}</a></li>
+    </ul>
+    <a href={cta.href} class="sh-cta" data-scroll={home ? '' : undefined} data-track="cta_click" data-track-location="header">{cta.label} <Icon name="arrow" /></a>
+  </nav>
+  <button class="sh-burger" type="button" aria-expanded="false" aria-controls="sh-menu" data-site-burger>
+    <span></span><span></span>
+    <span class="visually-hidden">{es ? 'Menú' : 'Menu'}</span>
+  </button>
+</header>
+
+<style>
+  .sh {
+    position: fixed; inset: 0 0 auto; z-index: 70;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    padding: 18px var(--gutter);
+    background: linear-gradient(180deg, rgb(8 7 26 / 0.85), rgb(8 7 26 / 0)) border-box no-repeat;
+    border-bottom: 1px solid transparent;
+    transition: background 0.35s, padding 0.35s, border-color 0.35s;
+  }
+  .sh.is-solid { background: rgb(8 7 26 / 0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding-block: 10px; border-bottom-color: rgb(255 255 255 / 0.08); }
+  .sh-logo img { width: 128px; height: auto; display: block; }
+  .sh-nav { display: flex; align-items: center; gap: 24px; }
+  .sh-nav ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .sh-nav ul a { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; color: var(--ink); text-decoration: none; font-weight: 500; font-size: 0.97rem; border-radius: 4px; }
+  .sh-nav ul a:hover, .sh-nav ul a[aria-current='page'] { color: var(--brand-amber); }
+  .sh-nav ul a[aria-current='page'] { box-shadow: inset 0 -2px 0 var(--brand-amber); border-radius: 0; }
+  .sh-lang { border: 1px solid rgb(255 255 255 / 0.25); }
+  .sh-lang :global(svg) { width: 16px; height: 16px; }
+  .sh-cta { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 18px; background: var(--brand-orange); color: #1b0f05; font-weight: 600; text-decoration: none; border-radius: 4px; transition: background 0.25s, transform 0.25s var(--ease); }
+  .sh-cta:hover { background: #ff9450; color: #1b0f05; transform: translateY(-2px); }
+  .sh-cta :global(svg) { width: 18px; height: 18px; }
+  .sh-burger { display: none; }
+  @media (max-width: 960px) {
+    .sh-burger { display: grid; gap: 7px; place-content: center; width: 48px; height: 48px; background: none; border: 1px solid rgb(255 255 255 / 0.3); border-radius: 4px; cursor: pointer; }
+    .sh-burger span:not(.visually-hidden) { display: block; width: 22px; height: 2px; background: #fff; transition: transform 0.3s var(--ease); }
+    .sh-burger[aria-expanded='true'] span:nth-child(1) { transform: translateY(4.5px) rotate(45deg); }
+    .sh-burger[aria-expanded='true'] span:nth-child(2) { transform: translateY(-4.5px) rotate(-45deg); }
+    .sh-nav {
+      position: fixed; inset: 0; z-index: -1; flex-direction: column; justify-content: center; gap: 32px;
+      background: #08071a; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+    }
+    .sh-nav.is-open { opacity: 1; visibility: visible; }
+    .sh-nav ul { flex-direction: column; align-items: center; gap: 8px; }
+    .sh-nav ul a { font-family: var(--font-cond); font-size: 2.2rem; font-weight: 700; text-transform: uppercase; }
+    .sh-nav ul a[aria-current='page'] { box-shadow: none; }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const burger = document.querySelector<HTMLButtonElement>('[data-site-burger]');
+  const nav = document.querySelector<HTMLElement>('[data-site-nav]');
+
+  const setMenu = (open: boolean) => {
+    burger?.setAttribute('aria-expanded', String(open));
+    nav?.classList.toggle('is-open', open);
+    // El inicio pausa el scroll suave mientras el menú está abierto
+    document.dispatchEvent(new CustomEvent('site:menu', { detail: { open } }));
+  };
+  burger?.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
+  nav?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && burger?.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      burger.focus();
+    }
+  });
+
+  const onScroll = () => header?.classList.toggle('is-solid', window.scrollY > 40);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

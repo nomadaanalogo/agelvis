@@ -43,17 +43,20 @@ const waMsg = es ? undefined : 'Hello AGELVIS EU, I would like a technical asses
     gap: 32px;
     align-items: center;
     padding: clamp(32px, 5vw, 56px);
-    border-radius: var(--radius-lg);
-    color: #fff;
-    background:
-      radial-gradient(60% 120% at 100% 0%, rgb(251 122 48 / 0.35), transparent 60%),
-      var(--grad-blue);
-    box-shadow: 0 30px 60px -30px rgb(24 0 173 / 0.6);
+    border-radius: var(--radius);
+    color: #1b0f05;
+    background: var(--brand-orange);
   }
-  .deco { position: absolute; right: -60px; bottom: -80px; width: 320px; z-index: -1; fill: none; stroke: rgb(255 255 255 / 0.12); stroke-width: 1.5; animation: spin 40s linear infinite; }
+  .cta-band::after { content: ''; position: absolute; inset: auto 0 0; height: 12px; background: repeating-linear-gradient(45deg, #1b0f05 0 12px, var(--brand-amber) 12px 24px); }
+  .cta-band :global(.icon-tile) { background: #1b0f05; color: var(--brand-orange); }
+  .cta-band :global(.btn--primary) { background: #08071a; color: #fff; }
+  .cta-band :global(.btn--primary:hover) { background: #1d1a3d; color: #fff; }
+  .cta-band :global(.btn--ghost) { border-color: rgb(27 15 5 / 0.5); color: #1b0f05; }
+  .cta-band :global(.btn--ghost:hover) { background: #1b0f05; color: #fff; border-color: #1b0f05; }
+  .deco { position: absolute; right: -60px; bottom: -80px; width: 320px; z-index: -1; fill: none; stroke: rgb(27 15 5 / 0.15); stroke-width: 1.5; animation: spin 40s linear infinite; }
   .text { display: flex; gap: 20px; align-items: flex-start; }
-  h2 { color: #fff; font-size: clamp(1.6rem, 2.8vw, 2.2rem); max-width: 24ch; }
-  p { margin: 0; color: #dcdaf5; max-width: 60ch; }
+  h2 { color: #1b0f05; font-size: clamp(1.8rem, 3vw, 2.6rem); max-width: 22ch; }
+  p { margin: 0; color: #2b1405; max-width: 60ch; font-weight: 500; }
   @keyframes spin { to { rotate: 360deg; } }
   @media (max-width: 860px) { .cta-band { grid-template-columns: 1fr; } }
   @media (max-width: 520px) { .text { flex-direction: column; } }

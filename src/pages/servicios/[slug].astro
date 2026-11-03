@@ -126,23 +126,23 @@ const serviceLd = {
   .scope h2 { font-size: 1.4rem; margin: 0; }
   .note { font-size: 0.9rem; color: var(--ink-soft); margin: 20px 0; }
   .gallery { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .gallery li { aspect-ratio: 4 / 3; overflow: hidden; border-radius: 20px; }
+  .gallery li { aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius); }
   .gallery img { width: 100%; height: 100%; object-fit: cover; transition: scale 0.8s var(--ease); }
   .gallery li:hover img { scale: 1.06; }
   .sectors-row ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
-  .sectors-row li { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff, #f7f6fc); border-radius: 999px; padding: 8px 16px 8px 12px; font-weight: 500; }
+  .sectors-row li { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface-alt); border-radius: 4px; padding: 8px 16px 8px 12px; font-weight: 500; }
   .sectors-row li :global(svg) { width: 18px; height: 18px; color: var(--brand-orange); }
   .related { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
   .related a {
     display: flex; align-items: center; gap: 14px;
-    padding: 14px 18px 14px 14px; border: 1px solid var(--line); border-radius: 18px; background: #fff;
+    padding: 14px 18px 14px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-alt);
     font-family: var(--font-display); font-size: 1rem; font-weight: 600;
     color: var(--ink); text-decoration: none;
     transition: border-color 0.3s, transform 0.4s var(--ease), box-shadow 0.3s;
   }
-  .related a:hover { border-color: rgb(75 47 214 / 0.3); color: var(--brand-blue); transform: translateY(-3px); box-shadow: var(--shadow-sm); }
+  .related a:hover { border-color: rgb(251 122 48 / 0.5); color: var(--brand-blue); transform: translateY(-3px); box-shadow: var(--shadow-sm); }
   .related .rl { flex: 1; }
-  .related .icon-tile { width: 44px; height: 44px; border-radius: 12px; }
+  .related .icon-tile { width: 44px; height: 44px; border-radius: 4px; }
   .related .icon-tile :global(svg) { width: 22px; height: 22px; }
   .related :global(.go) { width: 20px; height: 20px; color: var(--brand-orange); flex: none; transition: translate 0.3s var(--ease); }
   .related a:hover :global(.go) { translate: 4px 0; }

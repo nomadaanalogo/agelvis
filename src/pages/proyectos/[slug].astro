@@ -62,6 +62,6 @@ const ficha = [
   dt:first-child { margin-top: 0; }
   dd { margin: 0; }
   .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 20px; }
+  .gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); }
   @media (max-width: 860px) { .layout, .gallery { grid-template-columns: 1fr; } }
 </style>

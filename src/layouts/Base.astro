@@ -1,8 +1,8 @@
 ---
 import '../styles/global.css';
 import { getImage } from 'astro:assets';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import Analytics from '../components/Analytics.astro';
 import { site } from '../data/site';
@@ -19,7 +19,7 @@ interface Props {
   /** Ruta de la versión alterna en otro idioma (hreflang). */
   alternate?: { lang: 'es' | 'en'; href: string };
   jsonLd?: Record<string, unknown>[];
-  /** Página de una sola pantalla: trae su propio header y footer. */
+  /** Inicio one-page: el header muestra enlaces de sección. */
   bare?: boolean;
 }
 
@@ -139,13 +139,13 @@ const website = {
     {jsonLd.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
     <Analytics />
   </head>
-  <body class:list={{ bare }}>
+  <body>
     <a class="skip-link" href="#contenido">{lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
-    {bare ? <slot name="header" /> : <Header lang={lang} alternate={alternate} />}
+    <SiteHeader lang={lang} alternate={alternate} home={bare} />
     <main id="contenido">
       <slot />
     </main>
-    {bare ? <slot name="footer" /> : <Footer lang={lang} />}
+    <SiteFooter lang={lang} />
     <WhatsAppFloat lang={lang} />
     <script>
       // Aparición progresiva de elementos marcados con data-reveal.

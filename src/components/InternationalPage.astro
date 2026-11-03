@@ -266,30 +266,30 @@ const waMsg = es
 <style>
   .hero-ctas { margin-top: 28px; }
   .stats { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: -48px; }
-  .stat { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 22px; box-shadow: var(--shadow); }
+  .stat { background: var(--surface-alt); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
   .stat strong { display: block; font-family: var(--font-display); font-size: 2rem; line-height: 1; color: var(--brand-blue); margin-bottom: 6px; }
   .stat span { color: var(--ink-soft); font-size: 0.95rem; }
   .two { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
   .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .pair img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 20px; box-shadow: var(--shadow); }
+  .pair img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow); }
   .pair img:last-child { margin-top: 40px; }
   .img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
   .chain { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .chain li { display: flex; flex-direction: column; padding: 24px; border-radius: 20px; background: rgb(255 255 255 / 0.05); border: 1px solid rgb(255 255 255 / 0.1); }
+  .chain li { display: flex; flex-direction: column; padding: 24px; border-radius: var(--radius); background: rgb(255 255 255 / 0.05); border: 1px solid rgb(255 255 255 / 0.1); }
   .chain .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
   .chain .n { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: rgb(255 255 255 / 0.25); }
   .chain h3 { font-size: 1.1rem; margin-bottom: 6px; }
-  .chain p { color: #bdbbd6; margin: 0 0 14px; flex: 1; font-size: 0.97rem; }
-  .dur { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font-size: 0.85rem; font-weight: 600; color: var(--brand-amber); background: rgb(255 255 255 / 0.06); border-radius: 999px; padding: 4px 12px 4px 8px; }
+  .chain p { color: var(--ink-soft); margin: 0 0 14px; flex: 1; font-size: 0.97rem; }
+  .dur { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font-size: 0.85rem; font-weight: 600; color: var(--brand-amber); background: rgb(255 255 255 / 0.06); border-radius: 4px; padding: 4px 12px 4px 8px; }
   .dur :global(svg) { width: 16px; height: 16px; }
   .cities-label { font-weight: 600; margin: 20px 0 10px; }
   .chips { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
-  .chips li { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--line); padding: 8px 16px 8px 12px; border-radius: 999px; font-weight: 600; }
+  .chips li { display: inline-flex; align-items: center; gap: 8px; background: var(--surface-alt); border: 1px solid var(--line); padding: 8px 16px 8px 12px; border-radius: 4px; font-weight: 600; }
   .chips li :global(svg) { width: 18px; height: 18px; color: var(--brand-orange); }
-  .chips li.home { background: var(--grad-blue); border-color: var(--brand-blue); color: #fff; }
-  .chips li.home :global(svg) { color: #fff; }
+  .chips li.home { background: var(--grad-blue); border-color: var(--brand-blue); color: #1b0f05; }
+  .chips li.home :global(svg) { color: #1b0f05; }
   .inco { margin: 20px 0 0; display: grid; gap: 12px; }
-  .inco div { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+  .inco div { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; background: var(--surface-alt); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
   .inco dt { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; color: var(--brand-blue); }
   .inco dd { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
   .more { margin-top: 24px; }

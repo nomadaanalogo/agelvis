@@ -50,7 +50,7 @@ const verMas = lang === 'en' ? 'View service' : 'Ver servicio';
     min-width: 0;
     overflow: hidden;
     isolation: isolate;
-    border-radius: 22px;
+    border-radius: var(--radius);
     background: var(--navy-900);
     color: #fff;
     text-decoration: none;
@@ -67,7 +67,7 @@ const verMas = lang === 'en' ? 'View service' : 'Ver servicio';
     font-weight: 700; font-size: 0.9rem; letter-spacing: 0.06em; color: var(--brand-amber);
     transition: left 0.6s var(--ease), translate 0.6s var(--ease), font-size 0.6s;
   }
-  .item.is-active .num { left: 28px; translate: 0 0; font-size: 1rem; background: rgb(12 10 38 / 0.55); padding: 4px 12px; border-radius: 999px; backdrop-filter: blur(6px); }
+  .item.is-active .num { left: 28px; translate: 0 0; font-size: 1rem; background: rgb(12 10 38 / 0.55); padding: 4px 12px; border-radius: 4px; backdrop-filter: blur(6px); }
 
   .label {
     position: absolute; inset: 56px 0 20px 0;
@@ -91,11 +91,11 @@ const verMas = lang === 'en' ? 'View service' : 'Ver servicio';
   .txt { color: #dcdbee; font-size: 0.98rem; line-height: 1.55; }
   .go {
     display: inline-flex; align-items: center; gap: 8px; margin-top: 6px;
-    padding: 9px 18px; border-radius: 999px; border: 1.5px solid rgb(255 255 255 / 0.5);
+    padding: 9px 18px; border-radius: 4px; border: 1.5px solid rgb(255 255 255 / 0.5);
     font-weight: 600; font-size: 0.9rem; transition: background 0.25s, color 0.25s;
   }
   .go :global(svg) { width: 17px; height: 17px; }
-  .item:hover .go { background: #fff; color: var(--navy-900); }
+  .item:hover .go { background: var(--surface-alt); color: var(--navy-900); }
 
   @media (max-width: 900px) {
     .acc { flex-direction: column; height: auto; }
@@ -103,7 +103,7 @@ const verMas = lang === 'en' ? 'View service' : 'Ver servicio';
     .item :global(img) { filter: none; }
     .shade, .item.is-active .shade { background: linear-gradient(180deg, rgb(12 10 38 / 0.05) 25%, rgb(12 10 38 / 0.9) 100%); }
     .label { display: none; }
-    .num, .item.is-active .num { left: 20px; translate: 0 0; background: rgb(12 10 38 / 0.55); padding: 4px 12px; border-radius: 999px; }
+    .num, .item.is-active .num { left: 20px; translate: 0 0; background: rgb(12 10 38 / 0.55); padding: 4px 12px; border-radius: 4px; }
     .content { position: relative; opacity: 1; translate: 0 0; padding: 72px 22px 22px; }
     .content h3 { font-size: 1.3rem; }
   }

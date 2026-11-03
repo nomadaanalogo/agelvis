@@ -1,0 +1,80 @@
+---
+/** Pie de página del sitio (oscuro). */
+import { Image } from 'astro:assets';
+import logoBlanco from '../assets/marca/logo-agelvis-blanco.png';
+import { site, whatsappUrl } from '../data/site';
+import { enServicios } from '../data/en';
+import { getServicios } from '../lib/colecciones';
+
+interface Props { lang?: 'es' | 'en' }
+const { lang = 'es' } = Astro.props;
+const es = lang === 'es';
+const servicios = (await getServicios()).map((s) => ({
+  titulo: es ? s.data.tituloCorto : enServicios[s.id].short,
+  href: es ? `/servicios/${s.id}` : `/en/services/${enServicios[s.id].slug}`,
+}));
+const waMsg = es ? undefined : 'Hello AGELVIS EU, I would like a quote for an industrial machinery project.';
+---
+<footer class="sf">
+  <div class="sf-wrap sf-grid">
+    <div>
+      <Image src={logoBlanco} alt={site.name} width={170} />
+      <p>{es ? 'Montaje, traslado, rigging, embalaje y relocalización de maquinaria industrial.' : 'Industrial machinery installation, transfer, rigging, packing and relocation.'}</p>
+    </div>
+    <div>
+      <h2>{es ? 'Servicios' : 'Services'}</h2>
+      <ul>{servicios.map((s) => <li><a href={s.href}>{s.titulo}</a></li>)}</ul>
+    </div>
+    <div>
+      <h2>{es ? 'Empresa' : 'Company'}</h2>
+      <ul>
+        {es ? (
+          <>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/nosotros">Nosotros</a></li>
+            <li><a href="/proyectos">Proyectos</a></li>
+            <li><a href="/proyectos-internacionales">Proyectos internacionales</a></li>
+            <li><a href="/fabricantes-oem">Fabricantes OEM</a></li>
+            <li><a href="/sectores">Sectores</a></li>
+            <li><a href="/contacto">Contacto</a></li>
+            <li><a href="/politica-de-privacidad">Política de privacidad</a></li>
+          </>
+        ) : (
+          <>
+            <li><a href="/en/">Home</a></li>
+            <li><a href="/en/services">Services</a></li>
+            <li><a href="/en/international">International projects</a></li>
+            <li><a href="/en/oem">For OEM manufacturers</a></li>
+            <li><a href="/proyectos" hreflang="es">Project photos (ES)</a></li>
+          </>
+        )}
+      </ul>
+    </div>
+    <div>
+      <h2>{es ? 'Contacto' : 'Contact'}</h2>
+      <ul>
+        <li><a href={whatsappUrl(waMsg)} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location="footer">WhatsApp {site.whatsapp.label}</a></li>
+        {site.phones.map((p) => <li><a href={p.href} data-track="phone_click" data-track-location="footer">{p.label}</a></li>)}
+        <li><a href={`mailto:${site.email}`} data-track="email_click" data-track-location="footer">{site.email}</a></li>
+        {site.address.publish && <li>{site.address.street}, {site.address.city}</li>}
+        <li>{site.address.region}, Colombia</li>
+      </ul>
+    </div>
+  </div>
+  <p class="sf-wrap sf-legal">© {new Date().getFullYear()} {site.name} · {es ? 'Colombia y el mundo' : 'Colombia and the world'}</p>
+</footer>
+
+<style>
+  .sf { background: #050412; color: var(--ink-soft); padding-top: 64px; }
+  .sf-wrap { width: min(100% - 2 * var(--gutter), var(--container)); margin-inline: auto; }
+  .sf-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 48px; }
+  .sf img { width: 160px; height: auto; margin-bottom: 16px; }
+  .sf p { max-width: 34ch; margin: 0; }
+  .sf h2 { font-family: var(--font-body); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #fff; margin: 0 0 16px; line-height: 1.4; }
+  .sf ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .sf a { color: var(--ink-soft); text-decoration: none; overflow-wrap: anywhere; }
+  .sf a:hover { color: var(--brand-amber); }
+  .sf-legal { border-top: 1px solid rgb(255 255 255 / 0.08); padding-block: 20px; font-size: 0.88rem; max-width: none; }
+  @media (max-width: 900px) { .sf-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .sf-grid { grid-template-columns: 1fr; } }
+</style>

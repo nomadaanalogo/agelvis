@@ -31,12 +31,12 @@ const ld = {
   .faq { display: grid; grid-template-columns: 0.8fr 1.4fr; gap: clamp(24px, 5vw, 64px); align-items: start; }
   .list { display: grid; gap: 12px; }
   details {
-    background: #fff;
+    background: var(--surface-alt);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     transition: border-color 0.3s, box-shadow 0.3s;
   }
-  details[open] { border-color: rgb(75 47 214 / 0.3); box-shadow: var(--shadow-sm); }
+  details[open] { border-color: rgb(251 122 48 / 0.5); box-shadow: var(--shadow-sm); }
   summary {
     display: flex;
     justify-content: space-between;
@@ -56,7 +56,7 @@ const ld = {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: rgb(24 0 173 / 0.07);
+    background: rgb(245 184 46 / 0.08);
     transition: background 0.3s, rotate 0.4s var(--ease);
   }
   summary i::before, summary i::after {

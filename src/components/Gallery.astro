@@ -55,7 +55,7 @@ const fotos = [
 
 <style>
   .gallery { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  li { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 20px; background: var(--surface-alt); }
+  li { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius); background: var(--surface-alt); }
   li::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgb(12 10 38 / 0.45)); pointer-events: none; }
   img { width: 100%; height: 100%; object-fit: cover; transition: scale 0.8s var(--ease); }
   li:hover img { scale: 1.06; }
@@ -64,7 +64,7 @@ const fotos = [
     z-index: 1;
     background: rgb(255 255 255 / 0.16); backdrop-filter: blur(8px); color: #fff;
     font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.78rem;
-    padding: 5px 12px; border-radius: 999px; border: 1px solid rgb(255 255 255 / 0.25);
+    padding: 5px 12px; border-radius: 4px; border: 1px solid rgb(255 255 255 / 0.25);
   }
   @media (max-width: 900px) { .gallery { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }
