@@ -19,9 +19,11 @@ interface Props {
   /** Ruta de la versión alterna en otro idioma (hreflang). */
   alternate?: { lang: 'es' | 'en'; href: string };
   jsonLd?: Record<string, unknown>[];
+  /** Página de una sola pantalla: trae su propio header y footer. */
+  bare?: boolean;
 }
 
-const { title, description, image = ogDefault, lang = 'es', noindex = false, alternate, jsonLd = [] } = Astro.props;
+const { title, description, image = ogDefault, lang = 'es', noindex = false, alternate, jsonLd = [], bare = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // Mismo formato que el canonical (con barra final) para que el par hreflang coincida exacto.
 const altUrl = alternate && new URL(alternate.href.endsWith('/') ? alternate.href : `${alternate.href}/`, Astro.site);
@@ -130,20 +132,20 @@ const website = {
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
 
     <script type="application/ld+json" set:html={JSON.stringify(business)} />
     <script type="application/ld+json" set:html={JSON.stringify(website)} />
     {jsonLd.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
     <Analytics />
   </head>
-  <body>
+  <body class:list={{ bare }}>
     <a class="skip-link" href="#contenido">{lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
-    <Header lang={lang} alternate={alternate} />
+    {bare ? <slot name="header" /> : <Header lang={lang} alternate={alternate} />}
     <main id="contenido">
       <slot />
     </main>
-    <Footer lang={lang} />
+    {bare ? <slot name="footer" /> : <Footer lang={lang} />}
     <WhatsAppFloat lang={lang} />
     <script>
       // Aparición progresiva de elementos marcados con data-reveal.

@@ -1,0 +1,605 @@
+---
+/**
+ * Inicio de una sola página (ES en /, EN en /en/).
+ * Las animaciones (grúa, parallax, scroll horizontal, contadores) están en src/scripts/onepage.ts.
+ */
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import ContactForm from '../ContactForm.astro';
+import Crane from './Crane.astro';
+import { site, whatsappUrl } from '../../data/site';
+import { enServicios } from '../../data/en';
+import { getServicios } from '../../lib/colecciones';
+import type { IconName } from '../../data/icons';
+import logoBlanco from '../../assets/marca/logo-agelvis-blanco.png';
+
+import heroBg from '../../assets/fotos/carga-envuelta-cama-baja-bodega.webp';
+import paso1 from '../../assets/fotos/mantenimiento-planta-industrial.webp';
+import paso2 from '../../assets/fotos/grua-elevando-chiller-techo.webp';
+import paso3 from '../../assets/fotos/embalaje-guacal-equipo-planta.webp';
+import paso4 from '../../assets/fotos/ingreso-carga-guiada-almacen.webp';
+import g1 from '../../assets/fotos/carga-asegurada-trailer-plataforma.webp';
+import g2 from '../../assets/fotos/izaje-maquinaria-envuelta.webp';
+import g3 from '../../assets/fotos/maquina-industrial-almacen.webp';
+import g4 from '../../assets/fotos/traslado-carga-asegurada-calle.webp';
+import g5 from '../../assets/fotos/movimiento-maquina-envuelta-planta.webp';
+import g6 from '../../assets/fotos/montacargas-maquina-cnc-okuma.webp';
+import g7 from '../../assets/fotos/izaje-chiller-industrial.webp';
+import g8 from '../../assets/fotos/maquinaria-montacargas-patio-fabrica.webp';
+
+interface Props { lang: 'es' | 'en' }
+const { lang } = Astro.props;
+const es = lang === 'es';
+const t = <T,>(a: T, b: T) => (es ? a : b);
+
+const servicios = (await getServicios()).map((s) => ({
+  id: s.id,
+  icono: s.data.icono as IconName,
+  imagen: s.data.imagen,
+  titulo: es ? s.data.tituloCorto : enServicios[s.id].short,
+  texto: es ? s.data.resumen : enServicios[s.id].summary,
+  href: es ? `/servicios/${s.id}` : `/en/services/${enServicios[s.id].slug}`,
+}));
+
+const nav = [
+  { href: '#que-hacemos', label: t('Qué hacemos', 'What we do') },
+  { href: '#como', label: t('Cómo', 'How') },
+  { href: '#donde', label: t('Dónde', 'Where') },
+  { href: '#proyectos', label: t('Proyectos', 'Projects') },
+];
+
+const cifras = [
+  { n: site.foundingYear, pre: t('Desde', 'Since'), suf: '', l: t('moviendo maquinaria industrial', 'moving industrial machinery') },
+  { n: site.internationalExperience.length + 1, pre: '', suf: '', l: t('países con proyectos', 'countries with projects') },
+  { n: site.stats.crewSize, pre: '', suf: '', l: t('técnicos por cuadrilla que viaja', 'technicians per travelling crew') },
+  { n: site.stats.ownLiftTons, pre: '', suf: ' t', l: t('con herramientas propias', 'with our own tools') },
+  { n: site.stats.craneTons, pre: '', suf: ' t', l: t('en grúas con aliados', 'cranes through partners') },
+];
+
+const pasos = [
+  { img: paso1, alt: t('Técnico de AGELVIS EU revisando una máquina en planta', 'AGELVIS EU technician inspecting a machine on site'),
+    h: t('Vamos a su planta', 'We visit your plant'),
+    p: t('Medimos, fotografiamos y entendemos la máquina, el sitio, los accesos y lo que no puede detenerse.', 'We measure, photograph and understand the machine, the site, the access routes and what cannot stop.') },
+  { img: paso2, alt: t('Grúa elevando un chiller hacia el techo de una planta', 'Crane lifting a chiller onto a plant roof'),
+    h: t('Planeamos cada maniobra', 'We engineer every lift'),
+    p: t('Secuencia, puntos de izaje, equipos, riesgos y cronograma. Usted aprueba el plan antes de que movamos un tornillo.', 'Sequence, pick points, equipment, risks and schedule. You sign off the plan before we touch a single bolt.') },
+  { img: paso3, alt: t('Equipo de AGELVIS EU embalando una máquina en guacal de madera', 'AGELVIS EU crew crating a machine'),
+    h: t('Desmontamos, embalamos y trasladamos', 'We dismantle, pack and move'),
+    p: t('Cada pieza marcada, cada equipo protegido a la medida. Izaje y transporte con cuadrilla propia y aliados.', 'Every part tagged, every unit custom-protected. Lifting and transport by our crew and partners.') },
+  { img: paso4, alt: t('Ingreso guiado de una máquina embalada a una planta', 'Guided entry of a packed machine into a plant'),
+    h: t('Montamos y entregamos', 'We install and hand over'),
+    p: t('Posicionamiento, nivelación, alineación y anclaje. Entregamos con actas, registros y la línea lista para arrancar.', 'Positioning, leveling, alignment and anchoring. Handover with records and the line ready to start.') },
+];
+
+const paises = es ? ['Colombia', ...site.internationalExperience] : ['Colombia', ...site.internationalExperienceEn];
+// Posiciones aproximadas en el lienzo de rutas (600 × 400)
+const puntos: Record<string, [number, number]> = {
+  Colombia: [205, 250], 'México': [95, 150], Mexico: [95, 150], 'Panamá': [178, 222], Panama: [178, 222],
+  Ecuador: [170, 282], 'Perú': [180, 335], Peru: [180, 335], Bulgaria: [492, 118], Ucrania: [535, 92], Ukraine: [535, 92],
+};
+const origen = puntos.Colombia;
+const rutas = paises.slice(1).map((p) => {
+  const [x, y] = puntos[p];
+  // Punto de control desplazado en perpendicular, siempre hacia arriba: arcos limpios a cualquier distancia
+  const dx = x - origen[0];
+  const dy = y - origen[1];
+  const dist = Math.hypot(dx, dy);
+  let nx = -dy / dist;
+  let ny = dx / dist;
+  if (ny > 0) { nx = -nx; ny = -ny; }
+  const k = dist * 0.32;
+  const cx = (origen[0] + x) / 2 + nx * k;
+  const cy = (origen[1] + y) / 2 + ny * k;
+  return { nombre: p, x, y, d: `M${origen[0]} ${origen[1]}Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x} ${y}` };
+});
+
+const sectores = es
+  ? ['Alimentos y bebidas', 'Farmacéutico', 'Papel y tissue', 'Empaques', 'Artes gráficas', 'Plásticos', 'Vidrio', 'Metalmecánica', 'Química']
+  : ['Food & beverage', 'Pharma', 'Paper & tissue', 'Packaging', 'Printing', 'Plastics', 'Glass', 'Metalworking', 'Chemicals'];
+
+const galeria = [
+  [{ src: g1, alt: t('Carga asegurada sobre tráiler de plataforma', 'Load secured on a flatbed trailer') }, { src: g2, alt: t('Izaje de maquinaria envuelta con grúa', 'Crane lift of wrapped machinery') }, { src: g3, alt: t('Máquina industrial posicionada en almacén', 'Industrial machine positioned in a warehouse') }],
+  [{ src: g4, alt: t('Traslado de carga asegurada por la ciudad', 'Secured load being moved through the city') }, null, { src: g5, alt: t('Movimiento de máquina envuelta dentro de planta', 'Wrapped machine moved inside a plant') }],
+  [{ src: g6, alt: t('Montacargas moviendo un centro de mecanizado CNC', 'Forklift moving a CNC machining center') }, { src: g7, alt: t('Grúa izando un chiller industrial con eslingas', 'Crane lifting an industrial chiller with slings') }, { src: g8, alt: t('Maquinaria en montacargas en el patio de una fábrica', 'Machinery on a forklift in a factory yard') }],
+];
+
+const waMsg = t(undefined, 'Hello AGELVIS EU, I would like a quote for an industrial machinery project.');
+const otherHref = es ? '/en/' : '/';
+---
+<Base
+  lang={lang}
+  bare
+  title={t('AGELVIS EU | Montaje, traslado y relocalización de maquinaria industrial', 'AGELVIS EU | Industrial machinery installation, rigging & plant relocation')}
+  description={t(
+    'Instalamos, desmontamos, embalamos y trasladamos maquinaria industrial y plantas completas en Colombia, México, Latinoamérica y el mundo. Desde 1996.',
+    'We install, dismantle, pack and relocate industrial machinery and complete plants in Colombia, Mexico, Latin America and worldwide. Since 1996.',
+  )}
+  image={g7}
+  alternate={es ? { lang: 'en', href: '/en/' } : { lang: 'es', href: '/' }}
+>
+  <header class="op-header" slot="header" data-op-header>
+    <a href={es ? '/' : '/en/'} class="op-logo" aria-label={`${site.name} — ${t('inicio', 'home')}`}>
+      <Image src={logoBlanco} alt={site.name} width={150} loading="eager" />
+    </a>
+    <nav class="op-nav" id="op-menu" aria-label={t('Principal', 'Main')} data-op-nav>
+      <ul>
+        {nav.map((n) => <li><a href={n.href} data-scroll>{n.label}</a></li>)}
+        <li><a href={otherHref} hreflang={es ? 'en' : 'es'} lang={es ? 'en' : 'es'} class="op-lang"><Icon name="globe" /> {es ? 'EN' : 'ES'}</a></li>
+      </ul>
+      <a href="#cotizar" class="op-btn op-btn--fire" data-scroll data-track="cta_click" data-track-location="header">{t('Cotizar', 'Get a quote')} <Icon name="arrow" /></a>
+    </nav>
+    <button class="op-burger" type="button" aria-expanded="false" aria-controls="op-menu" data-op-burger>
+      <span></span><span></span>
+      <span class="visually-hidden">{t('Menú', 'Menu')}</span>
+    </button>
+  </header>
+
+  <div class="op">
+    <!-- HERO -->
+    <section class="hero" data-hero>
+      <div class="hero-bg" data-parallax="0.35">
+        <Image src={heroBg} alt="" widths={[768, 1280, 1672]} sizes="100vw" loading="eager" fetchpriority="high" />
+      </div>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <p class="hero-ghost" aria-hidden="true" data-ghost>{t('LO PESADO · LO PESADO · ', 'HEAVY · HEAVY · HEAVY · ')}</p>
+      <div class="hero-crane" data-crane><Crane lang={lang} /></div>
+
+      <div class="wrap hero-copy">
+        <p class="kicker" data-intro>{t('Montaje · Traslado · Rigging · Relocalización', 'Installation · Transfer · Rigging · Relocation')}</p>
+        <h1 data-intro>
+          {es ? <>Movemos<br />lo que <em>pesa.</em></> : <>We move<br />the <em>heavy.</em></>}
+        </h1>
+        <p class="hero-lead" data-intro>{t(
+          `Instalamos, desmontamos, embalamos y trasladamos maquinaria industrial y plantas completas. Desde Palmira para Colombia y el mundo, desde ${site.foundingYear}.`,
+          `We install, dismantle, pack and relocate industrial machinery and complete plants. From Colombia to the world, since ${site.foundingYear}.`,
+        )}</p>
+        <div class="hero-ctas" data-intro>
+          <a href="#cotizar" class="op-btn op-btn--fire" data-scroll data-track="cta_click" data-track-location="hero">{t('Cotizar mi proyecto', 'Quote my project')} <Icon name="arrow" /></a>
+          <a href="#como" class="op-btn op-btn--line" data-scroll>{t('Cómo trabajamos', 'How we work')}</a>
+        </div>
+      </div>
+      <p class="scroll-cue" aria-hidden="true"><span></span>{t('Baje. La grúa sube.', 'Scroll down. The crane lifts.')}</p>
+    </section>
+
+    <!-- QUÉ HACEMOS -->
+    <section class="work" id="que-hacemos" data-hscroll>
+      <div class="work-pin">
+        <div class="work-head wrap">
+          <p class="kicker">{t('Qué hacemos', 'What we do')}</p>
+          <h2 data-up>{t('Seis formas de mover su planta', 'Six ways to move your plant')}</h2>
+        </div>
+        <div class="work-track" data-htrack>
+          {servicios.map((s, i) => (
+            <article class="svc">
+              <a href={s.href}>
+                <div class="svc-img"><Image src={s.imagen} alt="" widths={[480, 800]} sizes="(max-width: 700px) 85vw, 440px" /></div>
+                <div class="svc-body">
+                  <span class="svc-n">{String(i + 1).padStart(2, '0')}</span>
+                  <h3>{s.titulo}</h3>
+                  <p>{s.texto}</p>
+                  <span class="svc-more">{t('Ver servicio', 'View service')} <Icon name="arrow" /></span>
+                </div>
+              </a>
+            </article>
+          ))}
+          <article class="svc svc--end">
+            <a href="#cotizar" data-scroll>
+              <div class="svc-body">
+                <span class="svc-n">+</span>
+                <h3>{t('¿O todo junto?', 'Or all of it?')}</h3>
+                <p>{t('Lo hacemos de punta a punta: un solo equipo, desde el desmontaje en origen hasta el arranque en destino.', 'End to end: one team, from dismantling at origin to start-up at destination.')}</p>
+                <span class="svc-more">{t('Cotizar llave en mano', 'Quote turnkey')} <Icon name="arrow" /></span>
+              </div>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CIFRAS -->
+    <section class="stats" aria-label={t('Cifras', 'Numbers')}>
+      <div class="wrap stats-row">
+        {cifras.map((c) => (
+          <div class="stat" data-up>
+            <strong>{c.pre && <small>{c.pre}</small>}<span data-count={c.n}>{c.n}</span>{c.suf}</strong>
+            <span>{c.l}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- CÓMO -->
+    <section class="how" id="como">
+      <div class="wrap how-grid">
+        <div class="how-media" aria-hidden="true">
+          <div class="how-frame">
+            {pasos.map((p, i) => (
+              <Image src={p.img} alt={p.alt} class:list={['how-img', { 'is-on': i === 0 }]} widths={[480, 800, 1100]} sizes="(max-width: 900px) 100vw, 45vw" data-step-img={i} />
+            ))}
+            <span class="how-badge" data-step-badge>01 / 04</span>
+          </div>
+        </div>
+        <div class="how-steps">
+          <p class="kicker">{t('Cómo lo hacemos', 'How we do it')}</p>
+          <h2 data-up>{t('Del plano al arranque, sin sorpresas', 'From plan to start-up, no surprises')}</h2>
+          <ol>
+            {pasos.map((p, i) => (
+              <li class:list={['step', { 'is-on': i === 0 }]} data-step={i}>
+                <span class="step-n">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>{p.h}</h3>
+                  <p>{p.p}</p>
+                  <Image src={p.img} alt={p.alt} class="step-img" widths={[480, 800]} sizes="100vw" />
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- DÓNDE -->
+    <section class="where" id="donde">
+      <div class="where-marquee" aria-hidden="true">
+        <p data-drift="-1">{[...paises, ...paises].join(' · ')} ·</p>
+        <p data-drift="1" class="outline">{[...paises, ...paises].reverse().join(' · ')} ·</p>
+      </div>
+      <div class="wrap where-grid">
+        <div>
+          <p class="kicker">{t('Dónde trabajamos', 'Where we work')}</p>
+          <h2 data-up>{t('Base en Colombia. Cuadrillas que viajan.', 'Based in Colombia. Crews that travel.')}</h2>
+          <p class="where-lead" data-up>{t(
+            'Desde Palmira, Valle del Cauca, atendemos toda Colombia y movilizamos cuadrillas a Latinoamérica y Europa. Desmontamos en origen, coordinamos puerto y aduana con aliados, y montamos en destino.',
+            'From Palmira, Colombia, we cover the whole country and deploy crews across Latin America and Europe. We dismantle at origin, coordinate port and customs with partners, and install at destination.',
+          )}</p>
+          <div class="where-mx" data-up>
+            <strong>{t('México y el nearshoring', 'Mexico & nearshoring')}</strong>
+            <span>Monterrey · Querétaro · Bajío · Guadalajara · Puebla · CDMX</span>
+          </div>
+          <a href={es ? '/proyectos-internacionales' : '/en/international'} class="op-btn op-btn--line">{t('Proyectos internacionales', 'International projects')} <Icon name="arrow" /></a>
+        </div>
+        <svg class="routes" viewBox="0 0 600 400" role="img" aria-label={t(`Rutas desde Colombia hacia ${paises.slice(1).join(', ')}`, `Routes from Colombia to ${paises.slice(1).join(', ')}`)}>
+          <defs>
+            <pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.3" fill="#ffffff" opacity="0.12" /></pattern>
+          </defs>
+          <rect width="600" height="400" fill="url(#dots)" />
+          {rutas.map((r) => <path d={r.d} class="route" pathLength="1" />)}
+          {rutas.map((r) => (
+            <g class="pin">
+              <circle cx={r.x} cy={r.y} r="5" />
+              <text x={r.x + 10} y={r.y + 4}>{r.nombre}</text>
+            </g>
+          ))}
+          <g class="pin pin--home">
+            <circle cx={origen[0]} cy={origen[1]} r="16" class="pulse" />
+            <circle cx={origen[0]} cy={origen[1]} r="7" />
+            <text x={origen[0] + 14} y={origen[1] + 22}>Palmira, Colombia</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- PROYECTOS -->
+    <section class="gallery" id="proyectos">
+      <div class="wrap gallery-head">
+        <div>
+          <p class="kicker">{t('Proyectos', 'Projects')}</p>
+          <h2 data-up>{t('Esto es lo que hacemos un martes cualquiera', 'This is what a regular Tuesday looks like')}</h2>
+        </div>
+        <ul class="chips">{sectores.map((s) => <li>{s}</li>)}</ul>
+      </div>
+      <div class="wrap gallery-cols">
+        {galeria.map((col, ci) => (
+          <div class="gcol" data-speed={[-0.12, 0.1, -0.06][ci]}>
+            {col.map((f) => f ? (
+              <figure><Image src={f.src} alt={f.alt} widths={[400, 700]} sizes="(max-width: 700px) 50vw, 400px" /></figure>
+            ) : (
+              <figure class="gvideo">
+                <video autoplay muted loop playsinline preload="metadata" poster="/video/izaje-chiller-cubierta.webp" aria-label={t('Video: izaje de un chiller a la cubierta de un edificio', 'Video: chiller lifted to a building roof')}>
+                  <source src="/video/izaje-chiller-cubierta.mp4" type="video/mp4" />
+                </video>
+              </figure>
+            ))}
+          </div>
+        ))}
+      </div>
+      <p class="wrap gallery-more"><a href="/proyectos" class="op-btn op-btn--line">{t('Ver más fotos y videos', 'More photos and videos')} <Icon name="arrow" /></a></p>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="cotizar">
+      <div class="cta-stripes" aria-hidden="true"></div>
+      <div class="wrap cta-grid">
+        <div class="cta-copy">
+          <p class="kicker kicker--dark">{t('Cotice hoy', 'Get a quote today')}</p>
+          <h2 data-cta-title>{t('¿Cuánto le cuesta cada día de planta parada?', 'How much does each day of downtime cost you?')}</h2>
+          <p class="cta-lead">{t('Escríbanos antes de averiguarlo.', 'Message us before you find out.')}</p>
+          <a href={whatsappUrl(waMsg)} target="_blank" rel="noopener" class="op-btn op-btn--dark cta-wa" data-track="whatsapp_click" data-track-location="cta"><Icon name="whatsapp" /> WhatsApp {site.whatsapp.label}</a>
+          <ul class="cta-direct">
+            {site.phones.map((p) => <li><a href={p.href} data-track="phone_click" data-track-location="cta"><Icon name="phone" /> {p.label}</a></li>)}
+            <li><a href={`mailto:${site.email}`} data-track="email_click" data-track-location="cta"><Icon name="mail" /> {site.email}</a></li>
+          </ul>
+        </div>
+        <div class="cta-form">
+          <ContactForm lang={lang} />
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="op-footer" slot="footer">
+    <div class="wrap op-footer-grid">
+      <div>
+        <Image src={logoBlanco} alt={site.name} width={170} />
+        <p>{t('Montaje, traslado, rigging, embalaje y relocalización de maquinaria industrial.', 'Industrial machinery installation, transfer, rigging, packing and relocation.')}</p>
+      </div>
+      <div>
+        <h2>{t('Servicios', 'Services')}</h2>
+        <ul>{servicios.map((s) => <li><a href={s.href}>{s.titulo}</a></li>)}</ul>
+      </div>
+      <div>
+        <h2>{t('Empresa', 'Company')}</h2>
+        <ul>
+          {es ? (
+            <>
+              <li><a href="/nosotros">Nosotros</a></li>
+              <li><a href="/proyectos">Proyectos</a></li>
+              <li><a href="/proyectos-internacionales">Proyectos internacionales</a></li>
+              <li><a href="/fabricantes-oem">Fabricantes OEM</a></li>
+              <li><a href="/sectores">Sectores</a></li>
+              <li><a href="/politica-de-privacidad">Política de privacidad</a></li>
+            </>
+          ) : (
+            <>
+              <li><a href="/en/services">Services</a></li>
+              <li><a href="/en/international">International projects</a></li>
+              <li><a href="/en/oem">For OEM manufacturers</a></li>
+              <li><a href="/proyectos" hreflang="es">Project photos (ES)</a></li>
+            </>
+          )}
+        </ul>
+      </div>
+      <div>
+        <h2>{t('Contacto', 'Contact')}</h2>
+        <ul>
+          <li><a href={whatsappUrl(waMsg)} target="_blank" rel="noopener">WhatsApp {site.whatsapp.label}</a></li>
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li>{site.address.street}, {site.address.city}</li>
+          <li>{site.address.region}, Colombia</li>
+        </ul>
+      </div>
+    </div>
+    <p class="wrap op-legal">© {new Date().getFullYear()} {site.name} · {t('Colombia y el mundo', 'Colombia and the world')}</p>
+  </footer>
+</Base>
+
+<script>
+  import '../../scripts/onepage';
+</script>
+
+<style is:global>
+  body.bare { background: #08071a; color: #e9e8f3; }
+</style>
+
+<style>
+  /* ---------- Base del one-page ---------- */
+  .op, .op-header, .op-footer {
+    --bg: #08071a;
+    --bg-2: #100e2a;
+    --fg: #f1f0f8;
+    --fg-soft: #a9a7c4;
+    --fire: #fb7a30;
+    --steel: #f5b82e;
+    --cond: 'IBM Plex Sans Condensed', 'IBM Plex Sans', sans-serif;
+    color: var(--fg);
+  }
+  .op { overflow-x: clip; }
+  .wrap { width: min(100% - 2 * var(--gutter), 1280px); margin-inline: auto; }
+  .op h2, .op h3 { color: var(--fg); }
+  .op h2 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: -0.01em; font-size: clamp(2.3rem, 5.4vw, 4.6rem); line-height: 0.95; margin: 0 0 24px; }
+  .kicker { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 18px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--steel); }
+  .kicker::before { content: ''; width: 28px; height: 2px; background: currentColor; }
+  .kicker--dark { color: #1b0f05; }
+
+  .op-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    min-height: 52px; padding: 12px 26px;
+    font-weight: 600; font-size: 1rem; text-decoration: none;
+    border-radius: 4px; border: 1px solid transparent;
+    transition: transform 0.25s var(--ease), background 0.25s, color 0.25s, border-color 0.25s;
+  }
+  .op-btn :global(svg) { width: 19px; height: 19px; transition: translate 0.25s var(--ease); }
+  .op-btn:hover { transform: translateY(-2px); }
+  .op-btn:hover :global(svg:last-child) { translate: 4px 0; }
+  .op-btn--fire { background: var(--fire); color: #1b0f05; }
+  .op-btn--fire:hover { background: #ff9450; color: #1b0f05; }
+  .op-btn--line { border-color: rgb(255 255 255 / 0.35); color: var(--fg); }
+  .op-btn--line:hover { border-color: var(--fg); background: var(--fg); color: var(--bg); }
+  .op-btn--dark { background: #08071a; color: #fff; }
+  .op-btn--dark:hover { color: #fff; background: #1d1a3d; }
+
+  /* ---------- Header ---------- */
+  .op-header {
+    position: fixed; inset: 0 0 auto; z-index: 70;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    padding: 18px var(--gutter);
+    transition: background 0.35s, padding 0.35s, border-color 0.35s;
+    border-bottom: 1px solid transparent;
+  }
+  .op-header.is-solid { background: rgb(8 7 26 / 0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding-block: 10px; border-bottom-color: rgb(255 255 255 / 0.08); }
+  .op-logo img { width: 128px; height: auto; display: block; }
+  .op-nav { display: flex; align-items: center; gap: 28px; }
+  .op-nav ul { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
+  .op-nav ul a { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; color: var(--fg); text-decoration: none; font-weight: 500; font-size: 0.97rem; border-radius: 4px; }
+  .op-nav ul a:hover { color: var(--steel); }
+  .op-lang { border: 1px solid rgb(255 255 255 / 0.25); }
+  .op-lang :global(svg) { width: 16px; height: 16px; }
+  .op-nav .op-btn { min-height: 44px; padding: 8px 18px; }
+  .op-burger { display: none; }
+  @media (max-width: 900px) {
+    .op-burger { display: grid; gap: 7px; place-content: center; width: 48px; height: 48px; background: none; border: 1px solid rgb(255 255 255 / 0.3); border-radius: 4px; cursor: pointer; }
+    .op-burger span:not(.visually-hidden) { display: block; width: 22px; height: 2px; background: #fff; transition: transform 0.3s var(--ease); }
+    .op-burger[aria-expanded='true'] span:nth-child(1) { transform: translateY(4.5px) rotate(45deg); }
+    .op-burger[aria-expanded='true'] span:nth-child(2) { transform: translateY(-4.5px) rotate(-45deg); }
+    .op-nav {
+      position: fixed; inset: 0; z-index: -1; flex-direction: column; justify-content: center; gap: 32px;
+      background: #08071a; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+    }
+    .op-nav.is-open { opacity: 1; visibility: visible; }
+    .op-nav ul { flex-direction: column; align-items: center; gap: 8px; }
+    .op-nav ul a { font-family: var(--cond); font-size: 2.2rem; font-weight: 700; text-transform: uppercase; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; min-height: 100svh; display: grid; align-items: end; overflow: hidden; isolation: isolate; background: var(--bg); }
+  .hero-bg { position: absolute; inset: -10% 0 0; z-index: -3; }
+  .hero-bg img { width: 100%; height: 115%; object-fit: cover; filter: grayscale(0.6) contrast(1.1) brightness(0.45); }
+  .hero::after { content: ''; position: absolute; inset: 0; z-index: -2; background: linear-gradient(90deg, rgb(8 7 26 / 0.96) 0%, rgb(8 7 26 / 0.7) 45%, rgb(8 7 26 / 0.25) 100%), linear-gradient(0deg, var(--bg) 0%, transparent 35%); }
+  .hero-grid { position: absolute; inset: 0; z-index: -2; background-image: linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent); }
+  .hero-ghost { position: absolute; top: 18%; left: 0; z-index: -1; margin: 0; white-space: nowrap; font-family: var(--cond); font-weight: 700; font-size: clamp(7rem, 22vw, 20rem); line-height: 1; color: transparent; -webkit-text-stroke: 1px rgb(255 255 255 / 0.08); pointer-events: none; }
+  .hero-crane { position: absolute; right: 0; bottom: 0; height: 100%; z-index: -1; pointer-events: none; }
+  .hero-copy { position: relative; padding-block: 140px clamp(80px, 12vh, 140px); }
+  .hero h1 { margin: 0 0 24px; font-family: var(--cond); font-weight: 700; text-transform: uppercase; font-size: clamp(3.6rem, 10vw, 9rem); line-height: 0.86; letter-spacing: -0.02em; color: #fff; }
+  .hero h1 em { font-style: normal; color: var(--fire); }
+  .hero-lead { max-width: 46ch; font-size: clamp(1.05rem, 1.4vw, 1.25rem); color: #cfcde4; margin: 0 0 32px; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .scroll-cue { position: absolute; left: max(var(--gutter), calc((100% - 1280px) / 2)); bottom: 28px; margin: 0; display: flex; align-items: center; gap: 12px; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-soft); }
+  .scroll-cue span { width: 2px; height: 42px; background: linear-gradient(var(--steel), transparent); animation: cue 1.8s var(--ease) infinite; transform-origin: top; }
+  @keyframes cue { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+  @media (max-width: 900px) {
+    .hero { align-items: start; }
+    .hero-crane { position: relative; justify-self: end; height: 46svh; margin: 72px -6vw 0 0; }
+    .hero-copy { padding-top: 8px; padding-bottom: 56px; }
+    .scroll-cue { display: none; }
+  }
+
+  /* ---------- Qué hacemos ---------- */
+  .work { background: var(--bg); padding-block: clamp(80px, 10vw, 120px) 40px; }
+  .work-pin { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
+  .work-head { margin-bottom: 40px; }
+  .work-head h2 { max-width: 14ch; }
+  .work-track { display: flex; gap: 20px; padding-inline: max(var(--gutter), calc((100vw - 1280px) / 2)); width: max-content; }
+  .svc { width: clamp(280px, 30vw, 420px); flex: none; }
+  .svc a { display: flex; flex-direction: column; height: 100%; color: inherit; text-decoration: none; background: var(--bg-2); border: 1px solid rgb(255 255 255 / 0.08); border-radius: 6px; overflow: hidden; transition: border-color 0.3s, transform 0.4s var(--ease); }
+  .svc a:hover { border-color: var(--fire); transform: translateY(-6px); }
+  .svc-img { aspect-ratio: 4 / 3; overflow: hidden; }
+  .svc-img img { width: 100%; height: 100%; object-fit: cover; transition: scale 0.8s var(--ease); }
+  .svc a:hover .svc-img img { scale: 1.06; }
+  .svc-body { padding: 24px; display: flex; flex-direction: column; flex: 1; }
+  .svc-n { font-family: var(--cond); font-weight: 700; font-size: 2.6rem; line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--steel); margin-bottom: 12px; }
+  .svc h3 { font-size: 1.4rem; margin: 0 0 8px; }
+  .svc p { color: var(--fg-soft); margin: 0 0 18px; flex: 1; }
+  .svc-more { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--fire); }
+  .svc-more :global(svg) { width: 18px; height: 18px; }
+  .svc--end a { background: var(--fire); border-color: var(--fire); justify-content: center; }
+  .svc--end a:hover { border-color: #fff; }
+  .svc--end .svc-n { -webkit-text-stroke: 1px #1b0f05; font-size: 5rem; }
+  .svc--end h3 { color: #1b0f05; font-family: var(--cond); font-size: 2.6rem; text-transform: uppercase; }
+  .svc--end p, .svc--end .svc-more { color: #2b1405; }
+  /* Sin animación: carrusel con scroll nativo */
+  .work:not(.is-pinned) .work-track { width: auto; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; scrollbar-width: thin; }
+  .work:not(.is-pinned) .svc { scroll-snap-align: start; }
+  .work:not(.is-pinned) .work-pin { min-height: 0; }
+
+  /* ---------- Cifras ---------- */
+  .stats { background: var(--steel); color: #1b0f05; }
+  .stats-row { display: grid; grid-template-columns: repeat(5, 1fr); }
+  .stat { padding: 36px 20px; border-left: 1px solid rgb(27 15 5 / 0.18); }
+  .stat:first-child { border-left: 0; }
+  .stat strong { display: flex; align-items: baseline; gap: 6px; font-family: var(--cond); font-weight: 700; font-size: clamp(2.6rem, 5vw, 4.4rem); line-height: 1; }
+  .stat small { font-size: 0.35em; text-transform: uppercase; letter-spacing: 0.08em; }
+  .stat > span { display: block; margin-top: 8px; font-weight: 500; font-size: 0.95rem; }
+  @media (max-width: 900px) { .stats-row { grid-template-columns: 1fr 1fr; } .stat:nth-child(odd) { border-left: 0; } .stat { border-top: 1px solid rgb(27 15 5 / 0.18); } }
+
+  /* ---------- Cómo ---------- */
+  .how { background: var(--bg); padding-block: clamp(80px, 10vw, 140px); }
+  .how-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); }
+  .how-media { position: relative; }
+  .how-frame { position: sticky; top: 12vh; height: 76vh; border-radius: 6px; overflow: hidden; background: var(--bg-2); }
+  .how-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; scale: 1.08; transition: opacity 0.7s var(--ease), scale 1.2s var(--ease); }
+  .how-img.is-on { opacity: 1; scale: 1; }
+  .how-badge { position: absolute; left: 16px; bottom: 16px; padding: 6px 12px; background: var(--fire); color: #1b0f05; font-family: var(--cond); font-weight: 700; font-size: 1.1rem; border-radius: 3px; }
+  .how-steps ol { list-style: none; margin: 40px 0 0; padding: 0; }
+  .step { display: grid; grid-template-columns: 72px 1fr; gap: 16px; min-height: 52vh; padding-top: 28px; border-top: 1px solid rgb(255 255 255 / 0.12); opacity: 0.35; transition: opacity 0.5s; }
+  .step.is-on { opacity: 1; }
+  .step-n { font-family: var(--cond); font-weight: 700; font-size: 3rem; line-height: 1; color: var(--steel); }
+  .step h3 { font-family: var(--cond); text-transform: uppercase; font-size: clamp(1.8rem, 3vw, 2.6rem); line-height: 1; margin: 4px 0 14px; }
+  .step p { color: var(--fg-soft); font-size: 1.1rem; max-width: 40ch; }
+  .step-img { display: none; }
+  @media (max-width: 900px) {
+    .how-grid { grid-template-columns: 1fr; }
+    .how-media { display: none; }
+    .step { min-height: 0; padding-bottom: 32px; opacity: 1; grid-template-columns: 56px 1fr; }
+    .step-img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; margin-top: 8px; }
+  }
+
+  /* ---------- Dónde ---------- */
+  .where { background: var(--bg-2); padding-block: 72px clamp(80px, 10vw, 140px); overflow: hidden; }
+  .where-marquee { margin-bottom: clamp(48px, 8vw, 96px); }
+  .where-marquee p { margin: 0; white-space: nowrap; font-family: var(--cond); font-weight: 700; text-transform: uppercase; font-size: clamp(3.5rem, 9vw, 8rem); line-height: 1; color: var(--fg); }
+  .where-marquee .outline { color: transparent; -webkit-text-stroke: 1px rgb(255 255 255 / 0.35); }
+  .where-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .where-lead { color: var(--fg-soft); font-size: 1.12rem; max-width: 50ch; }
+  .where-mx { display: grid; gap: 4px; margin: 28px 0 32px; padding: 18px 20px; border-left: 3px solid var(--fire); background: rgb(255 255 255 / 0.04); }
+  .where-mx strong { font-family: var(--cond); text-transform: uppercase; font-size: 1.4rem; }
+  .where-mx span { color: var(--fg-soft); }
+  .routes { width: 100%; height: auto; }
+  .route { fill: none; stroke: var(--fire); stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .pin circle { fill: var(--steel); }
+  .pin text { fill: var(--fg); font: 600 13px var(--font-body); }
+  .pin--home circle { fill: var(--fire); }
+  .pin--home text { font-weight: 700; }
+  .pulse { fill: none !important; stroke: var(--fire); stroke-width: 2; transform-origin: 205px 250px; animation: pulse 2s ease-out infinite; }
+  @keyframes pulse { from { transform: scale(0.4); opacity: 1; } to { transform: scale(2); opacity: 0; } }
+  @media (max-width: 900px) { .where-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- Proyectos ---------- */
+  .gallery { background: var(--bg); padding-block: clamp(80px, 10vw, 140px); overflow: hidden; }
+  .gallery-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px 48px; margin-bottom: 48px; }
+  .gallery-head h2 { max-width: 16ch; margin: 0; }
+  .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; max-width: 520px; }
+  .chips li { padding: 6px 12px; border: 1px solid rgb(255 255 255 / 0.18); border-radius: 3px; font-size: 0.88rem; color: var(--fg-soft); }
+  .gallery-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+  .gcol { display: grid; gap: 16px; }
+  .gcol:nth-child(2) { margin-top: 80px; }
+  .gcol figure { margin: 0; overflow: hidden; border-radius: 6px; background: var(--bg-2); }
+  .gcol img { width: 100%; height: auto; display: block; transition: scale 0.8s var(--ease); }
+  .gcol figure:hover img { scale: 1.05; }
+  .gvideo video { display: block; width: 100%; aspect-ratio: 9 / 14; object-fit: cover; }
+  .gallery-more { margin-top: 48px; text-align: center; }
+  @media (max-width: 700px) {
+    .gallery-cols { grid-template-columns: 1fr 1fr; }
+    .gcol:nth-child(3) { display: none; }
+    .gcol:nth-child(2) { margin-top: 40px; }
+  }
+
+  /* ---------- CTA ---------- */
+  .cta { position: relative; overflow: hidden; background: var(--fire); color: #1b0f05; padding-block: clamp(80px, 10vw, 130px); isolation: isolate; }
+  .cta-stripes { position: absolute; inset: auto 0 0; height: 18px; background: repeating-linear-gradient(45deg, #1b0f05 0 18px, var(--steel) 18px 36px); }
+  .cta-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .cta h2 { color: #1b0f05; font-size: clamp(2.8rem, 6.4vw, 6rem); max-width: 13ch; }
+  .cta-lead { font-size: clamp(1.2rem, 2vw, 1.6rem); font-weight: 600; margin: 0 0 28px; }
+  .cta-wa { font-size: 1.1rem; min-height: 60px; }
+  .cta-wa :global(svg) { width: 24px; height: 24px; color: #3be47b; }
+  .cta-direct { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 8px; }
+  .cta-direct a { display: inline-flex; align-items: center; gap: 10px; color: #1b0f05; font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
+  .cta-direct a:hover { text-decoration: underline; }
+  .cta-direct :global(svg) { width: 18px; height: 18px; }
+  .cta-form :global(.btn) { border-radius: 4px; min-height: 52px; }
+  .cta-form { background: #fff; color: var(--ink); padding: clamp(24px, 4vw, 40px); border-radius: 6px; box-shadow: 0 30px 60px -30px rgb(27 15 5 / 0.6); }
+  @media (max-width: 900px) { .cta-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- Footer ---------- */
+  .op-footer { background: #050412; color: var(--fg-soft); padding-top: 64px; }
+  .op-footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 48px; }
+  .op-footer img { width: 160px; height: auto; margin-bottom: 16px; }
+  .op-footer p { max-width: 34ch; margin: 0; }
+  .op-footer h2 { font-family: var(--font-body); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #fff; margin: 0 0 16px; }
+  .op-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .op-footer a { color: var(--fg-soft); text-decoration: none; overflow-wrap: anywhere; }
+  .op-footer a:hover { color: var(--steel); }
+  .op-legal { border-top: 1px solid rgb(255 255 255 / 0.08); padding-block: 20px; margin-top: 0; font-size: 0.88rem; }
+  @media (max-width: 900px) { .op-footer-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .op-footer-grid { grid-template-columns: 1fr; } }
+</style>
