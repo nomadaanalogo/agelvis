@@ -95,9 +95,9 @@ const galeria = [
   [{ src: g6, alt: t('Montacargas moviendo un centro de mecanizado CNC', 'Forklift moving a CNC machining center') }, { src: g7, alt: t('Izaje de un tanque industrial con grúa telescópica', 'Industrial tank lifted by telescopic crane') }, { src: g8, alt: t('Maquinaria en montacargas en el patio de una fábrica', 'Machinery on a forklift in a factory yard') }],
 ];
 
-// Escena del hero: foto de la grúa sin la carga + gancho original con una troqueladora colgando (misma escala, 941 × 1672)
+// Escena del hero: foto de la grúa sin la carga + gancho, eslingas y máquina envuelta de otro izaje real (misma escala, 941 × 1672)
 const fondo = await getImage({ src: gruaFondo, format: 'webp', width: 941, quality: 82 });
-const carga = await getImage({ src: gruaCarga, format: 'webp', width: 263, quality: 90 });
+const carga = await getImage({ src: gruaCarga, format: 'webp', width: 276, quality: 90 });
 // Cables: de la punta de la pluma (y 104) al gancho (y 457), en coordenadas de la foto
 const cables = [[663, 662], [675, 670], [683, 680], [691, 690]];
 
@@ -121,13 +121,13 @@ const waMsg = t(undefined, 'Hello AGELVIS EU, I would like a quote for an indust
       <div class="hero-grid" aria-hidden="true"></div>
       <p class="hero-ghost" aria-hidden="true" data-ghost>{t('LO PESADO · LO PESADO · ', 'HEAVY · HEAVY · HEAVY · ')}</p>
       <div class="hero-stage">
-        <svg viewBox="0 0 941 1672" preserveAspectRatio="xMidYMin slice" role="img" aria-label={t('Grúa de AGELVIS EU izando una máquina troqueladora junto a una planta', 'AGELVIS EU crane lifting an industrial punch press next to a plant')}>
+        <svg viewBox="0 0 941 1672" preserveAspectRatio="xMidYMin slice" role="img" aria-label={t('Grúa de AGELVIS EU izando una máquina industrial embalada junto a una planta', 'AGELVIS EU crane lifting a packed industrial machine next to a plant')}>
           <image href={fondo.src} width="941" height="1672" />
           <g stroke="#23232b" stroke-width="1.7" opacity="0.9">
             {cables.map(([top, bottom]) => <line class="lift-cable" x1={top} y1="104" x2={bottom} y2="457" data-x={bottom} />)}
           </g>
           <g id="lift-load">
-            <image href={carga.src} x="550" y="442" width="263" height="427" />
+            <image href={carga.src} x="538" y="456" width="276" height="356" />
           </g>
         </svg>
       </div>
