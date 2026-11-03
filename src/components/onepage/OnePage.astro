@@ -10,6 +10,7 @@ import ContactForm from '../ContactForm.astro';
 import { site, whatsappUrl } from '../../data/site';
 import { enServicios } from '../../data/en';
 import { getServicios } from '../../lib/colecciones';
+import { tierra, proyectar, ciudades } from '../../lib/mapa';
 import type { IconName } from '../../data/icons';
 
 import gruaFondo from '../../assets/hero/grua-fondo.webp';
@@ -65,14 +66,12 @@ const pasos = [
 ];
 
 const paises = es ? ['Colombia', ...site.internationalExperience] : ['Colombia', ...site.internationalExperienceEn];
-// Posiciones aproximadas en el lienzo de rutas (600 × 400)
-const puntos: Record<string, [number, number]> = {
-  Colombia: [205, 250], 'México': [95, 150], Mexico: [95, 150], 'Panamá': [178, 222], Panama: [178, 222],
-  Ecuador: [170, 282], 'Perú': [180, 335], Peru: [180, 335], Bulgaria: [492, 118], Ucrania: [535, 92], Ukraine: [535, 92],
-};
-const origen = puntos.Colombia;
+// Ciudades proyectadas sobre el mapa (lienzo 600 × 400, ver src/lib/mapa.ts)
+const pos = (p: string) => proyectar(ciudades[p].lon, ciudades[p].lat);
+const origen = pos('Colombia');
 const rutas = paises.slice(1).map((p) => {
-  const [x, y] = puntos[p];
+  const [x, y] = pos(p);
+  const { dx: lx, dy: ly, anchor } = ciudades[p];
   // Punto de control desplazado en perpendicular, siempre hacia arriba: arcos limpios a cualquier distancia
   const dx = x - origen[0];
   const dy = y - origen[1];
@@ -83,7 +82,7 @@ const rutas = paises.slice(1).map((p) => {
   const k = dist * 0.32;
   const cx = (origen[0] + x) / 2 + nx * k;
   const cy = (origen[1] + y) / 2 + ny * k;
-  return { nombre: p, x, y, d: `M${origen[0]} ${origen[1]}Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x} ${y}` };
+  return { nombre: p, x, y, lx: x + lx, ly: y + ly, anchor, d: `M${origen[0].toFixed(1)} ${origen[1].toFixed(1)}Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}` };
 });
 
 const sectores = es
@@ -248,21 +247,18 @@ const waMsg = t(undefined, 'Hello AGELVIS EU, I would like a quote for an indust
           <a href={es ? '/proyectos-internacionales' : '/en/international'} class="op-btn op-btn--line">{t('Proyectos internacionales', 'International projects')} <Icon name="arrow" /></a>
         </div>
         <svg class="routes" viewBox="0 0 600 400" role="img" aria-label={t(`Rutas desde Colombia hacia ${paises.slice(1).join(', ')}`, `Routes from Colombia to ${paises.slice(1).join(', ')}`)}>
-          <defs>
-            <pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.3" fill="#ffffff" opacity="0.12" /></pattern>
-          </defs>
-          <rect width="600" height="400" fill="url(#dots)" />
+          <path d={tierra} class="land" />
           {rutas.map((r) => <path d={r.d} class="route" pathLength="1" />)}
           {rutas.map((r) => (
             <g class="pin">
               <circle cx={r.x} cy={r.y} r="5" />
-              <text x={r.x + 10} y={r.y + 4}>{r.nombre}</text>
+              <text x={r.lx} y={r.ly} text-anchor={r.anchor}>{r.nombre}</text>
             </g>
           ))}
           <g class="pin pin--home">
             <circle cx={origen[0]} cy={origen[1]} r="16" class="pulse" />
             <circle cx={origen[0]} cy={origen[1]} r="7" />
-            <text x={origen[0] + 14} y={origen[1] + 22}>Palmira, Colombia</text>
+            <text x={origen[0] + ciudades.Colombia.dx} y={origen[1] + ciudades.Colombia.dy}>Palmira, Colombia</text>
           </g>
         </svg>
       </div>
@@ -473,12 +469,13 @@ const waMsg = t(undefined, 'Hello AGELVIS EU, I would like a quote for an indust
   .where-mx strong { font-family: var(--cond); text-transform: uppercase; font-size: 1.4rem; }
   .where-mx span { color: var(--fg-soft); }
   .routes { width: 100%; height: auto; }
+  .land { fill: rgb(255 255 255 / 0.06); stroke: rgb(255 255 255 / 0.16); stroke-width: 0.6; stroke-linejoin: round; }
   .route { fill: none; stroke: var(--fire); stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: 0; }
   .pin circle { fill: var(--steel); }
-  .pin text { fill: var(--fg); font: 600 13px var(--font-body); }
+  .pin text { fill: var(--fg); font: 600 12px var(--font-body); paint-order: stroke; stroke: #100e2a; stroke-width: 3px; }
   .pin--home circle { fill: var(--fire); }
   .pin--home text { font-weight: 700; }
-  .pulse { fill: none !important; stroke: var(--fire); stroke-width: 2; transform-origin: 205px 250px; animation: pulse 2s ease-out infinite; }
+  .pulse { fill: none !important; stroke: var(--fire); stroke-width: 2; transform-box: fill-box; transform-origin: center; animation: pulse 2s ease-out infinite; }
   @keyframes pulse { from { transform: scale(0.4); opacity: 1; } to { transform: scale(2); opacity: 0; } }
   @media (max-width: 900px) { .where-grid { grid-template-columns: 1fr; } }
 
