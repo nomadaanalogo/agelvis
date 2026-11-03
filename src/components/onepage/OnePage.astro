@@ -3,20 +3,20 @@
  * Inicio de una sola página (ES en /, EN en /en/).
  * Las animaciones (grúa, parallax, scroll horizontal, contadores) están en src/scripts/onepage.ts.
  */
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Icon from '../Icon.astro';
 import ContactForm from '../ContactForm.astro';
-import Crane from './Crane.astro';
 import { site, whatsappUrl } from '../../data/site';
 import { enServicios } from '../../data/en';
 import { getServicios } from '../../lib/colecciones';
 import type { IconName } from '../../data/icons';
 import logoBlanco from '../../assets/marca/logo-agelvis-blanco.png';
 
-import heroBg from '../../assets/fotos/carga-envuelta-cama-baja-bodega.webp';
+import gruaFondo from '../../assets/hero/grua-fondo.webp';
+import gruaCarga from '../../assets/hero/grua-carga.webp';
 import paso1 from '../../assets/fotos/mantenimiento-planta-industrial.webp';
-import paso2 from '../../assets/fotos/grua-elevando-chiller-techo.webp';
+import paso2 from '../../assets/fotos/izaje-chiller-industrial.webp';
 import paso3 from '../../assets/fotos/embalaje-guacal-equipo-planta.webp';
 import paso4 from '../../assets/fotos/ingreso-carga-guiada-almacen.webp';
 import g1 from '../../assets/fotos/carga-asegurada-trailer-plataforma.webp';
@@ -25,7 +25,7 @@ import g3 from '../../assets/fotos/maquina-industrial-almacen.webp';
 import g4 from '../../assets/fotos/traslado-carga-asegurada-calle.webp';
 import g5 from '../../assets/fotos/movimiento-maquina-envuelta-planta.webp';
 import g6 from '../../assets/fotos/montacargas-maquina-cnc-okuma.webp';
-import g7 from '../../assets/fotos/izaje-chiller-industrial.webp';
+import g7 from '../../assets/fotos/izaje-tanque-industrial-grua.webp';
 import g8 from '../../assets/fotos/maquinaria-montacargas-patio-fabrica.webp';
 
 interface Props { lang: 'es' | 'en' }
@@ -61,7 +61,7 @@ const pasos = [
   { img: paso1, alt: t('Técnico de AGELVIS EU revisando una máquina en planta', 'AGELVIS EU technician inspecting a machine on site'),
     h: t('Vamos a su planta', 'We visit your plant'),
     p: t('Medimos, fotografiamos y entendemos la máquina, el sitio, los accesos y lo que no puede detenerse.', 'We measure, photograph and understand the machine, the site, the access routes and what cannot stop.') },
-  { img: paso2, alt: t('Grúa elevando un chiller hacia el techo de una planta', 'Crane lifting a chiller onto a plant roof'),
+  { img: paso2, alt: t('Grúa izando un chiller industrial con eslingas', 'Crane lifting an industrial chiller with slings'),
     h: t('Planeamos cada maniobra', 'We engineer every lift'),
     p: t('Secuencia, puntos de izaje, equipos, riesgos y cronograma. Usted aprueba el plan antes de que movamos un tornillo.', 'Sequence, pick points, equipment, risks and schedule. You sign off the plan before we touch a single bolt.') },
   { img: paso3, alt: t('Equipo de AGELVIS EU embalando una máquina en guacal de madera', 'AGELVIS EU crew crating a machine'),
@@ -101,8 +101,14 @@ const sectores = es
 const galeria = [
   [{ src: g1, alt: t('Carga asegurada sobre tráiler de plataforma', 'Load secured on a flatbed trailer') }, { src: g2, alt: t('Izaje de maquinaria envuelta con grúa', 'Crane lift of wrapped machinery') }, { src: g3, alt: t('Máquina industrial posicionada en almacén', 'Industrial machine positioned in a warehouse') }],
   [{ src: g4, alt: t('Traslado de carga asegurada por la ciudad', 'Secured load being moved through the city') }, null, { src: g5, alt: t('Movimiento de máquina envuelta dentro de planta', 'Wrapped machine moved inside a plant') }],
-  [{ src: g6, alt: t('Montacargas moviendo un centro de mecanizado CNC', 'Forklift moving a CNC machining center') }, { src: g7, alt: t('Grúa izando un chiller industrial con eslingas', 'Crane lifting an industrial chiller with slings') }, { src: g8, alt: t('Maquinaria en montacargas en el patio de una fábrica', 'Machinery on a forklift in a factory yard') }],
+  [{ src: g6, alt: t('Montacargas moviendo un centro de mecanizado CNC', 'Forklift moving a CNC machining center') }, { src: g7, alt: t('Izaje de un tanque industrial con grúa telescópica', 'Industrial tank lifted by telescopic crane') }, { src: g8, alt: t('Maquinaria en montacargas en el patio de una fábrica', 'Machinery on a forklift in a factory yard') }],
 ];
+
+// Escena del hero: foto de la grúa sin la carga + la carga recortada (misma escala, 941 × 1672)
+const fondo = await getImage({ src: gruaFondo, format: 'webp', width: 941, quality: 82 });
+const carga = await getImage({ src: gruaCarga, format: 'webp', width: 248, quality: 90 });
+// Cables: de la punta de la pluma (y 104) al gancho (y 457), en coordenadas de la foto
+const cables = [[663, 662], [675, 670], [683, 680], [691, 690]];
 
 const waMsg = t(undefined, 'Hello AGELVIS EU, I would like a quote for an industrial machinery project.');
 const otherHref = es ? '/en/' : '/';
@@ -138,12 +144,19 @@ const otherHref = es ? '/en/' : '/';
   <div class="op">
     <!-- HERO -->
     <section class="hero" data-hero>
-      <div class="hero-bg" data-parallax="0.35">
-        <Image src={heroBg} alt="" widths={[768, 1280, 1672]} sizes="100vw" loading="eager" fetchpriority="high" />
-      </div>
       <div class="hero-grid" aria-hidden="true"></div>
       <p class="hero-ghost" aria-hidden="true" data-ghost>{t('LO PESADO · LO PESADO · ', 'HEAVY · HEAVY · HEAVY · ')}</p>
-      <div class="hero-crane" data-crane><Crane lang={lang} /></div>
+      <div class="hero-stage">
+        <svg viewBox="0 0 941 1672" preserveAspectRatio="xMidYMin slice" role="img" aria-label={t('Grúa de AGELVIS EU izando un chiller hacia el techo de una planta', 'AGELVIS EU crane lifting a chiller onto a plant roof')}>
+          <image href={fondo.src} width="941" height="1672" />
+          <g stroke="#23232b" stroke-width="1.7" opacity="0.9">
+            {cables.map(([top, bottom]) => <line class="lift-cable" x1={top} y1="104" x2={bottom} y2="457" data-x={bottom} />)}
+          </g>
+          <g id="lift-load">
+            <image href={carga.src} x="546" y="442" width="248" height="386" />
+          </g>
+        </svg>
+      </div>
 
       <div class="wrap hero-copy">
         <p class="kicker" data-intro>{t('Montaje · Traslado · Rigging · Relocalización', 'Installation · Transfer · Rigging · Relocation')}</p>
@@ -424,6 +437,7 @@ const otherHref = es ? '/en/' : '/';
     position: fixed; inset: 0 0 auto; z-index: 70;
     display: flex; align-items: center; justify-content: space-between; gap: 24px;
     padding: 18px var(--gutter);
+    background: linear-gradient(180deg, rgb(8 7 26 / 0.85), rgb(8 7 26 / 0)) border-box no-repeat;
     transition: background 0.35s, padding 0.35s, border-color 0.35s;
     border-bottom: 1px solid transparent;
   }
@@ -453,12 +467,17 @@ const otherHref = es ? '/en/' : '/';
 
   /* ---------- Hero ---------- */
   .hero { position: relative; min-height: 100svh; display: grid; align-items: end; overflow: hidden; isolation: isolate; background: var(--bg); }
-  .hero-bg { position: absolute; inset: -10% 0 0; z-index: -3; }
-  .hero-bg img { width: 100%; height: 115%; object-fit: cover; filter: grayscale(0.6) contrast(1.1) brightness(0.45); }
-  .hero::after { content: ''; position: absolute; inset: 0; z-index: -2; background: linear-gradient(90deg, rgb(8 7 26 / 0.96) 0%, rgb(8 7 26 / 0.7) 45%, rgb(8 7 26 / 0.25) 100%), linear-gradient(0deg, var(--bg) 0%, transparent 35%); }
+  .hero-stage {
+    position: absolute; top: 0; right: 0; z-index: -1;
+    height: 128svh; aspect-ratio: 941 / 1672;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 34%), linear-gradient(0deg, transparent 4%, #000 34%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 34%), linear-gradient(0deg, transparent 4%, #000 34%);
+    mask-composite: intersect;
+  }
+  .hero-stage svg { display: block; width: 100%; height: 100%; }
   .hero-grid { position: absolute; inset: 0; z-index: -2; background-image: linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent); }
   .hero-ghost { position: absolute; top: 18%; left: 0; z-index: -1; margin: 0; white-space: nowrap; font-family: var(--cond); font-weight: 700; font-size: clamp(7rem, 22vw, 20rem); line-height: 1; color: transparent; -webkit-text-stroke: 1px rgb(255 255 255 / 0.08); pointer-events: none; }
-  .hero-crane { position: absolute; right: 0; bottom: 0; height: 100%; z-index: -1; pointer-events: none; }
   .hero-copy { position: relative; padding-block: 140px clamp(80px, 12vh, 140px); }
   .hero h1 { margin: 0 0 24px; font-family: var(--cond); font-weight: 700; text-transform: uppercase; font-size: clamp(3.6rem, 10vw, 9rem); line-height: 0.86; letter-spacing: -0.02em; color: #fff; }
   .hero h1 em { font-style: normal; color: var(--fire); }
@@ -468,9 +487,12 @@ const otherHref = es ? '/en/' : '/';
   .scroll-cue span { width: 2px; height: 42px; background: linear-gradient(var(--steel), transparent); animation: cue 1.8s var(--ease) infinite; transform-origin: top; }
   @keyframes cue { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
   @media (max-width: 900px) {
-    .hero { align-items: start; }
-    .hero-crane { position: relative; justify-self: end; height: 46svh; margin: 72px -6vw 0 0; }
-    .hero-copy { padding-top: 8px; padding-bottom: 56px; }
+    .hero-stage {
+      left: 0; width: 100%; height: auto;
+      -webkit-mask-image: linear-gradient(0deg, transparent 34%, #000 66%);
+      mask-image: linear-gradient(0deg, transparent 34%, #000 66%);
+    }
+    .hero-copy { padding-bottom: 48px; }
     .scroll-cue { display: none; }
   }
 
