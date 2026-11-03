@@ -2,7 +2,7 @@
  * Animaciones del inicio one-page.
  * - Lenis: scroll suave.
  * - GSAP ScrollTrigger: parallax, scroll horizontal de servicios, contadores, pasos, rutas y galería.
- * - Izaje del hero: el scroll sube la carga recortada de la foto, con balanceo de péndulo.
+ * - Izaje del hero: el scroll sube la carga recortada de la foto, con un zoom leve.
  * Con "reducir movimiento" activado no hay scroll suave, ni pin, ni parallax.
  */
 import { gsap } from 'gsap';
@@ -40,38 +40,41 @@ $$<HTMLAnchorElement>('a[data-scroll]').forEach((a) => {
 });
 
 /* ---------- Izaje del hero ---------- */
-// La foto de la grúa está separada en dos capas: el fondo y la carga (gancho + eslingas + chiller).
-// Mientras el hero está fijo, el scroll sube la carga; los cables se acortan con ella.
+// La foto de la grúa está separada en dos capas: el fondo y la carga (gancho + eslingas + máquina).
+// Mientras el hero está fijo (un tramo corto de scroll), la carga sube y los cables se acortan.
+// En vez de balancearse, la carga "respira": un zoom in / zoom out leve desde el gancho.
 const hero = $('[data-hero]');
 const load = $<SVGGElement>('#lift-load');
 const liftCables = $$<SVGLineElement>('.lift-cable');
+/** Recorrido de scroll con el hero fijo: unos dos movimientos de rueda. */
+const heroPin = () => Math.round(Math.max(240, window.innerHeight * 0.35));
 
 if (hero && load) {
-  const HOOK = { x: 676, y: 457 }; // punto de giro: el gancho, en coordenadas de la foto
+  const HOOK = { x: 676, y: 457 }; // gancho, en coordenadas de la foto
   const START = 430; // carga abajo, frente a la fachada
   const INTRO = 360; // tras el arranque automático
   const END = -190; // carga arriba, cerca de la punta de la pluma
 
   let progress = 0;
   let dy = START;
-  let angle = 0;
-  let angVel = 0;
+  let scale = 1;
   const start = performance.now();
   let last = start;
 
   const draw = () => {
-    load.setAttribute('transform', `translate(0 ${dy.toFixed(2)}) rotate(${angle.toFixed(3)} ${HOOK.x} ${HOOK.y})`);
+    const s = scale.toFixed(4);
+    load.setAttribute('transform', `translate(0 ${dy.toFixed(2)}) translate(${HOOK.x} ${HOOK.y}) scale(${s}) translate(${-HOOK.x} ${-HOOK.y})`);
     liftCables.forEach((c) => c.setAttribute('y2', (HOOK.y + dy).toFixed(2)));
   };
 
   if (reduce) {
-    dy = 0; // posición original de la foto
+    dy = 0;
     draw();
   } else {
     ScrollTrigger.create({
       trigger: hero,
       start: 'top top',
-      end: () => `+=${Math.round(window.innerHeight * 1.1)}`,
+      end: () => `+=${heroPin()}`,
       pin: true,
       onUpdate: (self) => { progress = self.progress; },
     });
@@ -84,13 +87,12 @@ if (hero && load) {
       const eased = 1 - Math.pow(1 - intro, 3);
       const target = START + (INTRO - START) * eased + (END - INTRO) * progress;
       const prev = dy;
-      dy += (target - dy) * Math.min(dt * 4, 1);
+      dy += (target - dy) * Math.min(dt * 5, 1);
 
-      // Péndulo amortiguado: los cambios bruscos de velocidad hacen oscilar la carga
-      const vel = (dy - prev) / Math.max(dt, 0.001);
-      angVel += (-7 * angle - 1.6 * angVel + vel * 0.004) * dt;
-      angle += angVel * dt * 10 + Math.sin(now / 1300) * 0.0035 * eased;
-      angle = Math.max(-4, Math.min(4, angle));
+      // Zoom leve: ±3 % en ciclos de ~4,5 s, más un pequeño empuje al subir rápido
+      const vel = Math.abs(dy - prev) / Math.max(dt, 0.001);
+      const targetScale = 1 + 0.03 * Math.sin((now / 4500) * Math.PI * 2) * eased + Math.min(vel * 0.00005, 0.03);
+      scale += (targetScale - scale) * Math.min(dt * 3, 1);
 
       draw();
       if (hero.getBoundingClientRect().bottom > -200) requestAnimationFrame(tick);
@@ -123,7 +125,7 @@ mm.add({ motion: '(prefers-reduced-motion: no-preference)', desktop: '(min-width
   gsap.from('[data-intro]', { y: 40, opacity: 0, duration: 1.1, ease: 'power3.out', stagger: 0.12, delay: 0.15 });
 
   // Parallax del hero
-  gsap.fromTo('[data-ghost]', { xPercent: 0 }, { xPercent: -25, ease: 'none', scrollTrigger: { trigger: '[data-hero]', start: 'top top', end: () => `+=${Math.round(window.innerHeight * 1.1)}`, scrub: true } });
+  gsap.fromTo('[data-ghost]', { xPercent: 0 }, { xPercent: -25, ease: 'none', scrollTrigger: { trigger: '[data-hero]', start: 'top top', end: () => `+=${heroPin()}`, scrub: true } });
 
   // Títulos y bloques
   $$('[data-up]').forEach((el) => {
