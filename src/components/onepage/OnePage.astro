@@ -137,10 +137,11 @@ const waMsg = t(undefined, 'Hello AGELVIS EU, I would like a quote for an indust
         <h1 data-intro>
           {es ? <>Movemos<br />lo que <em>pesa.</em></> : <>We move<br />the <em>heavy.</em></>}
         </h1>
-        <p class="hero-lead" data-intro>{t(
-          `Instalamos, desmontamos, embalamos y trasladamos maquinaria industrial y plantas completas. Desde Palmira para Colombia y el mundo, desde ${site.foundingYear}.`,
-          `We install, dismantle, pack and relocate industrial machinery and complete plants. From Colombia to the world, since ${site.foundingYear}.`,
-        )}</p>
+        <p class="hero-lead" data-intro>
+          {es
+            ? <>Instalamos, desmontamos, embalamos y trasladamos <strong>maquinaria industrial</strong> y plantas completas. Desde Palmira para Colombia y el mundo, desde {site.foundingYear}.</>
+            : <>We install, dismantle, pack and relocate <strong>industrial machinery</strong> and complete plants. From Colombia to the world, since {site.foundingYear}.</>}
+        </p>
         <div class="hero-ctas" data-intro>
           <a href="#cotizar" class="op-btn op-btn--fire" data-scroll data-track="cta_click" data-track-location="hero">{t('Cotizar mi proyecto', 'Quote my project')} <Icon name="arrow" /></a>
           <a href="#como" class="op-btn op-btn--line" data-scroll>{t('Cómo trabajamos', 'How we work')}</a>
@@ -369,8 +370,9 @@ const waMsg = t(undefined, 'Hello AGELVIS EU, I would like a quote for an indust
   .hero-grid { position: absolute; inset: 0; z-index: -2; background-image: linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent); }
   .hero-ghost { position: absolute; top: 18%; left: 0; z-index: -1; margin: 0; white-space: nowrap; font-family: var(--cond); font-weight: 700; font-size: clamp(7rem, 22vw, 20rem); line-height: 1; color: transparent; -webkit-text-stroke: 1px rgb(255 255 255 / 0.08); pointer-events: none; }
   .hero-copy { position: relative; padding-block: 140px clamp(80px, 12vh, 140px); }
-  .hero h1 { margin: 0 0 24px; font-family: var(--cond); font-weight: 700; text-transform: uppercase; font-size: clamp(3.2rem, 7.4vw, 6.8rem); line-height: 0.88; letter-spacing: -0.02em; color: #fff; }
+  .hero h1 { margin: 0 0 24px; font-family: var(--cond); font-weight: 700; text-transform: uppercase; font-size: clamp(2.6rem, 5.4vw, 5rem); line-height: 0.9; letter-spacing: -0.02em; color: #fff; }
   .hero h1 em { font-style: normal; color: var(--fire); }
+  .hero-lead strong { color: var(--fire); font-weight: 700; }
   .hero-lead { max-width: 46ch; font-size: clamp(1.05rem, 1.4vw, 1.25rem); color: #cfcde4; margin: 0 0 32px; }
   .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
   .scroll-cue { position: absolute; left: max(var(--gutter), calc((100% - 1280px) / 2)); bottom: 28px; margin: 0; display: flex; align-items: center; gap: 12px; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-soft); }
