@@ -50,7 +50,7 @@ const liftCables = $$<SVGLineElement>('.lift-cable');
 const heroPin = () => Math.round(Math.max(240, window.innerHeight * 0.35));
 
 if (hero && load) {
-  const HOOK = { x: 676, y: 457 }; // gancho, en coordenadas de la foto
+  const HOOK = { x: 685, y: 460 }; // boca del gancho, en coordenadas de la foto
   const START = 430; // carga abajo, frente a la fachada
   const INTRO = 360; // tras el arranque automático
   const END = -190; // carga arriba, cerca de la punta de la pluma
