@@ -106,7 +106,7 @@ const galeria = [
 
 // Escena del hero: foto de la grúa sin la carga + la carga recortada (misma escala, 941 × 1672)
 const fondo = await getImage({ src: gruaFondo, format: 'webp', width: 941, quality: 82 });
-const carga = await getImage({ src: gruaCarga, format: 'webp', width: 248, quality: 90 });
+const carga = await getImage({ src: gruaCarga, format: 'webp', width: 252, quality: 90 });
 // Cables: de la punta de la pluma (y 104) al gancho (y 457), en coordenadas de la foto
 const cables = [[663, 662], [675, 670], [683, 680], [691, 690]];
 
@@ -153,7 +153,7 @@ const otherHref = es ? '/en/' : '/';
             {cables.map(([top, bottom]) => <line class="lift-cable" x1={top} y1="104" x2={bottom} y2="457" data-x={bottom} />)}
           </g>
           <g id="lift-load">
-            <image href={carga.src} x="546" y="442" width="248" height="386" />
+            <image href={carga.src} x="546" y="442" width="252" height="390" />
           </g>
         </svg>
       </div>
@@ -500,7 +500,8 @@ const otherHref = es ? '/en/' : '/';
   .work { background: var(--bg); padding-block: clamp(80px, 10vw, 120px) 40px; }
   .work-pin { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
   .work-head { margin-bottom: 40px; }
-  .work-head h2 { max-width: 14ch; }
+  .work-head h2 { font-size: clamp(2.2rem, 4.4vw, 4rem); }
+  @media (min-width: 901px) { .work-head h2 { white-space: nowrap; } }
   .work-track { display: flex; gap: 20px; padding-inline: max(var(--gutter), calc((100vw - 1280px) / 2)); width: max-content; }
   .svc { width: clamp(280px, 30vw, 420px); flex: none; }
   .svc a { display: flex; flex-direction: column; height: 100%; color: inherit; text-decoration: none; background: var(--bg-2); border: 1px solid rgb(255 255 255 / 0.08); border-radius: 6px; overflow: hidden; transition: border-color 0.3s, transform 0.4s var(--ease); }
